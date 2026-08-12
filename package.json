@@ -1,0 +1,12 @@
+{
+  "name": "rec-navigator-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix client",
+    "build:client": "npm run build --prefix client",
+    "server": "npm run dev --prefix server",
+    "build:server": "npm run build --prefix server",
+    "build": "npm run build:client && npm run build:server"
+  }
+}
