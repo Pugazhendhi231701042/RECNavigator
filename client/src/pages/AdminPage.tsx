@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { Location, CategoryId } from '../types';
 import { PATH_NODES, PATH_EDGES } from '../data/recCampusData';
 import { CampusScene } from '../components/3d/CampusScene';
-import { ShieldCheck, MapPin, Save, Compass, Copy, Check, RotateCw } from 'lucide-react';
+import { ShieldCheck, MapPin, Save, Compass, Copy, Check, RotateCw, Lock, KeyRound, AlertCircle, LogOut } from 'lucide-react';
 
 interface AdminPageProps {
   locations: Location[];
@@ -15,6 +15,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   locations,
   onUpdateLocation,
 }) => {
+  // Admin Authentication State (Protected by password: Admin@2711)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem('rec_admin_authenticated') === 'true';
+  });
+  const [passwordInput, setPasswordInput] = useState<string>('');
+  const [authError, setAuthError] = useState<string>('');
+
   const [activeTab, setActiveTab] = useState<'editor' | 'locations' | 'graph'>('editor');
   const [selectedLocId, setSelectedLocId] = useState<string>(locations[0]?.id || '');
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
@@ -31,6 +38,23 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   const [posZ, setPosZ] = useState<number>(selectedLoc?.position.z || 0);
   const [rotY, setRotY] = useState<number>(selectedLoc?.rotationY || 0);
   const [nodeId, setNodeId] = useState<string>(selectedLoc?.nodeId || PATH_NODES[0].id);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === 'Admin@2711') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('rec_admin_authenticated', 'true');
+      setAuthError('');
+    } else {
+      setAuthError('Incorrect Password! Please enter valid admin credentials.');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('rec_admin_authenticated');
+    setPasswordInput('');
+  };
 
   const handleSelectBuildingToEdit = (loc: Location) => {
     setSelectedLocId(loc.id);
@@ -58,7 +82,6 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     onUpdateLocation(updated);
   };
 
-  // Generate copyable TypeScript dataset code for recCampusData.ts
   const generateTsCode = () => {
     return JSON.stringify(locations, null, 2);
   };
@@ -69,6 +92,67 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     setTimeout(() => setCopiedCode(false), 2000);
   };
 
+  // IF NOT AUTHENTICATED: RENDER ADMIN LOGIN PASSWORD GATE
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4 bg-slate-950">
+        <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 text-white text-center relative overflow-hidden">
+          {/* Top Decorative Glow */}
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-rec-blue/30 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-rec-gold/20 rounded-full blur-3xl" />
+
+          {/* Lock Header */}
+          <div className="relative space-y-3">
+            <div className="w-16 h-16 bg-slate-800 border border-slate-700 rounded-2xl mx-auto flex items-center justify-center text-rec-gold shadow-lg">
+              <Lock className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-black tracking-tight">Admin Portal Access</h2>
+            <p className="text-xs text-slate-400">
+              Enter the administrator password to manage 3D building positions, rotation angles, and road network settings.
+            </p>
+          </div>
+
+          {/* Password Form */}
+          <form onSubmit={handleLogin} className="space-y-4 text-left relative">
+            <div>
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <KeyRound className="w-3.5 h-3.5 text-rec-gold" />
+                Admin Password
+              </label>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => {
+                  setPasswordInput(e.target.value);
+                  if (authError) setAuthError('');
+                }}
+                placeholder="Enter admin password..."
+                className="w-full py-3 px-4 bg-slate-800 border border-slate-700 rounded-xl text-sm font-medium text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rec-blue transition-all"
+                autoFocus
+              />
+            </div>
+
+            {authError && (
+              <div className="p-3 bg-red-950/80 border border-red-800/80 rounded-xl text-red-300 text-xs flex items-center gap-2 animate-in fade-in">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
+                <span>{authError}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full py-3.5 bg-rec-blue hover:bg-rec-blue-dark text-white font-extrabold text-sm rounded-xl shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              Unlock Admin Portal
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // IF AUTHENTICATED: RENDER FULL ADMIN PORTAL
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-6 pb-24 text-white">
       {/* Header Banner */}
@@ -76,7 +160,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         <div>
           <div className="flex items-center gap-2 text-rec-gold text-xs font-bold uppercase tracking-wider mb-1">
             <ShieldCheck className="w-4 h-4" />
-            3D Campus Positioning & Model Rotation Editor
+            Authenticated Administrator Portal
           </div>
           <h2 className="text-2xl font-black">Visual 3D Building Rotation & Map Alignment</h2>
           <p className="text-xs text-slate-400 mt-1">
@@ -108,6 +192,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             }`}
           >
             Graph Nodes ({PATH_NODES.length})
+          </button>
+          <button
+            onClick={handleLogout}
+            title="Lock Admin Portal"
+            className="p-2 bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800/80 rounded-xl transition-all"
+          >
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -321,7 +412,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
             </div>
 
             <div className="border border-slate-800 bg-slate-950 rounded-2xl p-4 max-h-96 overflow-y-auto">
-              <h4 className="text-xs font-bold text-slate-800 uppercase mb-2">Graph Edges (Road Segments)</h4>
+              <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Graph Edges (Road Segments)</h4>
               <div className="space-y-1.5 text-xs font-mono">
                 {PATH_EDGES.map(edge => (
                   <div key={edge.id} className="p-2 bg-slate-900 rounded border border-slate-800 flex justify-between">

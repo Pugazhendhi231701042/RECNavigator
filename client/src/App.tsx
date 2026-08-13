@@ -75,7 +75,7 @@ export function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 relative">
+      <main className="flex-1 relative overflow-hidden">
         {activeTab === 'map' && (
           <MapPage
             locations={locations}
@@ -96,7 +96,7 @@ export function App() {
         )}
 
         {activeTab === 'directions' && (
-          <div className="max-w-xl mx-auto p-4 pt-6">
+          <div className="h-[calc(100vh-65px)] overflow-y-auto max-w-xl mx-auto p-4 pt-6 pb-24">
             <DirectionsPanel
               locations={locations}
               startLocation={startLocation}
@@ -133,15 +133,21 @@ export function App() {
           />
         )}
 
-        {activeTab === 'about' && <AboutPage />}
+        {activeTab === 'about' && (
+          <div className="h-[calc(100vh-65px)] overflow-y-auto">
+            <AboutPage />
+          </div>
+        )}
 
         {activeTab === 'admin' && (
-          <AdminPage
-            locations={locations}
-            onAddLocation={handleAddLocation}
-            onUpdateLocation={handleUpdateLocation}
-            onDeleteLocation={handleDeleteLocation}
-          />
+          <div className="h-[calc(100vh-65px)] overflow-y-auto">
+            <AdminPage
+              locations={locations}
+              onAddLocation={handleAddLocation}
+              onUpdateLocation={handleUpdateLocation}
+              onDeleteLocation={handleDeleteLocation}
+            />
+          </div>
         )}
       </main>
 

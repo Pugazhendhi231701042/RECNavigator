@@ -34,7 +34,7 @@ export const MapPage: React.FC<MapPageProps> = ({
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
   const [showDirections, setShowDirections] = useState<boolean>(activeTab === 'directions');
-  const [showLabels, setShowLabels] = useState<boolean>(true);
+  const [showLabels, setShowLabels] = useState<boolean>(false); // Initially OFF
   const [showRoads, setShowRoads] = useState<boolean>(true);
   const [brightness, setBrightness] = useState<number>(1.3);
 
@@ -119,7 +119,7 @@ export const MapPage: React.FC<MapPageProps> = ({
             <div className="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/80 text-center">
               <p className="text-sm font-bold text-white">Interactive 3D REC Campus</p>
               <p className="text-xs text-slate-400 mt-1">
-                Explore the 3D campus map texture under clear blue skies. Use toolbar buttons to adjust brightness, toggle 3D roads, rotate buildings, and calculate walking routes!
+                Explore the REC campus in 3D. Click any building to view details, rotate camera, toggle labels/roads, and find walking directions.
               </p>
             </div>
           )}

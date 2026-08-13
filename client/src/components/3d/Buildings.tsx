@@ -30,26 +30,19 @@ class GLBErrorBoundary extends Component<{ fallback: React.ReactNode; children: 
   }
 }
 
-// Component that loads GLB via useGLTF with Auto-Centering and Ground Bounding (No Shadows)
+// Component that loads GLB via useGLTF with Auto-Centering and Ground Bounding
 function GLBModel({ url, onClick, scale = 1 }: { url: string; onClick: (e: any) => void; scale?: number }) {
   const { scene } = useGLTF(url);
 
   const autoCenteredScene = useMemo(() => {
     const clone = scene.clone(true);
 
-    // Compute bounding box for auto-centering & ground alignment
     const box = new Box3().setFromObject(clone);
     const center = new Vector3();
     const size = new Vector3();
     box.getCenter(center);
     box.getSize(size);
 
-    console.log(`📦 Loaded GLB Model (${url}):`, {
-      dimensionsMeters: { width: Math.round(size.x), height: Math.round(size.y), depth: Math.round(size.z) },
-      originCenter: { x: Math.round(center.x), y: Math.round(center.y), z: Math.round(center.z) }
-    });
-
-    // Offset origin so geometry base rests at Y=0 and center sits at (0, 0, 0)
     clone.position.x -= center.x;
     clone.position.y -= box.min.y;
     clone.position.z -= center.z;
@@ -64,7 +57,7 @@ function GLBModel({ url, onClick, scale = 1 }: { url: string; onClick: (e: any) 
   );
 }
 
-// Procedural Fallback Building Geometry (No Shadows)
+// Procedural Fallback Building Geometry
 function ProceduralBuilding({ loc, color, onClick }: { loc: Location; color: string; onClick: (e: any) => void }) {
   return (
     <group onClick={onClick}>
@@ -228,6 +221,8 @@ export const Buildings: React.FC<BuildingsProps> = ({
   selectedLocation,
   onSelectLocation,
 }) => {
+  const baseUrl = import.meta.env.BASE_URL || '/';
+
   return (
     <group>
       {locations.map(loc => {
@@ -250,8 +245,8 @@ export const Buildings: React.FC<BuildingsProps> = ({
 
         const fallback = <ProceduralBuilding loc={loc} color={color} onClick={handleClick} />;
         
-        // Rotation Y angle in radians
         const rotYRad = ((loc.rotationY || 0) * Math.PI) / 180;
+        const glbUrl = manifestEntry ? `${baseUrl}${manifestEntry.glbPath}`.replace(/\/+/g, '/') : '';
 
         return (
           <group
@@ -262,7 +257,7 @@ export const Buildings: React.FC<BuildingsProps> = ({
             {useGLB ? (
               <GLBErrorBoundary fallback={fallback}>
                 <Suspense fallback={fallback}>
-                  <GLBModel url={manifestEntry.glbPath} onClick={handleClick} />
+                  <GLBModel url={glbUrl} onClick={handleClick} />
                 </Suspense>
               </GLBErrorBoundary>
             ) : (

@@ -2,7 +2,9 @@ import React, { Suspense } from 'react';
 import { useTexture } from '@react-three/drei';
 
 function TexturedMapGround() {
-  const mapTexture = useTexture('/assets/map/Map.png');
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const mapPath = `${baseUrl}assets/map/Map.png`.replace(/\/+/g, '/');
+  const mapTexture = useTexture(mapPath);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
@@ -24,7 +26,7 @@ function FallbackGround() {
 export const Terrain: React.FC = () => {
   return (
     <group>
-      {/* 3D Ground Plane using Map Image from /assets/map/Map.png */}
+      {/* 3D Ground Plane using Map Image from assets/map/Map.png */}
       <Suspense fallback={<FallbackGround />}>
         <TexturedMapGround />
       </Suspense>

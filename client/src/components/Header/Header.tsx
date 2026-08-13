@@ -31,7 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <div>
             <h1 className="text-lg font-black tracking-tight text-white flex items-center gap-1.5 leading-none">
-              WayFinder
+              RECNavigator
               <span className="text-[10px] bg-rec-gold/20 text-rec-gold font-bold px-2 py-0.5 rounded-full border border-rec-gold/30">
                 REC CHENNAI
               </span>
