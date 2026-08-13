@@ -19,7 +19,7 @@ export function App() {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [destinationLocation, setDestinationLocation] = useState<Location | null>(null);
-  const [activeTab, setActiveTab] = useState<'map' | 'directions' | 'places' | 'about' | 'admin'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'places' | 'about' | 'admin'>('map');
   
   // Mobile Bottom Sheet State
   const [mobileSheetMode, setMobileSheetMode] = useState<'none' | 'location' | 'directions'>('none');
@@ -58,7 +58,7 @@ export function App() {
     : null;
 
   return (
-    <div className="min-h-screen bg-slate-900 font-sans flex flex-col antialiased selection:bg-rec-blue selection:text-white">
+    <div className="min-h-screen bg-slate-950 font-sans flex flex-col antialiased selection:bg-rec-blue selection:text-white">
       {/* Top Main Navigation Header */}
       <Header
         locations={locations}
@@ -69,7 +69,6 @@ export function App() {
         activeTab={activeTab}
         onChangeTab={(tab) => {
           setActiveTab(tab);
-          if (tab === 'directions') setMobileSheetMode('directions');
         }}
         onLocateUser={handleLocateUser}
       />
@@ -84,37 +83,13 @@ export function App() {
             startLocation={startLocation}
             setStartLocation={(loc) => {
               setStartLocation(loc);
-              if (loc && destinationLocation) setMobileSheetMode('directions');
             }}
             destinationLocation={destinationLocation}
             setDestinationLocation={(loc) => {
               setDestinationLocation(loc);
-              if (startLocation && loc) setMobileSheetMode('directions');
             }}
             activeTab={activeTab}
           />
-        )}
-
-        {activeTab === 'directions' && (
-          <div className="h-[calc(100vh-65px)] overflow-y-auto max-w-xl mx-auto p-4 pt-6 pb-24">
-            <DirectionsPanel
-              locations={locations}
-              startLocation={startLocation}
-              destinationLocation={destinationLocation}
-              onSelectStart={setStartLocation}
-              onSelectDestination={setDestinationLocation}
-              onSwapLocations={() => {
-                const temp = startLocation;
-                setStartLocation(destinationLocation);
-                setDestinationLocation(temp);
-              }}
-              onClearDirections={() => {
-                setStartLocation(null);
-                setDestinationLocation(null);
-              }}
-              activeRoute={activeRoute}
-            />
-          </div>
         )}
 
         {activeTab === 'places' && (
@@ -128,7 +103,6 @@ export function App() {
             onSetAsDestination={(loc) => {
               setDestinationLocation(loc);
               setActiveTab('map');
-              setMobileSheetMode('directions');
             }}
           />
         )}
@@ -198,7 +172,6 @@ export function App() {
         activeTab={activeTab}
         onChangeTab={(tab) => {
           setActiveTab(tab);
-          if (tab === 'directions') setMobileSheetMode('directions');
         }}
       />
     </div>

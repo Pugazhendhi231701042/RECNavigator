@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import { ZoomIn, ZoomOut, RotateCcw, RotateCw, Maximize2, Tag, Waypoints, Sun } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, RotateCw, Maximize2, Tag, Waypoints, Sun, SlidersHorizontal, ChevronRight } from 'lucide-react';
 
 interface MapControlsProps {
   showLabels: boolean;
@@ -23,6 +23,9 @@ export const MapControls: React.FC<MapControlsProps> = ({
   onResetCamera,
   controlsRef,
 }) => {
+  // Collapsable state: default collapsed (false)
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
   const handleZoomIn = () => {
     if (controlsRef.current) {
       controlsRef.current.dollyIn(1.25);
@@ -70,8 +73,34 @@ export const MapControls: React.FC<MapControlsProps> = ({
     else onChangeBrightness(1.2);
   };
 
+  // IF COLLAPSED: RENDER SINGLE GLASS FLOATING TOGGLE BUTTON
+  if (!isExpanded) {
+    return (
+      <div className="absolute top-4 right-4 z-30">
+        <button
+          onClick={() => setIsExpanded(true)}
+          title="Expand 3D Camera & Map Controls"
+          className="p-3.5 bg-slate-900/80 hover:bg-slate-900/95 backdrop-blur-2xl border border-slate-700/80 rounded-2xl shadow-2xl text-amber-400 flex items-center justify-center transition-all transform active:scale-95 group ring-1 ring-white/10"
+        >
+          <SlidersHorizontal className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+        </button>
+      </div>
+    );
+  }
+
+  // IF EXPANDED: RENDER FULL VERTICAL TOOLBAR WITH COLLAPSE BUTTON
   return (
-    <div className="absolute top-4 right-4 z-30 flex flex-col gap-2 bg-slate-900/90 backdrop-blur-md p-2 rounded-2xl border border-slate-700/80 shadow-2xl text-white">
+    <div className="absolute top-4 right-4 z-30 flex flex-col gap-2 bg-slate-900/90 backdrop-blur-2xl p-2 rounded-2xl border border-slate-700/80 shadow-2xl text-white ring-1 ring-white/10 animate-in fade-in zoom-in-95 duration-200">
+      {/* Collapse Header Button */}
+      <button
+        onClick={() => setIsExpanded(false)}
+        title="Collapse Controls Toolbar"
+        className="p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-colors flex items-center justify-between gap-1 text-[11px] font-bold px-2.5 mb-1 border-b border-slate-800"
+      >
+        <span className="text-amber-400 font-extrabold uppercase tracking-wider text-[10px]">Controls</span>
+        <ChevronRight className="w-4 h-4 text-slate-400" />
+      </button>
+
       {/* Zoom In */}
       <button
         onClick={handleZoomIn}
@@ -90,7 +119,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         <ZoomOut className="w-5 h-5" />
       </button>
 
-      <div className="w-full h-px bg-slate-700/80 my-0.5" />
+      <div className="w-full h-px bg-slate-800/80 my-0.5" />
 
       {/* Rotate Left */}
       <button
@@ -110,12 +139,12 @@ export const MapControls: React.FC<MapControlsProps> = ({
         <RotateCw className="w-5 h-5" />
       </button>
 
-      <div className="w-full h-px bg-slate-700/80 my-0.5" />
+      <div className="w-full h-px bg-slate-800/80 my-0.5" />
 
       {/* Brightness Adjustment Button */}
       <button
         onClick={cycleBrightness}
-        title={`Scene Brightness: ${(brightness).toFixed(1)}x (Click to cycle)`}
+        title={`Scene Brightness: ${brightness.toFixed(1)}x (Click to cycle)`}
         className="p-2.5 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 text-amber-400 hover:bg-slate-800"
       >
         <Sun className="w-5 h-5" />
