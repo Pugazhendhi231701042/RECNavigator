@@ -1,56 +1,42 @@
 import React from 'react';
-import type { Category, CategoryId } from '../../types';
+import type { CategoryId } from '../../types';
 import { CATEGORIES } from '../../data/recCampusData';
-import { GraduationCap, Utensils, Home, Trophy, Car, DoorOpen, Building2, Sparkles, Layers } from 'lucide-react';
 
 interface CategoryFilterProps {
   selectedCategory: CategoryId | 'all';
-  onSelectCategory: (catId: CategoryId | 'all') => void;
+  onSelectCategory: (category: CategoryId | 'all') => void;
 }
-
-const iconMap: Record<string, React.ReactNode> = {
-  GraduationCap: <GraduationCap className="w-4 h-4" />,
-  Utensils: <Utensils className="w-4 h-4" />,
-  Home: <Home className="w-4 h-4" />,
-  Trophy: <Trophy className="w-4 h-4" />,
-  Car: <Car className="w-4 h-4" />,
-  DoorOpen: <DoorOpen className="w-4 h-4" />,
-  Building2: <Building2 className="w-4 h-4" />,
-  Sparkles: <Sparkles className="w-4 h-4" />,
-};
 
 export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   selectedCategory,
   onSelectCategory,
 }) => {
   return (
-    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 px-1">
+    <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar select-none">
       <button
         onClick={() => onSelectCategory('all')}
-        className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 flex items-center gap-1.5 transition-all shadow-sm ${
+        className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition-all shrink-0 active:scale-95 border ${
           selectedCategory === 'all'
-            ? 'bg-rec-blue text-white shadow-rec-blue/20'
-            : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+            ? 'bg-[#6A1B9A] text-white border-purple-300 shadow-md ring-2 ring-purple-200'
+            : 'bg-white text-[#6A1B9A] border-purple-200 hover:bg-purple-50'
         }`}
       >
-        <Layers className="w-3.5 h-3.5" />
         All Places
       </button>
 
-      {CATEGORIES.map((cat: Category) => {
+      {CATEGORIES.map(cat => {
         const isSelected = selectedCategory === cat.id;
         return (
           <button
             key={cat.id}
             onClick={() => onSelectCategory(cat.id)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 flex items-center gap-1.5 transition-all shadow-sm ${
+            className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition-all shrink-0 active:scale-95 flex items-center gap-1.5 border ${
               isSelected
-                ? 'bg-rec-blue text-white shadow-rec-blue/20'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                ? 'bg-[#6A1B9A] text-white border-purple-300 shadow-md ring-2 ring-purple-200'
+                : 'bg-white text-slate-700 border-purple-100 hover:bg-purple-50 hover:text-[#6A1B9A]'
             }`}
           >
-            {iconMap[cat.icon] || <Building2 className="w-3.5 h-3.5" />}
-            {cat.name}
+            <span>{cat.name}</span>
           </button>
         );
       })}

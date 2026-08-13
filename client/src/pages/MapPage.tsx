@@ -94,45 +94,45 @@ export const MapPage: React.FC<MapPageProps> = ({
   const isDestinationReached = activeRoute && currentStepIndex === activeRoute.steps.length - 1;
 
   return (
-    <div className="relative w-full h-[calc(100vh-65px)] flex overflow-hidden bg-slate-950">
-      {/* LEFT SIDEBAR (Desktop >= 1024px) with Ultra Premium Glassmorphism */}
-      <div className="hidden lg:flex flex-col w-[380px] bg-slate-900/80 backdrop-blur-2xl border-r border-slate-800/80 z-20 shadow-2xl overflow-y-auto text-white">
+    <div className="relative w-full h-[calc(100vh-65px)] flex overflow-hidden bg-[#FAFAFA]">
+      {/* LEFT SIDEBAR (Desktop >= 1024px) - Ultra Premium Purple & White Glassmorphism */}
+      <div className="hidden lg:flex flex-col w-[380px] bg-white/95 backdrop-blur-2xl border-r border-purple-100/90 z-20 shadow-2xl overflow-y-auto text-slate-900">
         <div className="p-4 space-y-4">
           
           {/* 1. DIRECTIONS BUTTON (POSITIONED ABOVE FILTER CATEGORIES) */}
           <div className="space-y-3">
             <button
               onClick={() => setShowDirections(prev => !prev)}
-              className={`w-full py-3 px-4 rounded-2xl font-black text-xs flex items-center justify-between transition-all shadow-lg active:scale-98 border ${
+              className={`w-full py-3.5 px-4 rounded-2xl font-black text-xs flex items-center justify-between transition-all shadow-md active:scale-98 border ${
                 showDirections || (startLocation && destinationLocation)
-                  ? 'bg-gradient-to-r from-rec-blue via-blue-600 to-indigo-700 text-white border-blue-400/40 ring-1 ring-white/20'
-                  : 'bg-slate-800/80 hover:bg-slate-800 text-slate-200 border-slate-700/70 hover:border-slate-600'
+                  ? 'bg-gradient-to-r from-[#6A1B9A] via-purple-700 to-[#4A148C] text-white border-purple-300 ring-2 ring-amber-400/50'
+                  : 'bg-[#FAFAFA] hover:bg-purple-50 text-[#6A1B9A] border-purple-200/80 hover:border-purple-300'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Navigation className="w-4 h-4 text-amber-400" />
+                <Navigation className="w-4.5 h-4.5 text-[#D97706]" />
                 <span>Directions {startLocation && destinationLocation ? '(Active Route)' : ''}</span>
               </div>
-              <span className="text-[10px] font-extrabold uppercase bg-white/10 px-2 py-0.5 rounded-full text-amber-300">
+              <span className="text-[10px] font-extrabold uppercase bg-amber-100 text-[#D97706] px-2.5 py-0.5 rounded-full border border-amber-300">
                 {showDirections ? 'Close' : 'Open'}
               </span>
             </button>
 
             {/* 2. DIRECTIONS FROM [] - TO [] PANEL & STEP NAVIGATION */}
             {showDirections && (
-              <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl space-y-3 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">
+              <div className="bg-white border border-purple-100 p-4 rounded-2xl space-y-3 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="flex items-center justify-between pb-2 border-b border-purple-100">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#6A1B9A]">
                     Find Shortest Walking Route
                   </span>
-                  <button onClick={handleClearDirections} className="text-slate-400 hover:text-white text-xs">
+                  <button onClick={handleClearDirections} className="text-[#6A7282] hover:text-[#6A1B9A] text-xs">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
                 {/* From Location Picker */}
                 <div>
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1">
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-[#6A7282] mb-1">
                     From (Starting Point)
                   </label>
                   <select
@@ -142,7 +142,7 @@ export const MapPage: React.FC<MapPageProps> = ({
                       setStartLocation(loc);
                       setIsNavigating(false);
                     }}
-                    className="w-full py-2 px-3 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-rec-blue"
+                    className="w-full py-2.5 px-3 bg-[#FAFAFA] border border-purple-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#6A1B9A]"
                   >
                     <option value="">-- Select Starting Point --</option>
                     {locations.map(loc => (
@@ -156,7 +156,7 @@ export const MapPage: React.FC<MapPageProps> = ({
                   <button
                     onClick={handleSwap}
                     title="Swap Start and Destination"
-                    className="p-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 rounded-full shadow-md transition-transform hover:rotate-180 duration-300"
+                    className="p-1.5 bg-white hover:bg-purple-50 border border-purple-200 text-[#D97706] rounded-full shadow-md transition-transform hover:rotate-180 duration-300"
                   >
                     <ArrowUpDown className="w-3.5 h-3.5" />
                   </button>
@@ -164,7 +164,7 @@ export const MapPage: React.FC<MapPageProps> = ({
 
                 {/* To Location Picker */}
                 <div>
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1">
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-[#6A7282] mb-1">
                     To (Destination)
                   </label>
                   <select
@@ -174,7 +174,7 @@ export const MapPage: React.FC<MapPageProps> = ({
                       setDestinationLocation(loc);
                       setIsNavigating(false);
                     }}
-                    className="w-full py-2 px-3 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-rec-blue"
+                    className="w-full py-2.5 px-3 bg-[#FAFAFA] border border-purple-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#6A1B9A]"
                   >
                     <option value="">-- Select Destination --</option>
                     {locations.map(loc => (
@@ -187,47 +187,47 @@ export const MapPage: React.FC<MapPageProps> = ({
                 {activeRoute && (
                   <div className="pt-2 space-y-3">
                     <div className="grid grid-cols-2 gap-2 text-center">
-                      <div className="bg-slate-800/80 p-2 rounded-xl border border-slate-700/80">
-                        <p className="text-[10px] text-slate-400 uppercase font-bold">Distance</p>
-                        <p className="text-sm font-black text-amber-400">{activeRoute.distance} m</p>
+                      <div className="bg-purple-50/80 p-2.5 rounded-xl border border-purple-100">
+                        <p className="text-[10px] text-[#6A7282] uppercase font-bold">Distance</p>
+                        <p className="text-sm font-black text-[#6A1B9A]">{activeRoute.distance} m</p>
                       </div>
-                      <div className="bg-slate-800/80 p-2 rounded-xl border border-slate-700/80">
-                        <p className="text-[10px] text-slate-400 uppercase font-bold">Walk Time</p>
-                        <p className="text-sm font-black text-emerald-400">{activeRoute.walkingTime} min</p>
+                      <div className="bg-amber-50/80 p-2.5 rounded-xl border border-amber-100">
+                        <p className="text-[10px] text-[#6A7282] uppercase font-bold">Walk Time</p>
+                        <p className="text-sm font-black text-[#D97706]">{activeRoute.walkingTime} min</p>
                       </div>
                     </div>
 
                     {!isNavigating ? (
                       <button
                         onClick={handleStartNavigation}
-                        className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs rounded-xl shadow-xl transition-all flex items-center justify-center gap-2 active:scale-98"
+                        className="w-full py-3 bg-gradient-to-r from-[#6A1B9A] to-purple-800 hover:from-purple-800 hover:to-[#6A1B9A] text-white font-black text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-98 border border-amber-400/40"
                       >
-                        <Play className="w-4 h-4 fill-current" />
-                        Start Navigation
+                        <Play className="w-4 h-4 fill-current text-amber-300" />
+                        Start 3D Navigation
                       </button>
                     ) : (
                       <div className="space-y-2">
                         {/* ACTIVE STEP CARD */}
-                        <div className="p-3 bg-slate-800 rounded-xl border border-emerald-500/50 space-y-2 shadow-lg">
-                          <div className="flex items-center justify-between text-[10px] font-bold text-emerald-400">
+                        <div className="p-3 bg-purple-50/90 rounded-xl border border-purple-300 space-y-2 shadow-sm">
+                          <div className="flex items-center justify-between text-[10px] font-extrabold text-[#6A1B9A]">
                             <span>Step {currentStepIndex + 1} of {activeRoute.steps.length}</span>
-                            <span>{activeRoute.steps[currentStepIndex].distance}m</span>
+                            <span className="text-[#D97706] font-mono">{activeRoute.steps[currentStepIndex].distance}m</span>
                           </div>
 
-                          <p className="text-xs font-extrabold text-white leading-snug">
+                          <p className="text-xs font-black text-slate-900 leading-snug">
                             {activeRoute.steps[currentStepIndex].instruction}
                           </p>
 
                           {/* DESTINATION REACHED NOTIFICATION OR NEXT STEP BUTTON */}
                           {isDestinationReached ? (
-                            <div className="p-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-lg text-center space-y-1 animate-in zoom-in-95">
+                            <div className="p-3 bg-gradient-to-r from-[#D97706] to-amber-500 rounded-xl text-center space-y-1.5 shadow-md animate-in zoom-in-95">
                               <p className="text-xs font-black text-white flex items-center justify-center gap-1.5">
-                                <Flag className="w-4 h-4 text-amber-300" />
+                                <Flag className="w-4 h-4 text-amber-200" />
                                 Destination Reached! 🏁
                               </p>
                               <button
                                 onClick={handleClearDirections}
-                                className="px-3 py-1 bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold rounded-md transition-colors"
+                                className="px-3 py-1 bg-white/20 hover:bg-white/30 text-white text-[10px] font-extrabold rounded-md transition-colors"
                               >
                                 Finish Navigation
                               </button>
@@ -235,10 +235,10 @@ export const MapPage: React.FC<MapPageProps> = ({
                           ) : (
                             <button
                               onClick={handleNextStep}
-                              className="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-lg shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-98"
+                              className="w-full py-2.5 bg-[#6A1B9A] hover:bg-purple-800 text-white font-extrabold text-xs rounded-lg shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-98"
                             >
                               <span>Next Step</span>
-                              <ChevronRight className="w-4 h-4" />
+                              <ChevronRight className="w-4 h-4 text-amber-300" />
                             </button>
                           )}
                         </div>
@@ -252,7 +252,7 @@ export const MapPage: React.FC<MapPageProps> = ({
 
           {/* 3. FILTER CATEGORIES */}
           <div>
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5 px-1">
+            <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-[#6A1B9A] mb-1.5 px-1">
               Filter Categories
             </h4>
             <CategoryFilter
@@ -278,10 +278,10 @@ export const MapPage: React.FC<MapPageProps> = ({
           )}
 
           {!selectedLocation && !showDirections && (
-            <div className="bg-slate-800/40 p-5 rounded-2xl border border-slate-700/60 text-center space-y-2">
-              <p className="text-xs font-extrabold text-white">Interactive 3D REC Campus</p>
-              <p className="text-[11px] text-slate-400">
-                Click any 3D building model to inspect facilities, or click <strong className="text-amber-400">Directions</strong> above to find shortest walking paths!
+            <div className="bg-white p-5 rounded-2xl border border-purple-100 text-center space-y-2 shadow-sm">
+              <p className="text-xs font-extrabold text-[#6A1B9A]">Interactive 3D REC Campus</p>
+              <p className="text-[11px] text-[#6A7282]">
+                Click any 3D building model to inspect facilities, or click <strong className="text-[#D97706]">Directions</strong> above to find shortest walking paths!
               </p>
             </div>
           )}
@@ -293,21 +293,21 @@ export const MapPage: React.FC<MapPageProps> = ({
         <SearchBar locations={locations} onSelectLocation={onSelectLocation} />
         <button
           onClick={() => setShowDirections(prev => !prev)}
-          className="w-full py-2.5 px-4 bg-gradient-to-r from-rec-blue to-indigo-700 text-white rounded-xl text-xs font-bold shadow-lg flex items-center justify-between"
+          className="w-full py-2.5 px-4 bg-[#6A1B9A] text-white rounded-xl text-xs font-bold shadow-lg flex items-center justify-between"
         >
           <span className="flex items-center gap-1.5">
-            <Navigation className="w-4 h-4 text-amber-400" />
+            <Navigation className="w-4 h-4 text-amber-300" />
             Directions From - To
           </span>
           <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">{showDirections ? 'Close' : 'Open'}</span>
         </button>
 
         {showDirections && (
-          <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl space-y-2 shadow-2xl text-white text-xs">
+          <div className="bg-white border border-purple-200 p-3 rounded-xl space-y-2 shadow-2xl text-slate-900 text-xs">
             <select
               value={startLocation?.id || ''}
               onChange={(e) => setStartLocation(locations.find(l => l.id === e.target.value) || null)}
-              className="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-xs"
+              className="w-full p-2 bg-[#FAFAFA] border border-purple-200 rounded-lg text-xs"
             >
               <option value="">-- From (Start) --</option>
               {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
@@ -315,7 +315,7 @@ export const MapPage: React.FC<MapPageProps> = ({
             <select
               value={destinationLocation?.id || ''}
               onChange={(e) => setDestinationLocation(locations.find(l => l.id === e.target.value) || null)}
-              className="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-xs"
+              className="w-full p-2 bg-[#FAFAFA] border border-purple-200 rounded-lg text-xs"
             >
               <option value="">-- To (Destination) --</option>
               {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
@@ -324,19 +324,19 @@ export const MapPage: React.FC<MapPageProps> = ({
             {activeRoute && !isNavigating && (
               <button
                 onClick={handleStartNavigation}
-                className="w-full py-2 bg-emerald-500 text-white font-bold rounded-lg text-xs"
+                className="w-full py-2 bg-[#6A1B9A] text-white font-bold rounded-lg text-xs"
               >
                 Start Navigation
               </button>
             )}
 
             {isNavigating && activeRoute && (
-              <div className="p-2 bg-slate-800 border border-emerald-500 rounded-lg space-y-1">
-                <p className="font-bold text-emerald-400">Step {currentStepIndex + 1}: {activeRoute.steps[currentStepIndex].instruction}</p>
+              <div className="p-2 bg-purple-50 border border-purple-300 rounded-lg space-y-1">
+                <p className="font-bold text-[#6A1B9A]">Step {currentStepIndex + 1}: {activeRoute.steps[currentStepIndex].instruction}</p>
                 {isDestinationReached ? (
-                  <p className="text-amber-400 font-bold">Destination Reached! 🏁</p>
+                  <p className="text-[#D97706] font-bold">Destination Reached! 🏁</p>
                 ) : (
-                  <button onClick={handleNextStep} className="w-full py-1 bg-emerald-500 text-white font-bold rounded">Next Step</button>
+                  <button onClick={handleNextStep} className="w-full py-1 bg-[#6A1B9A] text-white font-bold rounded">Next Step</button>
                 )}
               </div>
             )}

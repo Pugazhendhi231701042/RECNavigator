@@ -95,19 +95,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   // IF NOT AUTHENTICATED: RENDER ADMIN LOGIN PASSWORD GATE
   if (!isAuthenticated) {
     return (
-      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4 bg-slate-950">
-        <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 text-white text-center relative overflow-hidden">
+      <div className="w-full min-h-[calc(100vh-65px)] flex items-center justify-center p-4 bg-[#FAFAFA]">
+        <div className="w-full max-w-md bg-white border border-purple-100 rounded-3xl p-8 shadow-2xl space-y-6 text-slate-900 text-center relative overflow-hidden">
           {/* Top Decorative Glow */}
-          <div className="absolute -top-24 -left-24 w-48 h-48 bg-rec-blue/30 rounded-full blur-3xl" />
-          <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-rec-gold/20 rounded-full blur-3xl" />
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-purple-100 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-amber-100 rounded-full blur-3xl" />
 
           {/* Lock Header */}
           <div className="relative space-y-3">
-            <div className="w-16 h-16 bg-slate-800 border border-slate-700 rounded-2xl mx-auto flex items-center justify-center text-rec-gold shadow-lg">
+            <div className="w-16 h-16 bg-purple-50 border border-purple-200 rounded-2xl mx-auto flex items-center justify-center text-[#D97706] shadow-md">
               <Lock className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-black tracking-tight">Admin Portal Access</h2>
-            <p className="text-xs text-slate-400">
+            <h2 className="text-2xl font-black text-[#6A1B9A] tracking-tight">Admin Portal Access</h2>
+            <p className="text-xs text-[#6A7282]">
               Enter the administrator password to manage 3D building positions, rotation angles, and road network settings.
             </p>
           </div>
@@ -115,8 +115,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           {/* Password Form */}
           <form onSubmit={handleLogin} className="space-y-4 text-left relative">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <KeyRound className="w-3.5 h-3.5 text-rec-gold" />
+              <label className="block text-xs font-extrabold text-[#6A1B9A] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <KeyRound className="w-3.5 h-3.5 text-[#D97706]" />
                 Admin Password
               </label>
               <input
@@ -127,23 +127,23 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                   if (authError) setAuthError('');
                 }}
                 placeholder="Enter admin password..."
-                className="w-full py-3 px-4 bg-slate-800 border border-slate-700 rounded-xl text-sm font-medium text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rec-blue transition-all"
+                className="w-full py-3 px-4 bg-[#FAFAFA] border border-purple-200 rounded-xl text-sm font-bold text-slate-900 placeholder-[#6A7282] focus:outline-none focus:ring-2 focus:ring-[#6A1B9A] transition-all"
                 autoFocus
               />
             </div>
 
             {authError && (
-              <div className="p-3 bg-red-950/80 border border-red-800/80 rounded-xl text-red-300 text-xs flex items-center gap-2 animate-in fade-in">
-                <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs flex items-center gap-2 animate-in fade-in">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
                 <span>{authError}</span>
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full py-3.5 bg-rec-blue hover:bg-rec-blue-dark text-white font-extrabold text-sm rounded-xl shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-[#6A1B9A] hover:bg-purple-800 text-white font-extrabold text-sm rounded-xl shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2"
             >
-              <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4 text-amber-300" />
               Unlock Admin Portal
             </button>
           </form>
@@ -154,277 +154,279 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
   // IF AUTHENTICATED: RENDER FULL ADMIN PORTAL
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 space-y-6 pb-24 text-white">
-      {/* Header Banner */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-rec-gold text-xs font-bold uppercase tracking-wider mb-1">
-            <ShieldCheck className="w-4 h-4" />
-            Authenticated Administrator Portal
-          </div>
-          <h2 className="text-2xl font-black">Visual 3D Building Rotation & Map Alignment</h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Rotate buildings, adjust 3D positions, toggle roads, and align models over the campus map texture.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setActiveTab('editor')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'editor' ? 'bg-rec-blue text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-            }`}
-          >
-            Live 3D Position & Rotation Editor
-          </button>
-          <button
-            onClick={() => setActiveTab('locations')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'locations' ? 'bg-rec-blue text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-            }`}
-          >
-            Locations ({locations.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('graph')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'graph' ? 'bg-rec-blue text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-            }`}
-          >
-            Graph Nodes ({PATH_NODES.length})
-          </button>
-          <button
-            onClick={handleLogout}
-            title="Lock Admin Portal"
-            className="p-2 bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800/80 rounded-xl transition-all"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* LIVE 3D POSITION & ROTATION EDITOR TAB */}
-      {activeTab === 'editor' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 3D Viewport Preview (Col-span 2) */}
-          <div className="lg:col-span-2 bg-slate-950 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden h-[540px] relative">
-            <CampusScene
-              locations={locations}
-              selectedLocation={selectedLoc}
-              onSelectLocation={handleSelectBuildingToEdit}
-              activeRoute={null}
-              startLocation={null}
-              destinationLocation={null}
-              showLabels={true}
-              showRoads={true}
-              controlsRef={{ current: null }}
-            />
-            <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 text-xs font-bold flex items-center gap-2">
-              <Compass className="w-4 h-4 text-rec-gold" />
-              Live 3D Preview (Click building to rotate/move)
+    <div className="w-full min-h-[calc(100vh-65px)] bg-[#FAFAFA] text-slate-900">
+      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6 pb-24">
+        {/* Header Banner */}
+        <div className="bg-white border border-purple-100 p-6 rounded-3xl shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-[#D97706] text-xs font-extrabold uppercase tracking-wider mb-1">
+              <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+              Authenticated Administrator Portal
             </div>
+            <h2 className="text-2xl font-black text-[#6A1B9A]">Visual 3D Building Rotation & Map Alignment</h2>
+            <p className="text-xs text-[#6A7282] mt-1">
+              Rotate buildings, adjust 3D positions, toggle roads, and align models over the campus map texture.
+            </p>
           </div>
 
-          {/* Real-time Controls & Rotation Slider Panel */}
-          <div className="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-4 flex flex-col justify-between">
-            <div className="space-y-4">
-              <h3 className="text-sm font-bold text-white flex items-center justify-between">
-                <span>Building Rotation & Coordinates</span>
-                <span className="text-xs bg-rec-blue px-2.5 py-0.5 rounded-full text-white font-mono">
-                  {selectedLoc?.id}
-                </span>
-              </h3>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setActiveTab('editor')}
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
+                activeTab === 'editor' ? 'bg-[#6A1B9A] text-white shadow-md' : 'bg-purple-50 text-[#6A1B9A] hover:bg-purple-100'
+              }`}
+            >
+              Live 3D Editor
+            </button>
+            <button
+              onClick={() => setActiveTab('locations')}
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
+                activeTab === 'locations' ? 'bg-[#6A1B9A] text-white shadow-md' : 'bg-purple-50 text-[#6A1B9A] hover:bg-purple-100'
+              }`}
+            >
+              Locations ({locations.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('graph')}
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
+                activeTab === 'graph' ? 'bg-[#6A1B9A] text-white shadow-md' : 'bg-purple-50 text-[#6A1B9A] hover:bg-purple-100'
+              }`}
+            >
+              Graph Nodes ({PATH_NODES.length})
+            </button>
+            <button
+              onClick={handleLogout}
+              title="Lock Admin Portal"
+              className="p-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
 
-              {/* Select Building Dropdown */}
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Building / Landmark</label>
-                <select
-                  value={selectedLocId}
-                  onChange={(e) => {
-                    const loc = locations.find(l => l.id === e.target.value);
-                    if (loc) handleSelectBuildingToEdit(loc);
-                  }}
-                  className="w-full py-2.5 px-3 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-rec-blue"
+        {/* LIVE 3D POSITION & ROTATION EDITOR TAB */}
+        {activeTab === 'editor' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* 3D Viewport Preview (Col-span 2) */}
+            <div className="lg:col-span-2 bg-slate-950 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden h-[540px] relative">
+              <CampusScene
+                locations={locations}
+                selectedLocation={selectedLoc}
+                onSelectLocation={handleSelectBuildingToEdit}
+                activeRoute={null}
+                startLocation={null}
+                destinationLocation={null}
+                showLabels={true}
+                showRoads={true}
+                controlsRef={{ current: null }}
+              />
+              <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-purple-200 text-xs font-bold text-[#6A1B9A] flex items-center gap-2 shadow-md">
+                <Compass className="w-4 h-4 text-[#D97706]" />
+                Live 3D Preview (Click building to rotate/move)
+              </div>
+            </div>
+
+            {/* Real-time Controls & Rotation Slider Panel */}
+            <div className="bg-white p-5 rounded-3xl border border-purple-100 shadow-xl space-y-4 flex flex-col justify-between">
+              <div className="space-y-4">
+                <h3 className="text-sm font-black text-[#6A1B9A] flex items-center justify-between">
+                  <span>Building Rotation & Coordinates</span>
+                  <span className="text-xs bg-[#6A1B9A] px-2.5 py-0.5 rounded-full text-white font-mono">
+                    {selectedLoc?.id}
+                  </span>
+                </h3>
+
+                {/* Select Building Dropdown */}
+                <div>
+                  <label className="block text-xs font-extrabold text-[#6A7282] uppercase mb-1">Building / Landmark</label>
+                  <select
+                    value={selectedLocId}
+                    onChange={(e) => {
+                      const loc = locations.find(l => l.id === e.target.value);
+                      if (loc) handleSelectBuildingToEdit(loc);
+                    }}
+                    className="w-full py-2.5 px-3 bg-[#FAFAFA] border border-purple-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#6A1B9A]"
+                  >
+                    {locations.map(loc => (
+                      <option key={loc.id} value={loc.id}>{loc.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Building Rotation Y Slider (0° to 360°) */}
+                <div className="bg-purple-50/80 p-3 rounded-2xl border border-purple-100 space-y-1">
+                  <div className="flex justify-between text-xs font-bold text-[#6A1B9A]">
+                    <span className="flex items-center gap-1.5 text-[#D97706]">
+                      <RotateCw className="w-3.5 h-3.5" />
+                      Rotate Building (Y Angle)
+                    </span>
+                    <span className="font-mono text-[#D97706]">{rotY}°</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={360}
+                    step={5}
+                    value={rotY}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setRotY(val);
+                      onUpdateLocation({ ...selectedLoc, rotationY: val });
+                    }}
+                    className="w-full accent-[#6A1B9A] cursor-pointer"
+                  />
+                </div>
+
+                {/* 3D X Position Slider (-300m to +300m) */}
+                <div>
+                  <div className="flex justify-between text-xs font-bold text-[#6A7282] mb-1">
+                    <span>3D Position X (West ↔ East)</span>
+                    <span className="text-[#6A1B9A] font-mono">{posX} m</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={-300}
+                    max={300}
+                    step={1}
+                    value={posX}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setPosX(val);
+                      onUpdateLocation({ ...selectedLoc, position: { ...selectedLoc.position, x: val } });
+                    }}
+                    className="w-full accent-[#6A1B9A] cursor-pointer"
+                  />
+                </div>
+
+                {/* 3D Z Position Slider (-300m to +300m) */}
+                <div>
+                  <div className="flex justify-between text-xs font-bold text-[#6A7282] mb-1">
+                    <span>3D Position Z (North ↔ South)</span>
+                    <span className="text-[#6A1B9A] font-mono">{posZ} m</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={-300}
+                    max={300}
+                    step={1}
+                    value={posZ}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setPosZ(val);
+                      onUpdateLocation({ ...selectedLoc, position: { ...selectedLoc.position, z: val } });
+                    }}
+                    className="w-full accent-[#6A1B9A] cursor-pointer"
+                  />
+                </div>
+
+                {/* Height Elevation Y Slider (0m to 20m) */}
+                <div>
+                  <div className="flex justify-between text-xs font-bold text-[#6A7282] mb-1">
+                    <span>Elevation Y (Height)</span>
+                    <span className="text-[#6A1B9A] font-mono">{posY} m</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={20}
+                    step={0.5}
+                    value={posY}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setPosY(val);
+                      onUpdateLocation({ ...selectedLoc, position: { ...selectedLoc.position, y: val } });
+                    }}
+                    className="w-full accent-[#6A1B9A] cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              {/* Action Footer */}
+              <div className="pt-3 border-t border-purple-100 space-y-2">
+                <button
+                  onClick={handleSaveCurrentLocation}
+                  className="w-full py-2.5 bg-[#6A1B9A] hover:bg-purple-800 text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-colors"
                 >
-                  {locations.map(loc => (
-                    <option key={loc.id} value={loc.id}>{loc.name}</option>
-                  ))}
-                </select>
+                  <Save className="w-4 h-4 text-amber-300" />
+                  Save Building Location & Rotation
+                </button>
+
+                <button
+                  onClick={handleCopyTsCode}
+                  className="w-full py-2 bg-[#FAFAFA] hover:bg-purple-50 text-[#6A1B9A] font-extrabold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-purple-200 transition-colors"
+                >
+                  {copiedCode ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                  {copiedCode ? 'Copied Dataset Code!' : 'Copy recCampusData.ts Code'}
+                </button>
               </div>
-
-              {/* Building Rotation Y Slider (0° to 360°) */}
-              <div className="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80 space-y-1">
-                <div className="flex justify-between text-xs font-bold text-slate-200">
-                  <span className="flex items-center gap-1.5 text-rec-gold">
-                    <RotateCw className="w-3.5 h-3.5" />
-                    Rotate Building (Y Angle)
-                  </span>
-                  <span className="font-mono text-rec-gold">{rotY}°</span>
-                </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={360}
-                  step={5}
-                  value={rotY}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    setRotY(val);
-                    onUpdateLocation({ ...selectedLoc, rotationY: val });
-                  }}
-                  className="w-full accent-rec-gold cursor-pointer"
-                />
-              </div>
-
-              {/* 3D X Position Slider (-300m to +300m) */}
-              <div>
-                <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
-                  <span>3D Position X (West ↔ East)</span>
-                  <span className="text-slate-300 font-mono">{posX} m</span>
-                </div>
-                <input
-                  type="range"
-                  min={-300}
-                  max={300}
-                  step={1}
-                  value={posX}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    setPosX(val);
-                    onUpdateLocation({ ...selectedLoc, position: { ...selectedLoc.position, x: val } });
-                  }}
-                  className="w-full accent-rec-blue cursor-pointer"
-                />
-              </div>
-
-              {/* 3D Z Position Slider (-300m to +300m) */}
-              <div>
-                <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
-                  <span>3D Position Z (North ↔ South)</span>
-                  <span className="text-slate-300 font-mono">{posZ} m</span>
-                </div>
-                <input
-                  type="range"
-                  min={-300}
-                  max={300}
-                  step={1}
-                  value={posZ}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    setPosZ(val);
-                    onUpdateLocation({ ...selectedLoc, position: { ...selectedLoc.position, z: val } });
-                  }}
-                  className="w-full accent-rec-blue cursor-pointer"
-                />
-              </div>
-
-              {/* Height Elevation Y Slider (0m to 20m) */}
-              <div>
-                <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
-                  <span>Elevation Y (Height)</span>
-                  <span className="text-slate-300 font-mono">{posY} m</span>
-                </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={20}
-                  step={0.5}
-                  value={posY}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    setPosY(val);
-                    onUpdateLocation({ ...selectedLoc, position: { ...selectedLoc.position, y: val } });
-                  }}
-                  className="w-full accent-rec-blue cursor-pointer"
-                />
-              </div>
-            </div>
-
-            {/* Action Footer */}
-            <div className="pt-3 border-t border-slate-800 space-y-2">
-              <button
-                onClick={handleSaveCurrentLocation}
-                className="w-full py-2.5 bg-rec-blue hover:bg-rec-blue-dark text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg transition-colors"
-              >
-                <Save className="w-4 h-4" />
-                Save Building Location & Rotation
-              </button>
-
-              <button
-                onClick={handleCopyTsCode}
-                className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition-colors"
-              >
-                {copiedCode ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                {copiedCode ? 'Copied Dataset Code!' : 'Copy recCampusData.ts Code'}
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* LOCATIONS LIST TAB */}
-      {activeTab === 'locations' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-rec-gold" />
-              All Verified REC 3D Buildings & Landmarks ({locations.length})
+        {/* LOCATIONS LIST TAB */}
+        {activeTab === 'locations' && (
+          <div className="bg-white border border-purple-100 rounded-3xl p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-purple-100 pb-4">
+              <h3 className="text-base font-black text-[#6A1B9A] flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-[#D97706]" />
+                All Verified REC 3D Buildings & Landmarks ({locations.length})
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {locations.map(loc => (
+                <div key={loc.id} className="p-4 bg-[#FAFAFA] rounded-2xl border border-purple-100 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-black text-[#6A1B9A]">{loc.name}</h4>
+                    <span className="text-[10px] bg-[#6A1B9A] px-2 py-0.5 rounded-full font-bold uppercase text-white">
+                      {loc.category}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#6A7282] line-clamp-2">{loc.description}</p>
+                  <p className="text-[11px] font-mono text-[#D97706] font-bold">
+                    Pos: ({loc.position.x}m, {loc.position.y}m, {loc.position.z}m) | RotY: {loc.rotationY || 0}°
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* PATH GRAPH OVERVIEW TAB */}
+        {activeTab === 'graph' && (
+          <div className="bg-white border border-purple-100 rounded-3xl p-6 shadow-xl space-y-4">
+            <h3 className="text-base font-black text-[#6A1B9A] flex items-center gap-2">
+              <Compass className="w-5 h-5 text-[#D97706]" />
+              3D Navigation Road Graph Definition ({PATH_NODES.length} Nodes & {PATH_EDGES.length} Edges)
             </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {locations.map(loc => (
-              <div key={loc.id} className="p-4 bg-slate-800/80 rounded-2xl border border-slate-700/70 space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-white">{loc.name}</h4>
-                  <span className="text-[10px] bg-rec-blue px-2 py-0.5 rounded-full font-bold uppercase text-white">
-                    {loc.category}
-                  </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border border-purple-100 bg-[#FAFAFA] rounded-2xl p-4 max-h-96 overflow-y-auto">
+                <h4 className="text-xs font-extrabold text-[#6A1B9A] uppercase mb-2">3D Graph Nodes</h4>
+                <div className="space-y-1.5 text-xs font-mono">
+                  {PATH_NODES.map(node => (
+                    <div key={node.id} className="p-2 bg-white rounded border border-purple-100 flex justify-between text-slate-800">
+                      <span>{node.name} (<span className="text-[#D97706] font-bold">{node.id}</span>)</span>
+                      <span className="text-[#6A7282]">({node.position.x}m, {node.position.z}m)</span>
+                    </div>
+                  ))}
                 </div>
-                <p className="text-xs text-slate-400 line-clamp-2">{loc.description}</p>
-                <p className="text-[11px] font-mono text-rec-gold">
-                  Pos: ({loc.position.x}m, {loc.position.y}m, {loc.position.z}m) | RotY: {loc.rotationY || 0}°
-                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
 
-      {/* PATH GRAPH OVERVIEW TAB */}
-      {activeTab === 'graph' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
-          <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <Compass className="w-5 h-5 text-rec-blue" />
-            3D Navigation Road Graph Definition ({PATH_NODES.length} Nodes & {PATH_EDGES.length} Edges)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="border border-slate-800 bg-slate-950 rounded-2xl p-4 max-h-96 overflow-y-auto">
-              <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">3D Graph Nodes</h4>
-              <div className="space-y-1.5 text-xs font-mono">
-                {PATH_NODES.map(node => (
-                  <div key={node.id} className="p-2 bg-slate-900 rounded border border-slate-800 flex justify-between">
-                    <span>{node.name} (<span className="text-rec-gold">{node.id}</span>)</span>
-                    <span className="text-slate-400">({node.position.x}m, {node.position.z}m)</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="border border-slate-800 bg-slate-950 rounded-2xl p-4 max-h-96 overflow-y-auto">
-              <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Graph Edges (Road Segments)</h4>
-              <div className="space-y-1.5 text-xs font-mono">
-                {PATH_EDGES.map(edge => (
-                  <div key={edge.id} className="p-2 bg-slate-900 rounded border border-slate-800 flex justify-between">
-                    <span>{edge.roadName || 'Road'}: {edge.from} ↔ {edge.to}</span>
-                    <span className="text-emerald-400 font-bold">{edge.distance}m</span>
-                  </div>
-                ))}
+              <div className="border border-purple-100 bg-[#FAFAFA] rounded-2xl p-4 max-h-96 overflow-y-auto">
+                <h4 className="text-xs font-extrabold text-[#6A1B9A] uppercase mb-2">Graph Edges (Road Segments)</h4>
+                <div className="space-y-1.5 text-xs font-mono">
+                  {PATH_EDGES.map(edge => (
+                    <div key={edge.id} className="p-2 bg-white rounded border border-purple-100 flex justify-between text-slate-800">
+                      <span>{edge.roadName || 'Road'}: {edge.from} ↔ {edge.to}</span>
+                      <span className="text-[#D97706] font-bold">{edge.distance}m</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

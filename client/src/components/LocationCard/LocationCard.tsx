@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Location } from '../../types';
 import { CATEGORIES } from '../../data/recCampusData';
-import { X, Navigation, MapPin, CheckCircle2, Layers, Compass } from 'lucide-react';
+import { Navigation, X, CheckCircle2, MapPin } from 'lucide-react';
 
 interface LocationCardProps {
   location: Location;
@@ -19,71 +19,61 @@ export const LocationCard: React.FC<LocationCardProps> = ({
   const categoryObj = CATEGORIES.find(c => c.id === location.category);
 
   return (
-    <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[80vh] w-full animate-in fade-in slide-in-from-bottom-4 duration-200">
-      {/* Header Image with Gradient Overlay */}
-      <div className="relative h-44 w-full bg-slate-800 shrink-0 overflow-hidden">
+    <div className="bg-white rounded-3xl shadow-2xl border border-purple-100/90 overflow-hidden flex flex-col w-full animate-in fade-in slide-in-from-bottom-4 duration-300">
+      {/* Image Header with Gradient Overlay */}
+      <div className="relative h-48 w-full bg-slate-100 overflow-hidden">
         <img
           src={location.image || 'https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=800&q=80'}
           alt={location.name}
-          className="w-full h-full object-cover opacity-90"
+          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
         
+        {/* Category Pill */}
+        <span
+          style={{ backgroundColor: categoryObj?.color || '#6A1B9A' }}
+          className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-wider shadow-md"
+        >
+          {categoryObj?.name || location.category}
+        </span>
+
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 p-1.5 bg-slate-900/60 hover:bg-slate-900 text-white rounded-full backdrop-blur-md transition-colors"
+          className="absolute top-3 right-3 p-2 bg-slate-900/60 hover:bg-slate-900 text-white rounded-full backdrop-blur-md transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* Category Badge */}
-        <div className="absolute bottom-3 left-4 flex items-center gap-2">
-          <span
-            style={{ backgroundColor: categoryObj?.color || '#2563EB' }}
-            className="px-2.5 py-0.5 rounded-full text-[11px] font-bold text-white uppercase tracking-wider shadow-md"
-          >
-            {categoryObj?.name || location.category}
-          </span>
-          {location.block && (
-            <span className="bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full text-[11px] font-semibold text-white">
-              {location.block} ({location.floorCount} Floors)
-            </span>
-          )}
+        {/* Building Name on Image */}
+        <div className="absolute bottom-3 left-3 right-3 text-white">
+          <h3 className="text-lg font-black tracking-tight drop-shadow-md leading-snug">
+            {location.name}
+          </h3>
         </div>
       </div>
 
-      {/* Location Details Section */}
-      <div className="p-5 overflow-y-auto flex-1 space-y-4">
-        <div>
-          <h2 className="text-xl font-extrabold text-slate-900 leading-tight">
-            {location.name}
-          </h2>
-          <p className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-            <MapPin className="w-3.5 h-3.5 text-rec-blue" />
-            Rajalakshmi Engineering College Campus
-          </p>
+      {/* Body Content */}
+      <div className="p-5 space-y-3.5 bg-white text-slate-900">
+        <p className="text-xs text-[#6A7282] leading-relaxed font-medium">
+          {location.description || 'Verified Rajalakshmi Engineering College campus building.'}
+        </p>
+
+        {/* Coordinates Badges */}
+        <div className="flex items-center gap-2 text-[11px] text-[#6A7282] font-mono bg-[#FAFAFA] p-2.5 rounded-xl border border-purple-100">
+          <MapPin className="w-3.5 h-3.5 text-[#D97706] shrink-0" />
+          <span>3D Coordinates: ({location.position.x}m, {location.position.z}m)</span>
         </div>
 
-        {/* Description */}
-        {location.description && (
-          <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
-            {location.description}
-          </p>
-        )}
-
-        {/* Facilities & Departments List */}
+        {/* Facilities List */}
         {location.facilities && location.facilities.length > 0 && (
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5" />
-              Departments & Facilities
-            </h4>
-            <div className="grid grid-cols-1 gap-1.5">
+          <div className="space-y-1.5 pt-1">
+            <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-[#6A1B9A]">Key Facilities</h4>
+            <div className="grid grid-cols-2 gap-1.5">
               {location.facilities.map((fac, idx) => (
-                <div key={idx} className="flex items-start gap-2 text-xs text-slate-700 font-medium">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                  <span>{fac}</span>
+                <div key={idx} className="flex items-center gap-1.5 text-xs text-slate-700 font-semibold bg-purple-50/60 p-2 rounded-xl">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#D97706] shrink-0" />
+                  <span className="line-clamp-1">{fac}</span>
                 </div>
               ))}
             </div>
@@ -91,20 +81,20 @@ export const LocationCard: React.FC<LocationCardProps> = ({
         )}
       </div>
 
-      {/* Action Buttons Footer */}
-      <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center gap-3 shrink-0">
+      {/* Footer Action Buttons */}
+      <div className="p-4 bg-[#FAFAFA] border-t border-purple-100 flex items-center gap-2">
         <button
           onClick={() => onSetAsStart(location)}
-          className="flex-1 py-2.5 px-3 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+          className="flex-1 py-2.5 px-3 bg-white hover:bg-purple-50 text-[#6A1B9A] border border-purple-200 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-colors shadow-sm"
         >
-          <Compass className="w-4 h-4" />
+          <Navigation className="w-3.5 h-3.5 text-[#D97706] rotate-45" />
           Directions From
         </button>
         <button
           onClick={() => onSetAsDestination(location)}
-          className="flex-1 py-2.5 px-3 bg-rec-blue hover:bg-rec-blue-dark text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-lg shadow-rec-blue/20 transition-all"
+          className="flex-1 py-2.5 px-3 bg-[#6A1B9A] hover:bg-purple-800 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md transition-colors"
         >
-          <Navigation className="w-4 h-4" />
+          <Navigation className="w-3.5 h-3.5 text-amber-300" />
           Directions To
         </button>
       </div>

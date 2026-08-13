@@ -23,7 +23,6 @@ export const MapControls: React.FC<MapControlsProps> = ({
   onResetCamera,
   controlsRef,
 }) => {
-  // Collapsable state: default collapsed (false)
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const handleZoomIn = () => {
@@ -73,39 +72,39 @@ export const MapControls: React.FC<MapControlsProps> = ({
     else onChangeBrightness(1.2);
   };
 
-  // IF COLLAPSED: RENDER SINGLE GLASS FLOATING TOGGLE BUTTON
+  // IF COLLAPSED: RENDER SINGLE WHITE/PURPLE GLASS FLOATING TOGGLE BUTTON
   if (!isExpanded) {
     return (
       <div className="absolute top-4 right-4 z-30">
         <button
           onClick={() => setIsExpanded(true)}
           title="Expand 3D Camera & Map Controls"
-          className="p-3.5 bg-slate-900/80 hover:bg-slate-900/95 backdrop-blur-2xl border border-slate-700/80 rounded-2xl shadow-2xl text-amber-400 flex items-center justify-center transition-all transform active:scale-95 group ring-1 ring-white/10"
+          className="p-3.5 bg-white/90 hover:bg-white backdrop-blur-2xl border border-purple-200 rounded-2xl shadow-xl text-[#6A1B9A] flex items-center justify-center transition-all transform active:scale-95 group ring-2 ring-purple-100/50"
         >
-          <SlidersHorizontal className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+          <SlidersHorizontal className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300 text-[#D97706]" />
         </button>
       </div>
     );
   }
 
-  // IF EXPANDED: RENDER FULL VERTICAL TOOLBAR WITH COLLAPSE BUTTON
+  // IF EXPANDED: RENDER FULL WHITE/PURPLE GLASS TOOLBAR
   return (
-    <div className="absolute top-4 right-4 z-30 flex flex-col gap-2 bg-slate-900/90 backdrop-blur-2xl p-2 rounded-2xl border border-slate-700/80 shadow-2xl text-white ring-1 ring-white/10 animate-in fade-in zoom-in-95 duration-200">
+    <div className="absolute top-4 right-4 z-30 flex flex-col gap-2 bg-white/95 backdrop-blur-2xl p-2 rounded-2xl border border-purple-200 shadow-2xl text-slate-900 ring-2 ring-purple-100/60 animate-in fade-in zoom-in-95 duration-200">
       {/* Collapse Header Button */}
       <button
         onClick={() => setIsExpanded(false)}
         title="Collapse Controls Toolbar"
-        className="p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-colors flex items-center justify-between gap-1 text-[11px] font-bold px-2.5 mb-1 border-b border-slate-800"
+        className="p-2 text-[#6A7282] hover:text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors flex items-center justify-between gap-1 text-[11px] font-bold px-2.5 mb-1 border-b border-purple-100"
       >
-        <span className="text-amber-400 font-extrabold uppercase tracking-wider text-[10px]">Controls</span>
-        <ChevronRight className="w-4 h-4 text-slate-400" />
+        <span className="text-[#6A1B9A] font-extrabold uppercase tracking-wider text-[10px]">Controls</span>
+        <ChevronRight className="w-4 h-4 text-[#6A7282]" />
       </button>
 
       {/* Zoom In */}
       <button
         onClick={handleZoomIn}
         title="Zoom In (+)"
-        className="p-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors active:scale-95"
+        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
       >
         <ZoomIn className="w-5 h-5" />
       </button>
@@ -114,18 +113,18 @@ export const MapControls: React.FC<MapControlsProps> = ({
       <button
         onClick={handleZoomOut}
         title="Zoom Out (-)"
-        className="p-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors active:scale-95"
+        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
       >
         <ZoomOut className="w-5 h-5" />
       </button>
 
-      <div className="w-full h-px bg-slate-800/80 my-0.5" />
+      <div className="w-full h-px bg-purple-100 my-0.5" />
 
       {/* Rotate Left */}
       <button
         onClick={handleRotateLeft}
         title="Rotate Camera Left"
-        className="p-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors active:scale-95"
+        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
       >
         <RotateCcw className="w-5 h-5" />
       </button>
@@ -134,18 +133,18 @@ export const MapControls: React.FC<MapControlsProps> = ({
       <button
         onClick={handleRotateRight}
         title="Rotate Camera Right"
-        className="p-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors active:scale-95"
+        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
       >
         <RotateCw className="w-5 h-5" />
       </button>
 
-      <div className="w-full h-px bg-slate-800/80 my-0.5" />
+      <div className="w-full h-px bg-purple-100 my-0.5" />
 
       {/* Brightness Adjustment Button */}
       <button
         onClick={cycleBrightness}
         title={`Scene Brightness: ${brightness.toFixed(1)}x (Click to cycle)`}
-        className="p-2.5 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 text-amber-400 hover:bg-slate-800"
+        className="p-2.5 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 text-[#D97706] hover:bg-purple-50"
       >
         <Sun className="w-5 h-5" />
       </button>
@@ -155,7 +154,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         onClick={onToggleRoads}
         title="Show / Remove 3D Roads Overlay"
         className={`p-2.5 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 ${
-          showRoads ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+          showRoads ? 'bg-[#6A1B9A] text-white' : 'text-[#6A7282] hover:bg-purple-50'
         }`}
       >
         <Waypoints className="w-5 h-5" />
@@ -166,7 +165,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         onClick={onToggleLabels}
         title="Toggle 3D Building Labels"
         className={`p-2.5 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 ${
-          showLabels ? 'bg-rec-blue text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+          showLabels ? 'bg-[#6A1B9A] text-white' : 'text-[#6A7282] hover:bg-purple-50'
         }`}
       >
         <Tag className="w-5 h-5" />
@@ -176,7 +175,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
       <button
         onClick={onResetCamera}
         title="Reset 3D Camera View"
-        className="p-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-colors active:scale-95"
+        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
       >
         <Maximize2 className="w-5 h-5" />
       </button>
