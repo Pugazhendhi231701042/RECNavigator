@@ -39,7 +39,7 @@ export const ASSET_MANIFEST: Record<string, AssetManifestEntry> = {
     id: 'block-c',
     name: 'Block C (Biotech & Science)',
     glbPath: '/assets/campus/block-c.glb',
-    isVerifiedModel: true,
+    isVerifiedModel: false,
     description: 'Biotech and General Sciences academic building.',
   },
   'block-d': {
