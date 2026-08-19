@@ -25,14 +25,14 @@ export const ASSET_MANIFEST: Record<string, AssetManifestEntry> = {
     id: 'block-a',
     name: 'Block A (Academic & Admin)',
     glbPath: '/assets/campus/block-a.glb',
-    isVerifiedModel: false,
+    isVerifiedModel: true,
     description: '4-Story academic building housing CSE, IT, and ECE departments.',
   },
   'block-b': {
     id: 'block-b',
     name: 'Block B (Engineering Block)',
     glbPath: '/assets/campus/block-b.glb',
-    isVerifiedModel: false,
+    isVerifiedModel: true,
     description: 'U-shaped 4-story engineering building housing Mechanical and EEE.',
   },
   'block-c': {
@@ -53,7 +53,7 @@ export const ASSET_MANIFEST: Record<string, AssetManifestEntry> = {
     id: 'rec-cafe',
     name: 'REC Central Cafeteria',
     glbPath: '/assets/campus/rec-cafe.glb',
-    isVerifiedModel: false,
+    isVerifiedModel: true,
     description: 'Central multi-cuisine cafeteria building.',
   },
   'hut-cafe': {
