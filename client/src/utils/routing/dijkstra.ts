@@ -1,4 +1,4 @@
-import type { PathNode, PathEdge, RouteResult, RouteStep } from '../../types';
+import type { PathNode, PathEdge, RouteResult, RouteStep, Location } from '../../types';
 
 interface DistanceTable {
   [nodeId: string]: {
@@ -150,3 +150,59 @@ export function calculateDijkstraRoute(
     steps,
   };
 }
+
+/**
+ * Shortest path route between two Locations, considering all assigned entrances (junctions)
+ * for both the start and destination locations. Automatically finds the optimal entrance pair.
+ */
+export function calculateMultiEntranceRoute(
+  startLoc: Location | null,
+  destLoc: Location | null,
+  nodes: PathNode[],
+  edges: PathEdge[]
+): RouteResult | null {
+  if (!startLoc || !destLoc) return null;
+
+  const startEntrances = (startLoc.entranceNodeIds && startLoc.entranceNodeIds.length > 0)
+    ? startLoc.entranceNodeIds
+    : [startLoc.nodeId];
+
+  const destEntrances = (destLoc.entranceNodeIds && destLoc.entranceNodeIds.length > 0)
+    ? destLoc.entranceNodeIds
+    : [destLoc.nodeId];
+
+  let bestRoute: RouteResult | null = null;
+
+  for (const sNode of startEntrances) {
+    for (const dNode of destEntrances) {
+      if (sNode === dNode) {
+        const node = nodes.find(n => n.id === sNode);
+        if (node) {
+          return {
+            distance: 0,
+            walkingTime: 0,
+            pathNodeIds: [sNode],
+            nodes: [node],
+            edges: [],
+            steps: [{
+              stepNumber: 1,
+              instruction: `You are already at ${destLoc.name}`,
+              distance: 0,
+              landmark: destLoc.name
+            }]
+          };
+        }
+      }
+
+      const route = calculateDijkstraRoute(sNode, dNode, nodes, edges);
+      if (route) {
+        if (!bestRoute || route.distance < bestRoute.distance) {
+          bestRoute = route;
+        }
+      }
+    }
+  }
+
+  return bestRoute;
+}
+

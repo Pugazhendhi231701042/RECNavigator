@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-rec-purple: #6A1B9A;
   --color-rec-purple-dark: #4A148C;
@@ -17,32 +19,53 @@
   color-scheme: light;
 }
 
+:root.dark {
+  color-scheme: dark;
+}
+
 body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #FAFAFA;
+  background-color: #F8FAFC;
   color: #0F172A;
   -webkit-font-smoothing: antialiased;
+}
+
+.dark body {
+  background-color: #080B11;
+  color: #F8FAFC;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', 'Inter', sans-serif;
 }
 
-/* Custom Scrollbars for Purple/White Theme */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #FAFAFA;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D8B4FE;
+  background: #CBD5E1;
   border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
 }
 
 ::-webkit-scrollbar-thumb:hover {

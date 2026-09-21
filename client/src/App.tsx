@@ -1,6 +1,12 @@
-import { useState } from 'react';
-import type { Location } from './types';
-import { LOCATIONS as INITIAL_LOCATIONS } from './data/recCampusData';
+import { useState, useEffect, useMemo } from 'react';
+import type { Location, PathNode, Road } from './types';
+import {
+  LOCATIONS as INITIAL_LOCATIONS,
+  PATH_NODES as INITIAL_NODES,
+  INITIAL_ROADS,
+  PATH_EDGES,
+  deriveEdgesFromRoads,
+} from './data/recCampusData';
 import { Header } from './components/Header/Header';
 import { NavigationBar } from './components/NavigationBar/NavigationBar';
 import { BottomSheet } from './components/BottomSheet/BottomSheet';
@@ -10,12 +16,38 @@ import { MapPage } from './pages/MapPage';
 import { PlacesPage } from './pages/PlacesPage';
 import { AboutPage } from './pages/AboutPage';
 import { AdminPage } from './pages/AdminPage';
-import { calculateDijkstraRoute } from './utils/routing/dijkstra';
-import { PATH_NODES, PATH_EDGES } from './data/recCampusData';
+import { calculateMultiEntranceRoute } from './utils/routing/dijkstra';
+import { ThemeProvider } from './context/ThemeContext';
 
-export function App() {
-  // Application State
-  const [locations, setLocations] = useState<Location[]>(INITIAL_LOCATIONS);
+function AppContent() {
+  // Application State with LocalStorage Persistence
+  const [locations, setLocations] = useState<Location[]>(() => {
+    try {
+      const saved = localStorage.getItem('rec_locations');
+      return saved !== null ? JSON.parse(saved) : INITIAL_LOCATIONS;
+    } catch {
+      return INITIAL_LOCATIONS;
+    }
+  });
+
+  const [nodes, setNodes] = useState<PathNode[]>(() => {
+    try {
+      const saved = localStorage.getItem('rec_nodes');
+      return saved !== null ? JSON.parse(saved) : INITIAL_NODES;
+    } catch {
+      return INITIAL_NODES;
+    }
+  });
+
+  const [roads, setRoads] = useState<Road[]>(() => {
+    try {
+      const saved = localStorage.getItem('rec_roads');
+      return saved !== null ? JSON.parse(saved) : INITIAL_ROADS;
+    } catch {
+      return INITIAL_ROADS;
+    }
+  });
+
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [destinationLocation, setDestinationLocation] = useState<Location | null>(null);
@@ -23,6 +55,15 @@ export function App() {
   
   // Mobile Bottom Sheet State
   const [mobileSheetMode, setMobileSheetMode] = useState<'none' | 'location' | 'directions'>('none');
+
+  // Sync to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('rec_locations', JSON.stringify(locations));
+      localStorage.setItem('rec_nodes', JSON.stringify(nodes));
+      localStorage.setItem('rec_roads', JSON.stringify(roads));
+    } catch {}
+  }, [locations, nodes, roads]);
 
   // Handle Location Selection
   const handleSelectLocation = (loc: Location | null) => {
@@ -40,7 +81,7 @@ export function App() {
     if (mainGate) setSelectedLocation(mainGate);
   };
 
-  // Admin Handlers
+  // Building Admin Handlers
   const handleAddLocation = (newLoc: Location) => {
     setLocations(prev => [...prev, newLoc]);
   };
@@ -53,12 +94,87 @@ export function App() {
     setLocations(prev => prev.filter(l => l.id !== id));
   };
 
-  const activeRoute = (startLocation && destinationLocation)
-    ? calculateDijkstraRoute(startLocation.nodeId, destinationLocation.nodeId, PATH_NODES, PATH_EDGES)
-    : null;
+  // Junction Admin Handlers
+  const handleAddNode = (newNode: PathNode) => {
+    setNodes(prev => [...prev, newNode]);
+  };
+
+  const handleUpdateNode = (updatedNode: PathNode) => {
+    setNodes(prev => prev.map(n => n.id === updatedNode.id ? updatedNode : n));
+  };
+
+  const handleDeleteNode = (id: string) => {
+    setNodes(prev => prev.filter(n => n.id !== id));
+    // Remove from road junction sequences
+    setRoads(prev => prev.map(r => ({
+      ...r,
+      junctionIds: r.junctionIds.filter(jid => jid !== id),
+    })));
+    // Remove from building entrance lists
+    setLocations(prev => prev.map(l => {
+      const entrances = (l.entranceNodeIds || [l.nodeId]).filter(jid => jid !== id);
+      return {
+        ...l,
+        entranceNodeIds: entrances,
+        nodeId: l.nodeId === id ? (entrances[0] || '') : l.nodeId,
+      };
+    }));
+  };
+
+  // Road Admin Handlers
+  const handleAddRoad = (newRoad: Road) => {
+    setRoads(prev => [...prev, newRoad]);
+  };
+
+  const handleUpdateRoad = (updatedRoad: Road) => {
+    setRoads(prev => prev.map(r => r.id === updatedRoad.id ? updatedRoad : r));
+  };
+
+  const handleDeleteRoad = (id: string) => {
+    setRoads(prev => prev.filter(r => r.id !== id));
+  };
+
+  // Reset to Factory Campus Defaults
+  const handleResetDefaults = () => {
+    localStorage.setItem('rec_locations', JSON.stringify(INITIAL_LOCATIONS));
+    localStorage.setItem('rec_nodes', JSON.stringify(INITIAL_NODES));
+    localStorage.setItem('rec_roads', JSON.stringify(INITIAL_ROADS));
+    setLocations(INITIAL_LOCATIONS);
+    setNodes(INITIAL_NODES);
+    setRoads(INITIAL_ROADS);
+    setSelectedLocation(null);
+    setStartLocation(null);
+    setDestinationLocation(null);
+  };
+
+  // Reset System: Delete all buildings, roads and junctions
+  const handleResetSystem = () => {
+    localStorage.setItem('rec_locations', JSON.stringify([]));
+    localStorage.setItem('rec_nodes', JSON.stringify([]));
+    localStorage.setItem('rec_roads', JSON.stringify([]));
+    setLocations([]);
+    setNodes([]);
+    setRoads([]);
+    setSelectedLocation(null);
+    setStartLocation(null);
+    setDestinationLocation(null);
+  };
+
+  // Dynamically derive active navigation graph edges from roads & junctions
+  const activeEdges = useMemo(() => {
+    return deriveEdgesFromRoads(roads, nodes, PATH_EDGES);
+  }, [roads, nodes]);
+
+  // Compute live shortest-path route supporting multiple entrances per building
+  const activeRoute = useMemo(() => {
+    if (startLocation && destinationLocation) {
+      return calculateMultiEntranceRoute(startLocation, destinationLocation, nodes, activeEdges);
+    }
+    return null;
+  }, [startLocation, destinationLocation, nodes, activeEdges]);
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans flex flex-col antialiased selection:bg-rec-blue selection:text-white">
+    <div className="min-h-screen bg-slate-100 dark:bg-[#080B11] text-slate-900 dark:text-slate-100 font-sans flex flex-col antialiased transition-colors">
       {/* Top Main Navigation Header */}
       <Header
         locations={locations}
@@ -89,6 +205,8 @@ export function App() {
               setDestinationLocation(loc);
             }}
             activeTab={activeTab}
+            nodes={nodes}
+            edges={activeEdges}
           />
         )}
 
@@ -114,12 +232,22 @@ export function App() {
         )}
 
         {activeTab === 'admin' && (
-          <div className="h-[calc(100vh-65px)] overflow-y-auto">
+          <div className="h-[calc(100vh-65px)] overflow-hidden">
             <AdminPage
               locations={locations}
               onAddLocation={handleAddLocation}
               onUpdateLocation={handleUpdateLocation}
               onDeleteLocation={handleDeleteLocation}
+              nodes={nodes}
+              onAddNode={handleAddNode}
+              onUpdateNode={handleUpdateNode}
+              onDeleteNode={handleDeleteNode}
+              roads={roads}
+              onAddRoad={handleAddRoad}
+              onUpdateRoad={handleUpdateRoad}
+              onDeleteRoad={handleDeleteRoad}
+              onResetDefaults={handleResetDefaults}
+              onResetSystem={handleResetSystem}
             />
           </div>
         )}
@@ -177,4 +305,13 @@ export function App() {
     </div>
   );
 }
+
+export function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+}
+
 export default App;

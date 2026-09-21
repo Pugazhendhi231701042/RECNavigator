@@ -9,6 +9,7 @@ interface LocationMarker3DProps {
   startLocation: Location | null;
   destinationLocation: Location | null;
   onSelectLocation: (loc: Location) => void;
+  onDoubleClickLocation?: (loc: Location) => void;
   showLabels: boolean;
 }
 
@@ -18,6 +19,7 @@ export const LocationMarker3D: React.FC<LocationMarker3DProps> = ({
   startLocation,
   destinationLocation,
   onSelectLocation,
+  onDoubleClickLocation,
   showLabels,
 }) => {
   return (
@@ -28,10 +30,7 @@ export const LocationMarker3D: React.FC<LocationMarker3DProps> = ({
         const isSelected = selectedLocation?.id === loc.id;
 
         // Position pin 14m above building base
-        const pinX = typeof loc.position?.x === 'number' ? loc.position.x : 0;
-        const pinY = (typeof loc.position?.y === 'number' ? loc.position.y : 0) + 14;
-        const pinZ = typeof loc.position?.z === 'number' ? loc.position.z : 0;
-        const pinPos: [number, number, number] = [pinX, pinY, pinZ];
+        const pinPos: [number, number, number] = [loc.position.x, loc.position.y + 14, loc.position.z];
 
         return (
           <group key={loc.id} position={pinPos}>
@@ -41,6 +40,10 @@ export const LocationMarker3D: React.FC<LocationMarker3DProps> = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   onSelectLocation(loc);
+                }}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  onDoubleClickLocation?.(loc);
                 }}
                 className="cursor-pointer select-none transition-transform duration-200 hover:scale-125 group"
               >

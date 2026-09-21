@@ -1,4 +1,4 @@
-import type { Category, Location, PathNode, PathEdge } from '../types';
+import type { Category, Location, PathNode, PathEdge, Road, Entrance } from '../types';
 
 export const CATEGORIES: Category[] = [
   {
@@ -128,6 +128,213 @@ export const PATH_EDGES: PathEdge[] = [
   { id: 'e33', from: 'node_ground_south', to: 'node_girls_hostel', distance: 60, roadName: 'East Gate Connector' },
 ];
 
+export const getSegmentKey = (a: string, b: string): string => [a, b].sort().join(':::');
+
+/**
+ * Calculate straight-line 3D ground distance between two nodes (as an admin suggestion).
+ */
+export function calculateEuclideanDistance(nodeA: PathNode, nodeB: PathNode): number {
+  const dx = nodeB.position.x - nodeA.position.x;
+  const dz = nodeB.position.z - nodeA.position.z;
+  return Math.max(5, Math.round(Math.hypot(dx, dz)));
+}
+
+/**
+ * Ensure every location has structured Entrance objects
+ */
+export function ensureLocationEntrances(loc: Location, nodes: PathNode[]): Entrance[] {
+  if (loc.entrances && loc.entrances.length > 0) {
+    return loc.entrances;
+  }
+  const nodeIds = (loc.entranceNodeIds && loc.entranceNodeIds.length > 0)
+    ? loc.entranceNodeIds
+    : [loc.nodeId];
+  return nodeIds.map((nId, idx) => {
+    const nodeObj = nodes.find(n => n.id === nId);
+    const defaultName = idx === 0 ? 'Main Entrance' : (nodeObj ? `${nodeObj.name} Gate` : `Entrance ${idx + 1}`);
+    return {
+      id: `${loc.id}_ent_${idx + 1}`,
+      name: defaultName,
+      buildingId: loc.id,
+      junctionId: nId,
+      position: nodeObj?.position,
+    };
+  });
+}
+
+// Verified Named Campus Roads with Authoritative Manual Segment Distances (meters)
+export const INITIAL_ROADS: Road[] = [
+  {
+    id: 'road_main_entry',
+    name: 'Campus Main Approach Drive',
+    junctionIds: ['node_parking', 'node_entry_road', 'node_flagpole', 'node_main_gate'],
+    width: 12,
+    description: 'Main highway approach and security entrance road',
+    segmentDistances: {
+      [getSegmentKey('node_parking', 'node_entry_road')]: 180,
+      [getSegmentKey('node_entry_road', 'node_flagpole')]: 140,
+      [getSegmentKey('node_flagpole', 'node_main_gate')]: 40,
+    },
+  },
+  {
+    id: 'road_central_avenue',
+    name: 'Central Boulevard',
+    junctionIds: ['node_main_gate', 'node_central_road', 'node_atm_junc'],
+    width: 12,
+    description: 'Central avenue connecting main gate to core campus',
+    segmentDistances: {
+      [getSegmentKey('node_main_gate', 'node_central_road')]: 110,
+      [getSegmentKey('node_central_road', 'node_atm_junc')]: 80,
+    },
+  },
+  {
+    id: 'road_a_block_front',
+    name: 'A-Block Front Drive',
+    junctionIds: ['node_atm_junc', 'node_a_block_west', 'node_a_block_center', 'node_tech_lounge'],
+    width: 10,
+    description: 'Main academic avenue along front of Block A',
+    segmentDistances: {
+      [getSegmentKey('node_atm_junc', 'node_a_block_west')]: 160,
+      [getSegmentKey('node_a_block_west', 'node_a_block_center')]: 90,
+      [getSegmentKey('node_a_block_center', 'node_tech_lounge')]: 120,
+    },
+  },
+  {
+    id: 'road_food_court_lane',
+    name: 'Food Court & Promenade',
+    junctionIds: ['node_atm_junc', 'node_dominos', 'node_rec_cafe'],
+    width: 9,
+    description: 'Path linking ATM junction, Food Square, and REC Central Cafeteria',
+    segmentDistances: {
+      [getSegmentKey('node_atm_junc', 'node_dominos')]: 60,
+      [getSegmentKey('node_dominos', 'node_rec_cafe')]: 220,
+    },
+  },
+  {
+    id: 'road_inter_block',
+    name: 'Inter-Block Engineering Pathway',
+    junctionIds: ['node_a_block_west', 'node_b_block_north', 'node_b_block_east', 'node_rec_mart'],
+    width: 8,
+    description: 'Walkway connecting Block A and Block B',
+    segmentDistances: {
+      [getSegmentKey('node_a_block_west', 'node_b_block_north')]: 100,
+      [getSegmentKey('node_b_block_north', 'node_b_block_east')]: 130,
+      [getSegmentKey('node_b_block_east', 'node_rec_mart')]: 50,
+    },
+  },
+  {
+    id: 'road_science_street',
+    name: 'Science & Cafeteria Street',
+    junctionIds: ['node_rec_cafe', 'node_c_d_block', 'node_c_block', 'node_hut_cafe', 'node_sports_courts'],
+    width: 8,
+    description: 'Southern walkway between REC Cafe, Blocks C & D, Hut Cafe, and sports courts',
+    segmentDistances: {
+      [getSegmentKey('node_rec_cafe', 'node_c_d_block')]: 60,
+      [getSegmentKey('node_c_d_block', 'node_c_block')]: 50,
+      [getSegmentKey('node_c_block', 'node_hut_cafe')]: 70,
+      [getSegmentKey('node_hut_cafe', 'node_sports_courts')]: 110,
+    },
+  },
+  {
+    id: 'road_d_block_approach',
+    name: 'D-Block Approach Walk',
+    junctionIds: ['node_c_d_block', 'node_d_block'],
+    width: 8,
+    description: 'Dedicated walkway to Block D entrance',
+    segmentDistances: {
+      [getSegmentKey('node_c_d_block', 'node_d_block')]: 50,
+    },
+  },
+  {
+    id: 'road_stadium_perimeter',
+    name: 'Stadium Perimeter Track',
+    junctionIds: ['node_a_block_center', 'node_ground_north', 'node_ground_west', 'node_ground_south'],
+    width: 9,
+    description: 'Loop around sports grounds and turf',
+    segmentDistances: {
+      [getSegmentKey('node_a_block_center', 'node_ground_north')]: 110,
+      [getSegmentKey('node_ground_north', 'node_ground_west')]: 140,
+      [getSegmentKey('node_ground_west', 'node_ground_south')]: 140,
+    },
+  },
+  {
+    id: 'road_auditorium_boulevard',
+    name: 'Auditorium Boulevard',
+    junctionIds: ['node_ground_north', 'node_pool', 'node_auditorium', 'node_ground_south'],
+    width: 10,
+    description: 'Eastern avenue leading to Swimming Pool and Indoor Auditorium',
+    segmentDistances: {
+      [getSegmentKey('node_ground_north', 'node_pool')]: 150,
+      [getSegmentKey('node_pool', 'node_auditorium')]: 110,
+      [getSegmentKey('node_auditorium', 'node_ground_south')]: 130,
+    },
+  },
+  {
+    id: 'road_hostel_avenue',
+    name: 'Hostel Complex Avenue',
+    junctionIds: ['node_sports_courts', 'node_boys_hostel', 'node_nri_hostel', 'node_hostel_mess', 'node_girls_hostel', 'node_ground_south'],
+    width: 8,
+    description: 'Access corridor for Boys, NRI, and Girls Hostels and Mess',
+    segmentDistances: {
+      [getSegmentKey('node_sports_courts', 'node_boys_hostel')]: 80,
+      [getSegmentKey('node_boys_hostel', 'node_nri_hostel')]: 70,
+      [getSegmentKey('node_nri_hostel', 'node_hostel_mess')]: 90,
+      [getSegmentKey('node_hostel_mess', 'node_girls_hostel')]: 130,
+      [getSegmentKey('node_girls_hostel', 'node_ground_south')]: 60,
+    },
+  },
+];
+
+/**
+ * Derive graph edges from a list of multi-junction roads.
+ * Strictly respects authoritative manual road segment distances.
+ * Falls back to measured Euclidean distance only if no manual distance is provided.
+ */
+export function deriveEdgesFromRoads(roads: Road[], nodes: PathNode[], extraEdges: PathEdge[] = []): PathEdge[] {
+  const nodeMap = new Map<string, PathNode>();
+  nodes.forEach(n => nodeMap.set(n.id, n));
+
+  const edgeMap = new Map<string, PathEdge>();
+
+  roads.forEach(road => {
+    for (let i = 0; i < road.junctionIds.length - 1; i++) {
+      const fromId = road.junctionIds[i];
+      const toId = road.junctionIds[i + 1];
+      const fromNode = nodeMap.get(fromId);
+      const toNode = nodeMap.get(toId);
+      if (fromNode && toNode) {
+        const key = getSegmentKey(fromId, toId);
+
+        // Authoritative manual distance check
+        const manualDist = road.segmentDistances?.[key]
+          ?? road.segmentDistances?.[`${fromId}:::${toId}`]
+          ?? road.segmentDistances?.[`${toId}:::${fromId}`];
+
+        const distance = (typeof manualDist === 'number' && !isNaN(manualDist) && manualDist > 0)
+          ? manualDist
+          : calculateEuclideanDistance(fromNode, toNode);
+
+        edgeMap.set(key, {
+          id: `edge_${road.id}_${i}`,
+          from: fromId,
+          to: toId,
+          distance,
+          roadName: road.name,
+        });
+      }
+    }
+  });
+
+  extraEdges.forEach(extra => {
+    const key = getSegmentKey(extra.from, extra.to);
+    if (!edgeMap.has(key)) {
+      edgeMap.set(key, extra);
+    }
+  });
+
+  return Array.from(edgeMap.values());
+}
+
 // Structured Verified Campus Locations in 3D World Space (meters)
 export const LOCATIONS: Location[] = [
   {
@@ -142,6 +349,7 @@ export const LOCATIONS: Location[] = [
     aliases: ['gate 1', 'entrance', 'front gate'],
     facilities: ['24/7 Security Checkpost', 'Visitor Registration', 'Bus Drop-off Zone'],
     nodeId: 'node_main_gate',
+    entranceNodeIds: ['node_main_gate', 'node_flagpole'],
   },
   {
     id: 'flagpole',
@@ -154,6 +362,7 @@ export const LOCATIONS: Location[] = [
     aliases: ['flag', 'tricolor', 'national flag'],
     facilities: ['Assembly Area', 'Landmark Circle'],
     nodeId: 'node_flagpole',
+    entranceNodeIds: ['node_flagpole'],
   },
   {
     id: 'parking-area',
@@ -166,6 +375,7 @@ export const LOCATIONS: Location[] = [
     aliases: ['parking', 'bike parking', 'car park', 'bus stand'],
     facilities: ['2-Wheeler Parking', '4-Wheeler Parking', 'EV Charging Spot', 'Security Guards'],
     nodeId: 'node_parking',
+    entranceNodeIds: ['node_parking'],
   },
   {
     id: 'block-a',
@@ -181,6 +391,7 @@ export const LOCATIONS: Location[] = [
     block: 'Block A',
     floorCount: 4,
     nodeId: 'node_a_block_center',
+    entranceNodeIds: ['node_a_block_center', 'node_a_block_west', 'node_tech_lounge'],
   },
   {
     id: 'block-b',
@@ -196,6 +407,7 @@ export const LOCATIONS: Location[] = [
     block: 'Block B',
     floorCount: 4,
     nodeId: 'node_b_block_north',
+    entranceNodeIds: ['node_b_block_north', 'node_b_block_east'],
   },
   {
     id: 'block-c',
@@ -211,6 +423,7 @@ export const LOCATIONS: Location[] = [
     block: 'Block C',
     floorCount: 3,
     nodeId: 'node_c_block',
+    entranceNodeIds: ['node_c_block', 'node_c_d_block'],
   },
   {
     id: 'block-d',
@@ -226,6 +439,7 @@ export const LOCATIONS: Location[] = [
     block: 'Block D',
     floorCount: 3,
     nodeId: 'node_d_block',
+    entranceNodeIds: ['node_d_block', 'node_c_d_block'],
   },
   {
     id: 'tech-lounge',

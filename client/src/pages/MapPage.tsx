@@ -1,15 +1,27 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import type { Location, CategoryId, RouteResult } from '../types';
+import type { Location, CategoryId, RouteResult, PathNode, PathEdge } from '../types';
+import { CATEGORIES } from '../data/recCampusData';
 import { CampusScene } from '../components/3d/CampusScene';
 import { MapControls } from '../components/navigation/MapControls';
 import { CategoryFilter } from '../components/CategoryFilter/CategoryFilter';
 import { LocationCard } from '../components/LocationCard/LocationCard';
-import { SearchBar } from '../components/SearchBar/SearchBar';
-import { calculateDijkstraRoute } from '../utils/routing/dijkstra';
-import { PATH_NODES, PATH_EDGES } from '../data/recCampusData';
-import { Navigation, ArrowUpDown, X, Play, ChevronRight, Flag } from 'lucide-react';
-import { ErrorBoundary } from '../components/ErrorBoundary';
+import { calculateMultiEntranceRoute } from '../utils/routing/dijkstra';
+import { PATH_NODES as DEFAULT_NODES, PATH_EDGES as DEFAULT_EDGES } from '../data/recCampusData';
+import {
+  ArrowUpDown,
+  X,
+  Play,
+  ChevronRight,
+  Flag,
+  Search,
+  Building2,
+  Compass,
+  PanelLeftClose,
+  PanelLeftOpen,
+  MapPin,
+  Route,
+} from 'lucide-react';
 
 interface MapPageProps {
   locations: Location[];
@@ -19,7 +31,9 @@ interface MapPageProps {
   setStartLocation: (loc: Location | null) => void;
   destinationLocation: Location | null;
   setDestinationLocation: (loc: Location | null) => void;
-  activeTab: string;
+  activeTab?: string;
+  nodes?: PathNode[];
+  edges?: PathEdge[];
 }
 
 export const MapPage: React.FC<MapPageProps> = ({
@@ -30,33 +44,47 @@ export const MapPage: React.FC<MapPageProps> = ({
   setStartLocation,
   destinationLocation,
   setDestinationLocation,
+  nodes = DEFAULT_NODES,
+  edges = DEFAULT_EDGES,
 }) => {
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
+  const [hudTab, setHudTab] = useState<'directory' | 'directions'>('directory');
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
-  const [showDirections, setShowDirections] = useState<boolean>(false);
-  const [showLabels, setShowLabels] = useState<boolean>(false); // Initially OFF
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isHudOpen, setIsHudOpen] = useState<boolean>(true);
+  const [focusLocation, setFocusLocation] = useState<Location | null>(null);
+
+  // Map 3D Layer Controls
+  const [showLabels, setShowLabels] = useState<boolean>(false);
   const [showRoads, setShowRoads] = useState<boolean>(true);
   const [brightness, setBrightness] = useState<number>(1.3);
 
-  // Navigation Step State
+  // Turn-by-Turn Navigation Step State
   const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
 
-  // Filter Locations by Category
-  const filteredLocations = selectedCategory === 'all'
-    ? locations
-    : locations.filter(l => l.category === selectedCategory);
+  // Filter Locations by Search & Category
+  const filteredLocations = useMemo(() => {
+    return locations.filter((loc) => {
+      const matchesCat = selectedCategory === 'all' || loc.category === selectedCategory;
+      const q = searchQuery.toLowerCase().trim();
+      const matchesQuery =
+        q === '' ||
+        loc.name.toLowerCase().includes(q) ||
+        (loc.block && loc.block.toLowerCase().includes(q)) ||
+        (loc.description && loc.description.toLowerCase().includes(q)) ||
+        loc.tags?.some((t) => t.toLowerCase().includes(q));
+      return matchesCat && matchesQuery;
+    });
+  }, [locations, selectedCategory, searchQuery]);
 
-  // Compute Active 3D Dijkstra Route
-  let activeRoute: RouteResult | null = null;
-  if (startLocation && destinationLocation) {
-    activeRoute = calculateDijkstraRoute(
-      startLocation.nodeId,
-      destinationLocation.nodeId,
-      PATH_NODES,
-      PATH_EDGES
-    );
-  }
+  // Compute Active 3D Dijkstra Route (with Smart Multi-Entrance Support)
+  const activeRoute: RouteResult | null = useMemo(() => {
+    if (startLocation && destinationLocation) {
+      return calculateMultiEntranceRoute(startLocation, destinationLocation, nodes, edges);
+    }
+    return null;
+  }, [startLocation, destinationLocation, nodes, edges]);
 
   const handleSwap = () => {
     const temp = startLocation;
@@ -69,7 +97,6 @@ export const MapPage: React.FC<MapPageProps> = ({
   const handleClearDirections = () => {
     setStartLocation(null);
     setDestinationLocation(null);
-    setShowDirections(false);
     setIsNavigating(false);
     setCurrentStepIndex(0);
   };
@@ -81,154 +108,376 @@ export const MapPage: React.FC<MapPageProps> = ({
 
   const handleNextStep = () => {
     if (activeRoute && currentStepIndex < activeRoute.steps.length - 1) {
-      setCurrentStepIndex(prev => prev + 1);
+      setCurrentStepIndex((prev) => prev + 1);
     }
   };
 
   const handleResetCameraView = () => {
     onSelectLocation(null);
+    setFocusLocation(null);
     if (controlsRef.current) {
       controlsRef.current.reset();
     }
   };
 
-  const isDestinationReached = activeRoute && currentStepIndex === activeRoute.steps.length - 1;
+  const handleBuildingDoubleClick = (loc: Location) => {
+    setFocusLocation(loc);
+  };
+
+  const isDestinationReached =
+    activeRoute && currentStepIndex === activeRoute.steps.length - 1;
 
   return (
-    <div className="relative w-full h-[calc(100vh-65px)] flex overflow-hidden bg-[#FAFAFA]">
-      {/* LEFT SIDEBAR (Desktop >= 1024px) - Ultra Premium Purple & White Glassmorphism */}
-      <div className="hidden lg:flex flex-col w-[380px] bg-white/95 backdrop-blur-2xl border-r border-purple-100/90 z-20 shadow-2xl overflow-y-auto text-slate-900">
-        <div className="p-4 space-y-4">
-          
-          {/* 1. DIRECTIONS BUTTON (POSITIONED ABOVE FILTER CATEGORIES) */}
-          <div className="space-y-3">
-            <button
-              onClick={() => setShowDirections(prev => !prev)}
-              className={`w-full py-3.5 px-4 rounded-2xl font-black text-xs flex items-center justify-between transition-all shadow-md active:scale-98 border ${
-                showDirections || (startLocation && destinationLocation)
-                  ? 'bg-gradient-to-r from-[#6A1B9A] via-purple-700 to-[#4A148C] text-white border-purple-300 ring-2 ring-amber-400/50'
-                  : 'bg-[#FAFAFA] hover:bg-purple-50 text-[#6A1B9A] border-purple-200/80 hover:border-purple-300'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <Navigation className="w-4.5 h-4.5 text-[#D97706]" />
-                <span>Directions {startLocation && destinationLocation ? '(Active Route)' : ''}</span>
-              </div>
-              <span className="text-[10px] font-extrabold uppercase bg-amber-100 text-[#D97706] px-2.5 py-0.5 rounded-full border border-amber-300">
-                {showDirections ? 'Close' : 'Open'}
+    <div className="relative w-full h-[calc(100vh-65px)] overflow-hidden bg-slate-100 dark:bg-[#080B11] text-slate-900 dark:text-white select-none">
+      {/* 1. BACKGROUND 3D WEBGL CAMPUS CANVAS */}
+      <div className="absolute inset-0 z-0">
+        <CampusScene
+          locations={filteredLocations}
+          selectedLocation={selectedLocation}
+          onSelectLocation={(loc) => {
+            onSelectLocation(loc);
+            if (!isHudOpen) setIsHudOpen(true);
+          }}
+          focusLocation={focusLocation}
+          onDoubleClickLocation={handleBuildingDoubleClick}
+          activeRoute={activeRoute}
+          startLocation={startLocation}
+          destinationLocation={destinationLocation}
+          showLabels={showLabels}
+          showRoads={showRoads}
+          brightness={brightness}
+          controlsRef={controlsRef}
+          nodes={nodes}
+          edges={edges}
+        />
+      </div>
+
+      {/* 2. FLOATING HUD TOGGLE BUTTON (When HUD is collapsed) */}
+      {!isHudOpen && (
+        <button
+          onClick={() => setIsHudOpen(true)}
+          className="absolute top-4 left-4 z-20 p-3 bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-800 text-purple-600 dark:text-purple-400 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl backdrop-blur-xl transition-all cursor-pointer flex items-center gap-2 group"
+          title="Expand Campus Directory"
+        >
+          <PanelLeftOpen className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          <span className="text-xs font-black tracking-wider uppercase">Open HUD</span>
+        </button>
+      )}
+
+      {/* 3. FLOATING CAD STUDIO HUD (Left Side Panel) */}
+      {isHudOpen && (
+        <aside className="absolute left-3 top-3 bottom-3 w-[370px] max-w-[calc(100vw-24px)] bg-white/90 dark:bg-slate-950/85 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-800/80 rounded-2xl z-20 shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-left-4 duration-300">
+          {/* HUD Header Bar */}
+          <div className="p-3.5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-slate-900/40">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-black tracking-widest text-purple-600 dark:text-purple-400 uppercase font-mono">
+                CAD NAVIGATOR
               </span>
+            </div>
+
+            {/* Collapse HUD Button */}
+            <button
+              onClick={() => setIsHudOpen(false)}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              title="Minimize HUD to view full canvas"
+            >
+              <PanelLeftClose className="w-4 h-4" />
             </button>
+          </div>
 
-            {/* 2. DIRECTIONS FROM [] - TO [] PANEL & STEP NAVIGATION */}
-            {showDirections && (
-              <div className="bg-white border border-purple-100 p-4 rounded-2xl space-y-3 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="flex items-center justify-between pb-2 border-b border-purple-100">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#6A1B9A]">
-                    Find Shortest Walking Route
-                  </span>
-                  <button onClick={handleClearDirections} className="text-[#6A7282] hover:text-[#6A1B9A] text-xs">
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+          {/* Mode Switcher Tabs (Directory vs Directions) */}
+          <div className="p-3 shrink-0 border-b border-slate-200/60 dark:border-slate-800/60 bg-slate-100/40 dark:bg-slate-900/20">
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-200/60 dark:bg-slate-900/90 border border-slate-300/60 dark:border-slate-800 rounded-xl">
+              <button
+                onClick={() => setHudTab('directory')}
+                className={`py-2 px-3 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  hudTab === 'directory'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5 text-amber-300" />
+                <span>Directory</span>
+              </button>
 
-                {/* From Location Picker */}
-                <div>
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-[#6A7282] mb-1">
-                    From (Starting Point)
-                  </label>
-                  <select
-                    value={startLocation?.id || ''}
-                    onChange={(e) => {
-                      const loc = locations.find(l => l.id === e.target.value) || null;
-                      setStartLocation(loc);
-                      setIsNavigating(false);
-                    }}
-                    className="w-full py-2.5 px-3 bg-[#FAFAFA] border border-purple-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#6A1B9A]"
-                  >
-                    <option value="">-- Select Starting Point --</option>
-                    {locations.map(loc => (
-                      <option key={loc.id} value={loc.id}>📍 {loc.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Swap Button */}
-                <div className="flex justify-center -my-1">
-                  <button
-                    onClick={handleSwap}
-                    title="Swap Start and Destination"
-                    className="p-1.5 bg-white hover:bg-purple-50 border border-purple-200 text-[#D97706] rounded-full shadow-md transition-transform hover:rotate-180 duration-300"
-                  >
-                    <ArrowUpDown className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                {/* To Location Picker */}
-                <div>
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-[#6A7282] mb-1">
-                    To (Destination)
-                  </label>
-                  <select
-                    value={destinationLocation?.id || ''}
-                    onChange={(e) => {
-                      const loc = locations.find(l => l.id === e.target.value) || null;
-                      setDestinationLocation(loc);
-                      setIsNavigating(false);
-                    }}
-                    className="w-full py-2.5 px-3 bg-[#FAFAFA] border border-purple-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#6A1B9A]"
-                  >
-                    <option value="">-- Select Destination --</option>
-                    {locations.map(loc => (
-                      <option key={loc.id} value={loc.id}>🏁 {loc.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Route Summary & Navigation Actions */}
+              <button
+                onClick={() => setHudTab('directions')}
+                className={`py-2 px-3 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer relative ${
+                  hudTab === 'directions'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <Route className="w-3.5 h-3.5 text-cyan-300" />
+                <span>Directions</span>
                 {activeRoute && (
-                  <div className="pt-2 space-y-3">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 absolute top-2 right-2 animate-ping" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Scrollable HUD Content Area */}
+          <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
+            {/* ---------------- DIRECTORY VIEW ---------------- */}
+            {hudTab === 'directory' && (
+              <div className="space-y-4">
+                {/* Search Bar */}
+                <div className="relative">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search campus buildings..."
+                    className="w-full py-2 pl-9 pr-8 bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Category Chips */}
+                <div>
+                  <CategoryFilter
+                    selectedCategory={selectedCategory}
+                    onSelectCategory={setSelectedCategory}
+                  />
+                </div>
+
+                {/* Selected Location Card Inspector */}
+                {selectedLocation ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between px-1">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400 font-mono">
+                        Selected Entity Inspector
+                      </span>
+                      <button
+                        onClick={() => onSelectLocation(null)}
+                        className="text-[10px] text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-semibold"
+                      >
+                        Back to List
+                      </button>
+                    </div>
+                    <LocationCard
+                      location={selectedLocation}
+                      onClose={() => onSelectLocation(null)}
+                      onSetAsStart={(loc) => {
+                        setStartLocation(loc);
+                        setHudTab('directions');
+                      }}
+                      onSetAsDestination={(loc) => {
+                        setDestinationLocation(loc);
+                        setHudTab('directions');
+                      }}
+                    />
+                  </div>
+                ) : (
+                  /* Filtered Locations List */
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1">
+                      <span>{filteredLocations.length} Locations Found</span>
+                      <span className="text-[10px] text-amber-500 font-mono">Double-click to zoom</span>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      {filteredLocations.map((loc) => {
+                        const cat = CATEGORIES.find((c) => c.id === loc.category);
+                        const isSelected = selectedLocation?.id === loc.id;
+                        const entranceCount = loc.entrances?.length || 0;
+
+                        return (
+                          <div
+                            key={loc.id}
+                            onClick={() => onSelectLocation(loc)}
+                            onDoubleClick={() => handleBuildingDoubleClick(loc)}
+                            className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between group ${
+                              isSelected
+                                ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-400 dark:border-purple-600 text-purple-900 dark:text-purple-200 shadow-sm ring-1 ring-purple-500/30'
+                                : 'bg-white/80 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800/70 hover:border-slate-300 dark:hover:border-slate-700'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <span
+                                style={{ backgroundColor: cat?.color || '#9333EA' }}
+                                className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm"
+                              />
+                              <div className="min-w-0">
+                                <h4 className="text-xs font-bold truncate leading-tight group-hover:text-purple-600 dark:group-hover:text-purple-300">
+                                  {loc.name}
+                                </h4>
+                                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate">
+                                  {cat?.name || loc.category} • [{Math.round(loc.position.x)}, {Math.round(loc.position.z)}]
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1 shrink-0 ml-2">
+                              {entranceCount > 0 && (
+                                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                  {entranceCount} 🚪
+                                </span>
+                              )}
+                              <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {filteredLocations.length === 0 && (
+                        <div className="p-6 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2">
+                          <Building2 className="w-8 h-8 mx-auto opacity-30 text-purple-400" />
+                          <p>No locations match your search or filter.</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ---------------- DIRECTIONS VIEW ---------------- */}
+            {hudTab === 'directions' && (
+              <div className="space-y-4 animate-in fade-in duration-200">
+                <div className="p-3.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400 font-mono flex items-center gap-1.5">
+                      <Compass className="w-3.5 h-3.5 text-amber-500" />
+                      Multi-Entrance Router
+                    </span>
+                    {(startLocation || destinationLocation) && (
+                      <button
+                        onClick={handleClearDirections}
+                        className="text-[10px] font-bold text-rose-500 hover:text-rose-600 cursor-pointer"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Start Point Picker */}
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-emerald-500" />
+                      From (Starting Point)
+                    </label>
+                    <select
+                      value={startLocation?.id || ''}
+                      onChange={(e) => {
+                        const loc = locations.find((l) => l.id === e.target.value) || null;
+                        setStartLocation(loc);
+                        setIsNavigating(false);
+                      }}
+                      className="w-full py-2 px-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="">-- Choose Starting Building --</option>
+                      {locations.map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          📍 {loc.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Swap Button */}
+                  <div className="flex justify-center -my-1">
+                    <button
+                      onClick={handleSwap}
+                      title="Swap Start and Destination"
+                      className="p-1.5 bg-white dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-amber-500 rounded-full shadow-md transition-transform hover:rotate-180 duration-300 cursor-pointer"
+                    >
+                      <ArrowUpDown className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Destination Picker */}
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1">
+                      <Flag className="w-3 h-3 text-amber-500" />
+                      To (Destination)
+                    </label>
+                    <select
+                      value={destinationLocation?.id || ''}
+                      onChange={(e) => {
+                        const loc = locations.find((l) => l.id === e.target.value) || null;
+                        setDestinationLocation(loc);
+                        setIsNavigating(false);
+                      }}
+                      className="w-full py-2 px-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="">-- Choose Destination Building --</option>
+                      {locations.map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          🏁 {loc.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Telemetry Summary & Step Guidance */}
+                {activeRoute && (
+                  <div className="space-y-3">
+                    {/* Distance & Time Telemetry Cards */}
                     <div className="grid grid-cols-2 gap-2 text-center">
-                      <div className="bg-purple-50/80 p-2.5 rounded-xl border border-purple-100">
-                        <p className="text-[10px] text-[#6A7282] uppercase font-bold">Distance</p>
-                        <p className="text-sm font-black text-[#6A1B9A]">{activeRoute.distance} m</p>
+                      <div className="bg-purple-50/80 dark:bg-purple-950/30 p-2.5 rounded-xl border border-purple-200 dark:border-purple-800/60">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black">
+                          Walking Distance
+                        </p>
+                        <p className="text-base font-black text-purple-600 dark:text-purple-300 font-mono">
+                          {activeRoute.distance} m
+                        </p>
                       </div>
-                      <div className="bg-amber-50/80 p-2.5 rounded-xl border border-amber-100">
-                        <p className="text-[10px] text-[#6A7282] uppercase font-bold">Walk Time</p>
-                        <p className="text-sm font-black text-[#D97706]">{activeRoute.walkingTime} min</p>
+                      <div className="bg-amber-50/80 dark:bg-amber-950/30 p-2.5 rounded-xl border border-amber-200 dark:border-amber-800/60">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-black">
+                          Est. Walking Time
+                        </p>
+                        <p className="text-base font-black text-amber-600 dark:text-amber-400 font-mono">
+                          {activeRoute.walkingTime} min
+                        </p>
                       </div>
                     </div>
 
                     {!isNavigating ? (
                       <button
                         onClick={handleStartNavigation}
-                        className="w-full py-3 bg-gradient-to-r from-[#6A1B9A] to-purple-800 hover:from-purple-800 hover:to-[#6A1B9A] text-white font-black text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-98 border border-amber-400/40"
+                        className="w-full py-3 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 text-white font-extrabold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer border border-purple-400/30"
                       >
                         <Play className="w-4 h-4 fill-current text-amber-300" />
-                        Start 3D Navigation
+                        Start 3D Step Guidance
                       </button>
                     ) : (
-                      <div className="space-y-2">
-                        {/* ACTIVE STEP CARD */}
-                        <div className="p-3 bg-purple-50/90 rounded-xl border border-purple-300 space-y-2 shadow-sm">
-                          <div className="flex items-center justify-between text-[10px] font-extrabold text-[#6A1B9A]">
-                            <span>Step {currentStepIndex + 1} of {activeRoute.steps.length}</span>
-                            <span className="text-[#D97706] font-mono">{activeRoute.steps[currentStepIndex].distance}m</span>
+                      <div className="space-y-2.5">
+                        {/* Active Step Card */}
+                        <div className="p-3 bg-purple-50 dark:bg-purple-950/50 rounded-xl border border-purple-300 dark:border-purple-700 space-y-2 shadow-sm">
+                          <div className="flex items-center justify-between text-[10px] font-black text-purple-600 dark:text-purple-300 uppercase font-mono">
+                            <span>
+                              Step {currentStepIndex + 1} of {activeRoute.steps.length}
+                            </span>
+                            <span className="text-amber-500 font-mono">
+                              {activeRoute.steps[currentStepIndex].distance}m
+                            </span>
                           </div>
 
-                          <p className="text-xs font-black text-slate-900 leading-snug">
+                          <p className="text-xs font-bold text-slate-900 dark:text-white leading-relaxed">
                             {activeRoute.steps[currentStepIndex].instruction}
                           </p>
 
-                          {/* DESTINATION REACHED NOTIFICATION OR NEXT STEP BUTTON */}
                           {isDestinationReached ? (
-                            <div className="p-3 bg-gradient-to-r from-[#D97706] to-amber-500 rounded-xl text-center space-y-1.5 shadow-md animate-in zoom-in-95">
-                              <p className="text-xs font-black text-white flex items-center justify-center gap-1.5">
+                            <div className="p-3 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl text-center space-y-1.5 shadow-md animate-in zoom-in-95 text-white">
+                              <p className="text-xs font-black flex items-center justify-center gap-1.5">
                                 <Flag className="w-4 h-4 text-amber-200" />
                                 Destination Reached! 🏁
                               </p>
                               <button
                                 onClick={handleClearDirections}
-                                className="px-3 py-1 bg-white/20 hover:bg-white/30 text-white text-[10px] font-extrabold rounded-md transition-colors"
+                                className="px-3 py-1 bg-white/20 hover:bg-white/30 text-white text-[10px] font-extrabold rounded-md transition-colors cursor-pointer"
                               >
                                 Finish Navigation
                               </button>
@@ -236,7 +485,7 @@ export const MapPage: React.FC<MapPageProps> = ({
                           ) : (
                             <button
                               onClick={handleNextStep}
-                              className="w-full py-2.5 bg-[#6A1B9A] hover:bg-purple-800 text-white font-extrabold text-xs rounded-lg shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-98"
+                              className="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-black text-xs rounded-lg shadow-md transition-all flex items-center justify-center gap-1.5 active:scale-98 cursor-pointer"
                             >
                               <span>Next Step</span>
                               <ChevronRight className="w-4 h-4 text-amber-300" />
@@ -247,149 +496,29 @@ export const MapPage: React.FC<MapPageProps> = ({
                     )}
                   </div>
                 )}
-              </div>
-            )}
-          </div>
 
-          {/* 3. FILTER CATEGORIES */}
-          <div>
-            <h4 className="text-[11px] font-extrabold uppercase tracking-wider text-[#6A1B9A] mb-1.5 px-1">
-              Filter Categories
-            </h4>
-            <CategoryFilter
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-            />
-          </div>
-
-          {/* 4. SELECTED LOCATION CARD DETAILS */}
-          {selectedLocation && !showDirections && (
-            <LocationCard
-              location={selectedLocation}
-              onClose={() => onSelectLocation(null)}
-              onSetAsStart={(loc) => {
-                setStartLocation(loc);
-                setShowDirections(true);
-              }}
-              onSetAsDestination={(loc) => {
-                setDestinationLocation(loc);
-                setShowDirections(true);
-              }}
-            />
-          )}
-
-          {!selectedLocation && !showDirections && (
-            <div className="bg-white p-5 rounded-2xl border border-purple-100 text-center space-y-2 shadow-sm">
-              <p className="text-xs font-extrabold text-[#6A1B9A]">Interactive 3D REC Campus</p>
-              <p className="text-[11px] text-[#6A7282]">
-                Click any 3D building model to inspect facilities, or click <strong className="text-[#D97706]">Directions</strong> above to find shortest walking paths!
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* MOBILE FLOATING SEARCH & CATEGORY BAR (< 1024px) */}
-      <div className="lg:hidden absolute top-3 left-3 right-3 z-30 space-y-2 pointer-events-auto">
-        <SearchBar locations={locations} onSelectLocation={onSelectLocation} />
-        <button
-          onClick={() => setShowDirections(prev => !prev)}
-          className="w-full py-2.5 px-4 bg-[#6A1B9A] text-white rounded-xl text-xs font-bold shadow-lg flex items-center justify-between"
-        >
-          <span className="flex items-center gap-1.5">
-            <Navigation className="w-4 h-4 text-amber-300" />
-            Directions From - To
-          </span>
-          <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">{showDirections ? 'Close' : 'Open'}</span>
-        </button>
-
-        {showDirections && (
-          <div className="bg-white border border-purple-200 p-3 rounded-xl space-y-2 shadow-2xl text-slate-900 text-xs">
-            <select
-              value={startLocation?.id || ''}
-              onChange={(e) => setStartLocation(locations.find(l => l.id === e.target.value) || null)}
-              className="w-full p-2 bg-[#FAFAFA] border border-purple-200 rounded-lg text-xs"
-            >
-              <option value="">-- From (Start) --</option>
-              {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
-            </select>
-            <select
-              value={destinationLocation?.id || ''}
-              onChange={(e) => setDestinationLocation(locations.find(l => l.id === e.target.value) || null)}
-              className="w-full p-2 bg-[#FAFAFA] border border-purple-200 rounded-lg text-xs"
-            >
-              <option value="">-- To (Destination) --</option>
-              {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
-            </select>
-
-            {activeRoute && !isNavigating && (
-              <button
-                onClick={handleStartNavigation}
-                className="w-full py-2 bg-[#6A1B9A] text-white font-bold rounded-lg text-xs"
-              >
-                Start Navigation
-              </button>
-            )}
-
-            {isNavigating && activeRoute && (
-              <div className="p-2 bg-purple-50 border border-purple-300 rounded-lg space-y-1">
-                <p className="font-bold text-[#6A1B9A]">Step {currentStepIndex + 1}: {activeRoute.steps[currentStepIndex].instruction}</p>
-                {isDestinationReached ? (
-                  <p className="text-[#D97706] font-bold">Destination Reached! 🏁</p>
-                ) : (
-                  <button onClick={handleNextStep} className="w-full py-1 bg-[#6A1B9A] text-white font-bold rounded">Next Step</button>
+                {!activeRoute && startLocation && destinationLocation && (
+                  <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-xs text-rose-600 dark:text-rose-400">
+                    No connected road path found between the selected buildings. Check entrance connections in CAD Studio.
+                  </div>
                 )}
               </div>
             )}
           </div>
-        )}
-      </div>
+        </aside>
+      )}
 
-      {/* MAIN 3D WEBGL CAMPUS CANVAS */}
-      <div className="flex-1 h-full relative">
-        <ErrorBoundary
-          title="3D Canvas Initialization"
-          fallback={
-            <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-white p-6 text-center">
-              <p className="text-sm font-bold text-amber-400 mb-2">3D WebGL Scene Suspended</p>
-              <p className="text-xs text-slate-400 max-w-sm mb-4">
-                WebGL or 3D acceleration is loading or unavailable. You can still use Directions, Search, Places list, and Admin Mode.
-              </p>
-              <button
-                onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-[#6A1B9A] text-white text-xs font-bold rounded-lg shadow"
-              >
-                Reload 3D Campus
-              </button>
-            </div>
-          }
-        >
-          <CampusScene
-            locations={filteredLocations}
-            selectedLocation={selectedLocation}
-            onSelectLocation={onSelectLocation}
-            activeRoute={activeRoute}
-            startLocation={startLocation}
-            destinationLocation={destinationLocation}
-            showLabels={showLabels}
-            showRoads={showRoads}
-            brightness={brightness}
-            controlsRef={controlsRef}
-          />
-        </ErrorBoundary>
-
-        {/* Collapsable 3D Floating Control Toolbar */}
-        <MapControls
-          showLabels={showLabels}
-          onToggleLabels={() => setShowLabels(prev => !prev)}
-          showRoads={showRoads}
-          onToggleRoads={() => setShowRoads(prev => !prev)}
-          brightness={brightness}
-          onChangeBrightness={setBrightness}
-          onResetCamera={handleResetCameraView}
-          controlsRef={controlsRef}
-        />
-      </div>
+      {/* 4. FLOATING MAP CONTROLS TOOLBAR (Right Side) */}
+      <MapControls
+        showLabels={showLabels}
+        onToggleLabels={() => setShowLabels((prev) => !prev)}
+        showRoads={showRoads}
+        onToggleRoads={() => setShowRoads((prev) => !prev)}
+        brightness={brightness}
+        onChangeBrightness={setBrightness}
+        onResetCamera={handleResetCameraView}
+        controlsRef={controlsRef}
+      />
     </div>
   );
 };

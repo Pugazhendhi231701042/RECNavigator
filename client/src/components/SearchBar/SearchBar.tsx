@@ -39,7 +39,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div ref={wrapperRef} className="relative w-full">
       <div className="relative">
-        <Search className="w-4 h-4 text-[#6A1B9A] absolute left-3.5 top-3" />
+        <Search className="w-4 h-4 text-purple-600 dark:text-purple-400 absolute left-3.5 top-2.5" />
         <input
           type="text"
           value={query}
@@ -49,7 +49,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Search buildings, departments (e.g. CSE, IT, Cafe)..."
-          className="w-full py-2.5 pl-10 pr-9 bg-white border border-purple-200 rounded-xl text-xs font-bold text-slate-900 placeholder-[#6A7282] focus:outline-none focus:ring-2 focus:ring-[#6A1B9A] shadow-sm transition-all"
+          className="w-full py-2 pl-9 pr-9 bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 shadow-inner transition-all"
         />
         {query && (
           <button
@@ -57,7 +57,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               setQuery('');
               setIsOpen(false);
             }}
-            className="absolute right-3 top-3 text-[#6A7282] hover:text-[#6A1B9A]"
+            className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -66,7 +66,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
       {/* Autocomplete Dropdown List */}
       {isOpen && filteredLocations.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-2xl border border-purple-200 rounded-2xl shadow-2xl overflow-hidden z-50 max-h-72 overflow-y-auto divide-y divide-purple-50">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden z-50 max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
           {filteredLocations.map(loc => (
             <div
               key={loc.id}
@@ -75,22 +75,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 setQuery('');
                 setIsOpen(false);
               }}
-              className="p-3 hover:bg-purple-50 cursor-pointer flex items-center justify-between transition-colors group"
+              className="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer flex items-center justify-between transition-colors group"
             >
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-purple-100 text-[#6A1B9A] flex items-center justify-center font-bold shrink-0">
-                  <MapPin className="w-4 h-4 text-[#D97706]" />
+              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                <div className="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 flex items-center justify-center font-bold shrink-0">
+                  <MapPin className="w-3.5 h-3.5 text-amber-500" />
                 </div>
-                <div>
-                  <h4 className="text-xs font-extrabold text-slate-900 group-hover:text-[#6A1B9A] transition-colors">
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-xs font-extrabold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors truncate">
                     {loc.name}
                   </h4>
-                  <p className="text-[10px] text-[#6A7282] line-clamp-1">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
                     {loc.description}
                   </p>
                 </div>
               </div>
-              <span className="text-[10px] bg-purple-100 text-[#6A1B9A] px-2 py-0.5 rounded-full font-extrabold uppercase">
+              <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-purple-600 dark:text-purple-400 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-full font-bold uppercase shrink-0 ml-2">
                 {loc.category}
               </span>
             </div>

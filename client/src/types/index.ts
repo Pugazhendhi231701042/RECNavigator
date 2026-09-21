@@ -30,7 +30,7 @@ export interface Location {
   position: Vector3D; // 3D world position in meters
   rotationY?: number; // Y-axis rotation angle in degrees or radians
   rotation?: [number, number, number]; // [rx, ry, rz]
-  scale?: [number, number, number];
+  scale?: [number, number, number] | number;
   modelKey?: string; // Key in assetManifest
   image?: string;
   tags?: string[];
@@ -38,8 +38,28 @@ export interface Location {
   facilities?: string[];
   block?: string;
   floorCount?: number;
-  nodeId: string; // Associated navigation graph node
+  nodeId: string; // Primary associated navigation graph node
+  entranceNodeIds?: string[]; // All entrance junctions for this building
+  entrances?: Entrance[]; // Explicit entrances with custom names & junction mapping
   isPlaceholder?: boolean;
+}
+
+export interface Entrance {
+  id: string;
+  name: string; // e.g., "Main Front Entrance", "East Wing Gate", "Emergency Exit"
+  buildingId: string;
+  junctionId: string; // Associated navigation graph node
+  position?: Vector3D; // Optional coordinate on map
+}
+
+export interface Road {
+  id: string;
+  name: string;
+  junctionIds: string[]; // Ordered sequence of junction IDs forming this road
+  segmentDistances?: Record<string, number>; // Authoritative manual distances (key: "nodeA:::nodeB") in meters
+  width?: number; // Road mesh width in meters (default: 10m)
+  color?: string;
+  description?: string;
 }
 
 export interface PathNode {

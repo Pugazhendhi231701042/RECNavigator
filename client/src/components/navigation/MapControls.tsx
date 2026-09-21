@@ -72,112 +72,112 @@ export const MapControls: React.FC<MapControlsProps> = ({
     else onChangeBrightness(1.2);
   };
 
-  // IF COLLAPSED: RENDER SINGLE WHITE/PURPLE GLASS FLOATING TOGGLE BUTTON
+  // IF COLLAPSED: RENDER SINGLE GLASS FLOATING TOGGLE BUTTON
   if (!isExpanded) {
     return (
       <div className="absolute top-4 right-4 z-30">
         <button
           onClick={() => setIsExpanded(true)}
           title="Expand 3D Camera & Map Controls"
-          className="p-3.5 bg-white/90 hover:bg-white backdrop-blur-2xl border border-purple-200 rounded-2xl shadow-xl text-[#6A1B9A] flex items-center justify-center transition-all transform active:scale-95 group ring-2 ring-purple-100/50"
+          className="p-3 bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-800 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-800/80 rounded-2xl shadow-xl text-purple-600 dark:text-purple-400 flex items-center justify-center transition-all transform active:scale-95 group cursor-pointer"
         >
-          <SlidersHorizontal className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300 text-[#D97706]" />
+          <SlidersHorizontal className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300 text-amber-500" />
         </button>
       </div>
     );
   }
 
-  // IF EXPANDED: RENDER FULL WHITE/PURPLE GLASS TOOLBAR
+  // IF EXPANDED: RENDER FULL STUDIO GLASS TOOLBAR
   return (
-    <div className="absolute top-4 right-4 z-30 flex flex-col gap-2 bg-white/95 backdrop-blur-2xl p-2 rounded-2xl border border-purple-200 shadow-2xl text-slate-900 ring-2 ring-purple-100/60 animate-in fade-in zoom-in-95 duration-200">
+    <div className="absolute top-4 right-4 z-30 flex flex-col gap-1.5 bg-white/90 dark:bg-slate-950/85 backdrop-blur-2xl p-2 rounded-2xl border border-slate-200/90 dark:border-slate-800/80 shadow-2xl text-slate-900 dark:text-white animate-in fade-in zoom-in-95 duration-200">
       {/* Collapse Header Button */}
       <button
         onClick={() => setIsExpanded(false)}
         title="Collapse Controls Toolbar"
-        className="p-2 text-[#6A7282] hover:text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors flex items-center justify-between gap-1 text-[11px] font-bold px-2.5 mb-1 border-b border-purple-100"
+        className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors flex items-center justify-between gap-1 text-[10px] font-bold px-2 mb-0.5 border-b border-slate-100 dark:border-slate-800 cursor-pointer"
       >
-        <span className="text-[#6A1B9A] font-extrabold uppercase tracking-wider text-[10px]">Controls</span>
-        <ChevronRight className="w-4 h-4 text-[#6A7282]" />
+        <span className="text-purple-600 dark:text-purple-400 font-extrabold uppercase tracking-wider text-[10px]">Controls</span>
+        <ChevronRight className="w-3.5 h-3.5" />
       </button>
 
       {/* Zoom In */}
       <button
         onClick={handleZoomIn}
         title="Zoom In (+)"
-        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
+        className="p-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors active:scale-95 cursor-pointer flex items-center justify-center"
       >
-        <ZoomIn className="w-5 h-5" />
+        <ZoomIn className="w-4 h-4" />
       </button>
 
       {/* Zoom Out */}
       <button
         onClick={handleZoomOut}
         title="Zoom Out (-)"
-        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
+        className="p-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors active:scale-95 cursor-pointer flex items-center justify-center"
       >
-        <ZoomOut className="w-5 h-5" />
+        <ZoomOut className="w-4 h-4" />
       </button>
 
-      <div className="w-full h-px bg-purple-100 my-0.5" />
+      <div className="w-full h-px bg-slate-200/80 dark:bg-slate-800 my-0.5" />
 
       {/* Rotate Left */}
       <button
         onClick={handleRotateLeft}
         title="Rotate Camera Left"
-        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
+        className="p-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors active:scale-95 cursor-pointer flex items-center justify-center"
       >
-        <RotateCcw className="w-5 h-5" />
+        <RotateCcw className="w-4 h-4" />
       </button>
 
       {/* Rotate Right */}
       <button
         onClick={handleRotateRight}
         title="Rotate Camera Right"
-        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
+        className="p-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors active:scale-95 cursor-pointer flex items-center justify-center"
       >
-        <RotateCw className="w-5 h-5" />
+        <RotateCw className="w-4 h-4" />
       </button>
 
-      <div className="w-full h-px bg-purple-100 my-0.5" />
+      <div className="w-full h-px bg-slate-200/80 dark:bg-slate-800 my-0.5" />
 
       {/* Brightness Adjustment Button */}
       <button
         onClick={cycleBrightness}
         title={`Scene Brightness: ${brightness.toFixed(1)}x (Click to cycle)`}
-        className="p-2.5 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 text-[#D97706] hover:bg-purple-50"
+        className="p-2 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 text-amber-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
       >
-        <Sun className="w-5 h-5" />
+        <Sun className="w-4 h-4" />
       </button>
 
       {/* Toggle 3D Roads */}
       <button
         onClick={onToggleRoads}
         title="Show / Remove 3D Roads Overlay"
-        className={`p-2.5 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 ${
-          showRoads ? 'bg-[#6A1B9A] text-white' : 'text-[#6A7282] hover:bg-purple-50'
+        className={`p-2 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 cursor-pointer ${
+          showRoads ? 'bg-purple-600 text-white shadow' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
         }`}
       >
-        <Waypoints className="w-5 h-5" />
+        <Waypoints className="w-4 h-4" />
       </button>
 
       {/* Toggle Labels */}
       <button
         onClick={onToggleLabels}
         title="Toggle 3D Building Labels"
-        className={`p-2.5 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 ${
-          showLabels ? 'bg-[#6A1B9A] text-white' : 'text-[#6A7282] hover:bg-purple-50'
+        className={`p-2 rounded-xl transition-colors flex items-center justify-center text-xs font-bold active:scale-95 cursor-pointer ${
+          showLabels ? 'bg-purple-600 text-white shadow' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
         }`}
       >
-        <Tag className="w-5 h-5" />
+        <Tag className="w-4 h-4" />
       </button>
 
       {/* Reset Camera View */}
       <button
         onClick={onResetCamera}
         title="Reset 3D Camera View"
-        className="p-2.5 text-[#6A1B9A] hover:bg-purple-50 rounded-xl transition-colors active:scale-95"
+        className="p-2 text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors active:scale-95 cursor-pointer flex items-center justify-center"
       >
-        <Maximize2 className="w-5 h-5" />
+        <Maximize2 className="w-4 h-4" />
       </button>
     </div>
   );

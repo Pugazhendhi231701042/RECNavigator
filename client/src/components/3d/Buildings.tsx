@@ -1,13 +1,20 @@
-import React, { useMemo, Suspense, Component } from 'react';
-import { useGLTF } from '@react-three/drei';
+import React, { useMemo, Suspense, Component, useRef } from 'react';
+import { useGLTF, TransformControls, Line, Html } from '@react-three/drei';
 import { Box3, Vector3 } from 'three';
 import { ASSET_MANIFEST } from '../../data/assetManifest';
-import type { Location } from '../../types';
+import type { Location, Vector3D, PathNode } from '../../types';
 
 interface BuildingsProps {
   locations: Location[];
   selectedLocation: Location | null;
   onSelectLocation: (loc: Location) => void;
+  onDoubleClickLocation?: (loc: Location) => void;
+  subdued?: boolean;
+  transformMode?: 'translate' | 'rotate' | 'scale' | null;
+  onTransformChange?: (newPos: Vector3D, newRotY: number, newScale: number) => void;
+  onTransformStart?: () => void;
+  onTransformEnd?: () => void;
+  nodes?: PathNode[];
 }
 
 // Error Boundary for GLB Model Loading
@@ -31,7 +38,17 @@ class GLBErrorBoundary extends Component<{ fallback: React.ReactNode; children: 
 }
 
 // Component that loads GLB via useGLTF with Auto-Centering and Ground Bounding
-function GLBModel({ url, onClick, scale = 1 }: { url: string; onClick: (e: any) => void; scale?: number }) {
+function GLBModel({
+  url,
+  onClick,
+  onDoubleClick,
+  scale = 1,
+}: {
+  url: string;
+  onClick: (e: any) => void;
+  onDoubleClick?: (e: any) => void;
+  scale?: number;
+}) {
   const { scene } = useGLTF(url);
 
   const autoCenteredScene = useMemo(() => {
@@ -51,16 +68,26 @@ function GLBModel({ url, onClick, scale = 1 }: { url: string; onClick: (e: any) 
   }, [scene, url]);
 
   return (
-    <group onClick={onClick} scale={[scale, scale, scale]}>
+    <group onClick={onClick} onDoubleClick={onDoubleClick} scale={[scale, scale, scale]}>
       <primitive object={autoCenteredScene} />
     </group>
   );
 }
 
 // Procedural Fallback Building Geometry
-function ProceduralBuilding({ loc, color, onClick }: { loc: Location; color: string; onClick: (e: any) => void }) {
+function ProceduralBuilding({
+  loc,
+  color,
+  onClick,
+  onDoubleClick,
+}: {
+  loc: Location;
+  color: string;
+  onClick: (e: any) => void;
+  onDoubleClick?: (e: any) => void;
+}) {
   return (
-    <group onClick={onClick}>
+    <group onClick={onClick} onDoubleClick={onDoubleClick}>
       {/* Block A (Long Horizontal Academic Block) */}
       {loc.id === 'block-a' && (
         <group>
@@ -216,57 +243,218 @@ function ProceduralBuilding({ loc, color, onClick }: { loc: Location; color: str
   );
 }
 
+interface BuildingItemProps {
+  loc: Location;
+  isSelected: boolean;
+  subdued?: boolean;
+  transformMode?: 'translate' | 'rotate' | 'scale' | null;
+  onSelect: (loc: Location) => void;
+  onDoubleClick?: (loc: Location) => void;
+  onTransformChange?: (newPos: Vector3D, newRotY: number, newScale: number) => void;
+  onTransformStart?: () => void;
+  onTransformEnd?: () => void;
+  entranceNodes: PathNode[];
+}
+
+function BuildingItem({
+  loc,
+  isSelected,
+  subdued,
+  transformMode,
+  onSelect,
+  onDoubleClick,
+  onTransformChange,
+  onTransformStart,
+  onTransformEnd,
+  entranceNodes,
+}: BuildingItemProps) {
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const groupRef = useRef<any>(null);
+
+  const manifestEntry = loc.modelKey ? ASSET_MANIFEST[loc.modelKey] : null;
+  const useGLB = manifestEntry && manifestEntry.isVerifiedModel && !subdued;
+
+  const color = subdued
+    ? '#475569'
+    : isSelected
+      ? '#38BDF8'
+      : loc.category === 'academic'
+        ? '#1E40AF'
+        : loc.category === 'food'
+          ? '#D97706'
+          : loc.category === 'hostel'
+            ? '#6D28D9'
+            : loc.category === 'sports'
+              ? '#059669'
+              : loc.category === 'entrance'
+                ? '#DC2626'
+                : '#0284C7';
+
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    onSelect(loc);
+  };
+
+  const handleDoubleClick = (e: any) => {
+    e.stopPropagation();
+    onDoubleClick?.(loc);
+  };
+
+  const fallback = (
+    <ProceduralBuilding
+      loc={loc}
+      color={color}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+    />
+  );
+  const rotYRad = ((loc.rotationY || 0) * Math.PI) / 180;
+  const glbUrl = manifestEntry ? `${baseUrl}${manifestEntry.glbPath}`.replace(/\/+/g, '/') : '';
+  const scaleVec: [number, number, number] = Array.isArray(loc.scale)
+    ? loc.scale
+    : typeof loc.scale === 'number'
+      ? [loc.scale, loc.scale, loc.scale]
+      : [1, 1, 1];
+
+  const content = (
+    <group
+      ref={groupRef}
+      position={[loc.position.x, loc.position.y, loc.position.z]}
+      rotation={[0, rotYRad, 0]}
+      scale={scaleVec}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+    >
+      {useGLB ? (
+        <GLBErrorBoundary fallback={fallback}>
+          <Suspense fallback={fallback}>
+            <GLBModel
+              url={glbUrl}
+              onClick={handleClick}
+              onDoubleClick={handleDoubleClick}
+            />
+          </Suspense>
+        </GLBErrorBoundary>
+      ) : (
+        fallback
+      )}
+
+      {/* Selected Building Ground Highlight Ring */}
+      {isSelected && (
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.15, 0]}>
+          <ringGeometry args={[18, 21, 36]} />
+          <meshBasicMaterial color="#38BDF8" toneMapped={false} />
+        </mesh>
+      )}
+    </group>
+  );
+
+  return (
+    <>
+      {/* 3D Transform Gizmo direct manipulation */}
+      {isSelected && transformMode && groupRef.current ? (
+        <TransformControls
+          object={groupRef}
+          mode={transformMode}
+          translationSnap={1}
+          rotationSnap={Math.PI / 36}
+          onMouseDown={onTransformStart}
+          onMouseUp={onTransformEnd}
+          onChange={() => {
+            if (groupRef.current && onTransformChange) {
+              const pos = groupRef.current.position;
+              const rot = groupRef.current.rotation;
+              const sc = groupRef.current.scale;
+              const deg = Math.round((rot.y * 180) / Math.PI);
+              onTransformChange(
+                { x: Math.round(pos.x), y: Number(pos.y.toFixed(1)), z: Math.round(pos.z) },
+                (deg % 360 + 360) % 360,
+                Number(sc.x.toFixed(2))
+              );
+            }
+          }}
+        >
+          {content}
+        </TransformControls>
+      ) : (
+        content
+      )}
+
+      {/* Entrance Connector Lines for Selected Building */}
+      {isSelected && entranceNodes.length > 0 && (
+        <group>
+          {entranceNodes.map(node => (
+            <group key={`ent-line-${loc.id}-${node.id}`}>
+              <Line
+                points={[
+                  [loc.position.x, 0.3, loc.position.z],
+                  [node.position.x, 0.3, node.position.z],
+                ]}
+                color="#10B981"
+                lineWidth={3}
+                dashed
+                dashScale={4}
+                dashSize={1}
+                gapSize={0.6}
+              />
+              <Html
+                position={[
+                  (loc.position.x + node.position.x) / 2,
+                  1.5,
+                  (loc.position.z + node.position.z) / 2,
+                ]}
+                center
+                distanceFactor={100}
+              >
+                <div className="bg-emerald-950/90 text-emerald-300 text-[10px] font-bold px-1.5 py-0.5 rounded border border-emerald-500/60 shadow-md whitespace-nowrap pointer-events-none">
+                  🚪 Entrance Link
+                </div>
+              </Html>
+            </group>
+          ))}
+        </group>
+      )}
+    </>
+  );
+}
+
 export const Buildings: React.FC<BuildingsProps> = ({
   locations,
   selectedLocation,
   onSelectLocation,
+  onDoubleClickLocation,
+  subdued = false,
+  transformMode = null,
+  onTransformChange,
+  onTransformStart,
+  onTransformEnd,
+  nodes = [],
 }) => {
-  const baseUrl = import.meta.env.BASE_URL || '/';
-
   return (
     <group>
       {locations.map(loc => {
         const isSelected = selectedLocation?.id === loc.id;
-        const color = isSelected ? '#3B82F6' : (
-          loc.category === 'academic' ? '#1E40AF' :
-          loc.category === 'food' ? '#D97706' :
-          loc.category === 'hostel' ? '#6D28D9' :
-          loc.category === 'sports' ? '#059669' :
-          loc.category === 'entrance' ? '#DC2626' : '#0284C7'
-        );
-
-        const manifestEntry = loc.modelKey ? ASSET_MANIFEST[loc.modelKey] : null;
-        const useGLB = manifestEntry && manifestEntry.isVerifiedModel;
-
-        const handleClick = (e: any) => {
-          e.stopPropagation();
-          onSelectLocation(loc);
-        };
-
-        const fallback = <ProceduralBuilding loc={loc} color={color} onClick={handleClick} />;
         
-        const rotYRad = ((loc.rotationY || 0) * Math.PI) / 180;
-        const glbUrl = manifestEntry ? `${baseUrl}${manifestEntry.glbPath}`.replace(/\/+/g, '/') : '';
-        const posX = typeof loc.position?.x === 'number' ? loc.position.x : 0;
-        const posY = typeof loc.position?.y === 'number' ? loc.position.y : 0;
-        const posZ = typeof loc.position?.z === 'number' ? loc.position.z : 0;
+        // Find entrance nodes for this building
+        const entranceIds = (loc.entranceNodeIds && loc.entranceNodeIds.length > 0)
+          ? loc.entranceNodeIds
+          : [loc.nodeId];
+        const entranceNodes = nodes.filter(n => entranceIds.includes(n.id));
 
         return (
-          <group
+          <BuildingItem
             key={loc.id}
-            position={[posX, posY, posZ]}
-            rotation={[0, rotYRad, 0]}
-          >
-            {useGLB ? (
-              <GLBErrorBoundary fallback={fallback}>
-                <Suspense fallback={fallback}>
-                  <GLBModel url={glbUrl} onClick={handleClick} />
-                </Suspense>
-              </GLBErrorBoundary>
-            ) : (
-              fallback
-            )}
-          </group>
+            loc={loc}
+            isSelected={isSelected}
+            subdued={subdued}
+            transformMode={isSelected ? transformMode : null}
+            onSelect={onSelectLocation}
+            onDoubleClick={onDoubleClickLocation}
+            onTransformChange={onTransformChange}
+            onTransformStart={onTransformStart}
+            onTransformEnd={onTransformEnd}
+            entranceNodes={entranceNodes}
+          />
         );
       })}
     </group>

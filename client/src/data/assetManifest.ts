@@ -46,7 +46,7 @@ export const ASSET_MANIFEST: Record<string, AssetManifestEntry> = {
     id: 'block-d',
     name: 'Block D (Management & Humanities)',
     glbPath: '/assets/campus/block-d.glb',
-    isVerifiedModel: false,
+    isVerifiedModel: true, // Enabled custom GLB model
     description: 'MBA and Placement cell building.',
   },
   'rec-cafe': {
@@ -67,7 +67,7 @@ export const ASSET_MANIFEST: Record<string, AssetManifestEntry> = {
     id: 'dominos',
     name: 'Food Square (Domino\'s & Blackbucks)',
     glbPath: '/assets/campus/dominos.glb',
-    isVerifiedModel: false,
+    isVerifiedModel: true,
     description: 'Food square kiosk building.',
   },
   'sports-ground': {
