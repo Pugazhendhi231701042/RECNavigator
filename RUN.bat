@@ -16,7 +16,7 @@ if not exist "client\node_modules\" (
     echo [INFO] Running 'npm install' in client folder...
     echo.
     cd client
-    call npm install
+    call npm install --legacy-peer-deps
     if %errorlevel% neq 0 (
         echo.
         echo [ERROR] 'npm install' encountered an error!
