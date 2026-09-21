@@ -28,7 +28,10 @@ export const LocationMarker3D: React.FC<LocationMarker3DProps> = ({
         const isSelected = selectedLocation?.id === loc.id;
 
         // Position pin 14m above building base
-        const pinPos: [number, number, number] = [loc.position.x, loc.position.y + 14, loc.position.z];
+        const pinX = typeof loc.position?.x === 'number' ? loc.position.x : 0;
+        const pinY = (typeof loc.position?.y === 'number' ? loc.position.y : 0) + 14;
+        const pinZ = typeof loc.position?.z === 'number' ? loc.position.z : 0;
+        const pinPos: [number, number, number] = [pinX, pinY, pinZ];
 
         return (
           <group key={loc.id} position={pinPos}>

@@ -9,6 +9,7 @@ import { SearchBar } from '../components/SearchBar/SearchBar';
 import { calculateDijkstraRoute } from '../utils/routing/dijkstra';
 import { PATH_NODES, PATH_EDGES } from '../data/recCampusData';
 import { Navigation, ArrowUpDown, X, Play, ChevronRight, Flag } from 'lucide-react';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 interface MapPageProps {
   locations: Location[];
@@ -346,18 +347,36 @@ export const MapPage: React.FC<MapPageProps> = ({
 
       {/* MAIN 3D WEBGL CAMPUS CANVAS */}
       <div className="flex-1 h-full relative">
-        <CampusScene
-          locations={filteredLocations}
-          selectedLocation={selectedLocation}
-          onSelectLocation={onSelectLocation}
-          activeRoute={activeRoute}
-          startLocation={startLocation}
-          destinationLocation={destinationLocation}
-          showLabels={showLabels}
-          showRoads={showRoads}
-          brightness={brightness}
-          controlsRef={controlsRef}
-        />
+        <ErrorBoundary
+          title="3D Canvas Initialization"
+          fallback={
+            <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-white p-6 text-center">
+              <p className="text-sm font-bold text-amber-400 mb-2">3D WebGL Scene Suspended</p>
+              <p className="text-xs text-slate-400 max-w-sm mb-4">
+                WebGL or 3D acceleration is loading or unavailable. You can still use Directions, Search, Places list, and Admin Mode.
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 bg-[#6A1B9A] text-white text-xs font-bold rounded-lg shadow"
+              >
+                Reload 3D Campus
+              </button>
+            </div>
+          }
+        >
+          <CampusScene
+            locations={filteredLocations}
+            selectedLocation={selectedLocation}
+            onSelectLocation={onSelectLocation}
+            activeRoute={activeRoute}
+            startLocation={startLocation}
+            destinationLocation={destinationLocation}
+            showLabels={showLabels}
+            showRoads={showRoads}
+            brightness={brightness}
+            controlsRef={controlsRef}
+          />
+        </ErrorBoundary>
 
         {/* Collapsable 3D Floating Control Toolbar */}
         <MapControls

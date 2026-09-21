@@ -247,11 +247,14 @@ export const Buildings: React.FC<BuildingsProps> = ({
         
         const rotYRad = ((loc.rotationY || 0) * Math.PI) / 180;
         const glbUrl = manifestEntry ? `${baseUrl}${manifestEntry.glbPath}`.replace(/\/+/g, '/') : '';
+        const posX = typeof loc.position?.x === 'number' ? loc.position.x : 0;
+        const posY = typeof loc.position?.y === 'number' ? loc.position.y : 0;
+        const posZ = typeof loc.position?.z === 'number' ? loc.position.z : 0;
 
         return (
           <group
             key={loc.id}
-            position={[loc.position.x, loc.position.y, loc.position.z]}
+            position={[posX, posY, posZ]}
             rotation={[0, rotYRad, 0]}
           >
             {useGLB ? (
