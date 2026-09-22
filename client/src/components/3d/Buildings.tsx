@@ -271,7 +271,15 @@ function BuildingItem({
   const baseUrl = import.meta.env.BASE_URL || '/';
   const groupRef = useRef<any>(null);
 
-  const manifestEntry = loc.modelKey ? ASSET_MANIFEST[loc.modelKey] : null;
+  const manifestEntry = loc.modelKey
+    ? ASSET_MANIFEST[loc.modelKey] || {
+        id: loc.modelKey,
+        name: loc.modelKey,
+        glbPath: `/assets/campus/${loc.modelKey}`,
+        isVerifiedModel: true,
+        description: loc.modelKey,
+      }
+    : null;
   const useGLB = manifestEntry && manifestEntry.isVerifiedModel && !subdued;
 
   const color = subdued
@@ -349,35 +357,62 @@ function BuildingItem({
     </group>
   );
 
+  const isDraggingRef = useRef(false);
+  const lastThrottleTime = useRef(0);
+
+  const handleGizmoMouseDown = () => {
+    isDraggingRef.current = true;
+    onTransformStart?.();
+  };
+
+  const handleGizmoMouseUp = () => {
+    isDraggingRef.current = false;
+    onTransformEnd?.();
+    if (groupRef.current && onTransformChange) {
+      const pos = groupRef.current.position;
+      const rot = groupRef.current.rotation;
+      const sc = groupRef.current.scale;
+      const deg = Math.round((rot.y * 180) / Math.PI);
+      onTransformChange(
+        { x: Math.round(pos.x), y: Number(pos.y.toFixed(1)), z: Math.round(pos.z) },
+        (deg % 360 + 360) % 360,
+        Number(sc.x.toFixed(2))
+      );
+    }
+  };
+
+  const handleGizmoChange = () => {
+    if (!groupRef.current || !onTransformChange || !isDraggingRef.current) return;
+    const now = performance.now();
+    // Throttle React state sync during active dragging to keep 60fps render loop butter-smooth
+    if (now - lastThrottleTime.current > 60) {
+      lastThrottleTime.current = now;
+      const pos = groupRef.current.position;
+      const rot = groupRef.current.rotation;
+      const sc = groupRef.current.scale;
+      const deg = Math.round((rot.y * 180) / Math.PI);
+      onTransformChange(
+        { x: Math.round(pos.x), y: Number(pos.y.toFixed(1)), z: Math.round(pos.z) },
+        (deg % 360 + 360) % 360,
+        Number(sc.x.toFixed(2))
+      );
+    }
+  };
+
   return (
     <>
-      {/* 3D Transform Gizmo direct manipulation */}
-      {isSelected && transformMode && groupRef.current ? (
+      {content}
+
+      {/* 3D Transform Gizmo direct manipulation — smooth continuous control */}
+      {isSelected && transformMode && groupRef.current && (
         <TransformControls
           object={groupRef}
           mode={transformMode}
-          translationSnap={1}
-          rotationSnap={Math.PI / 36}
-          onMouseDown={onTransformStart}
-          onMouseUp={onTransformEnd}
-          onChange={() => {
-            if (groupRef.current && onTransformChange) {
-              const pos = groupRef.current.position;
-              const rot = groupRef.current.rotation;
-              const sc = groupRef.current.scale;
-              const deg = Math.round((rot.y * 180) / Math.PI);
-              onTransformChange(
-                { x: Math.round(pos.x), y: Number(pos.y.toFixed(1)), z: Math.round(pos.z) },
-                (deg % 360 + 360) % 360,
-                Number(sc.x.toFixed(2))
-              );
-            }
-          }}
-        >
-          {content}
-        </TransformControls>
-      ) : (
-        content
+          size={0.85}
+          onMouseDown={handleGizmoMouseDown}
+          onMouseUp={handleGizmoMouseUp}
+          onChange={handleGizmoChange}
+        />
       )}
 
       {/* Entrance Connector Lines for Selected Building */}

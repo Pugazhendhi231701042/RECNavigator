@@ -21,6 +21,7 @@ import {
   PanelLeftOpen,
   MapPin,
   Route,
+  ChevronDown,
 } from 'lucide-react';
 
 interface MapPageProps {
@@ -48,7 +49,7 @@ export const MapPage: React.FC<MapPageProps> = ({
   edges = DEFAULT_EDGES,
 }) => {
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
-  const [hudTab, setHudTab] = useState<'directory' | 'directions'>('directory');
+  const [showDirections, setShowDirections] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isHudOpen, setIsHudOpen] = useState<boolean>(true);
@@ -186,165 +187,43 @@ export const MapPage: React.FC<MapPageProps> = ({
             </button>
           </div>
 
-          {/* Mode Switcher Tabs (Directory vs Directions) */}
+          {/* Action Bar: Directions Button */}
           <div className="p-3 shrink-0 border-b border-slate-200/60 dark:border-slate-800/60 bg-slate-100/40 dark:bg-slate-900/20">
-            <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-200/60 dark:bg-slate-900/90 border border-slate-300/60 dark:border-slate-800 rounded-xl">
-              <button
-                onClick={() => setHudTab('directory')}
-                className={`py-2 px-3 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                  hudTab === 'directory'
-                    ? 'bg-purple-600 text-white shadow-md'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <Building2 className="w-3.5 h-3.5 text-amber-300" />
-                <span>Directory</span>
-              </button>
-
-              <button
-                onClick={() => setHudTab('directions')}
-                className={`py-2 px-3 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer relative ${
-                  hudTab === 'directions'
-                    ? 'bg-purple-600 text-white shadow-md'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <Route className="w-3.5 h-3.5 text-cyan-300" />
+            <button
+              onClick={() => setShowDirections(prev => !prev)}
+              className={`w-full py-2.5 px-3.5 rounded-xl text-xs font-black transition-all flex items-center justify-between cursor-pointer border shadow-sm ${
+                showDirections
+                  ? 'bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-400/30'
+                  : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-600 hover:text-purple-600 dark:hover:text-purple-300'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Route className={`w-4 h-4 ${showDirections ? 'text-cyan-300' : 'text-purple-600 dark:text-purple-400'}`} />
                 <span>Directions</span>
                 {activeRoute && (
-                  <span className="w-2 h-2 rounded-full bg-amber-400 absolute top-2 right-2 animate-ping" />
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-extrabold ml-1">
+                    {activeRoute.distance}m
+                  </span>
                 )}
-              </button>
-            </div>
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold">
+                <span className={showDirections ? 'text-purple-200' : 'text-slate-400'}>
+                  {showDirections ? 'Close Form' : 'Open Form'}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    showDirections ? 'rotate-180' : ''
+                  }`}
+                />
+              </div>
+            </button>
           </div>
 
           {/* Scrollable HUD Content Area */}
           <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
-            {/* ---------------- DIRECTORY VIEW ---------------- */}
-            {hudTab === 'directory' && (
-              <div className="space-y-4">
-                {/* Search Bar */}
-                <div className="relative">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search campus buildings..."
-                    className="w-full py-2 pl-9 pr-8 bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                {/* Category Chips */}
-                <div>
-                  <CategoryFilter
-                    selectedCategory={selectedCategory}
-                    onSelectCategory={setSelectedCategory}
-                  />
-                </div>
-
-                {/* Selected Location Card Inspector */}
-                {selectedLocation ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between px-1">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400 font-mono">
-                        Selected Entity Inspector
-                      </span>
-                      <button
-                        onClick={() => onSelectLocation(null)}
-                        className="text-[10px] text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-semibold"
-                      >
-                        Back to List
-                      </button>
-                    </div>
-                    <LocationCard
-                      location={selectedLocation}
-                      onClose={() => onSelectLocation(null)}
-                      onSetAsStart={(loc) => {
-                        setStartLocation(loc);
-                        setHudTab('directions');
-                      }}
-                      onSetAsDestination={(loc) => {
-                        setDestinationLocation(loc);
-                        setHudTab('directions');
-                      }}
-                    />
-                  </div>
-                ) : (
-                  /* Filtered Locations List */
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1">
-                      <span>{filteredLocations.length} Locations Found</span>
-                      <span className="text-[10px] text-amber-500 font-mono">Double-click to zoom</span>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      {filteredLocations.map((loc) => {
-                        const cat = CATEGORIES.find((c) => c.id === loc.category);
-                        const isSelected = selectedLocation?.id === loc.id;
-                        const entranceCount = loc.entrances?.length || 0;
-
-                        return (
-                          <div
-                            key={loc.id}
-                            onClick={() => onSelectLocation(loc)}
-                            onDoubleClick={() => handleBuildingDoubleClick(loc)}
-                            className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between group ${
-                              isSelected
-                                ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-400 dark:border-purple-600 text-purple-900 dark:text-purple-200 shadow-sm ring-1 ring-purple-500/30'
-                                : 'bg-white/80 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800/70 hover:border-slate-300 dark:hover:border-slate-700'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2.5 min-w-0">
-                              <span
-                                style={{ backgroundColor: cat?.color || '#9333EA' }}
-                                className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm"
-                              />
-                              <div className="min-w-0">
-                                <h4 className="text-xs font-bold truncate leading-tight group-hover:text-purple-600 dark:group-hover:text-purple-300">
-                                  {loc.name}
-                                </h4>
-                                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate">
-                                  {cat?.name || loc.category} • [{Math.round(loc.position.x)}, {Math.round(loc.position.z)}]
-                                </p>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-1 shrink-0 ml-2">
-                              {entranceCount > 0 && (
-                                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                                  {entranceCount} 🚪
-                                </span>
-                              )}
-                              <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-                            </div>
-                          </div>
-                        );
-                      })}
-
-                      {filteredLocations.length === 0 && (
-                        <div className="p-6 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2">
-                          <Building2 className="w-8 h-8 mx-auto opacity-30 text-purple-400" />
-                          <p>No locations match your search or filter.</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* ---------------- DIRECTIONS VIEW ---------------- */}
-            {hudTab === 'directions' && (
-              <div className="space-y-4 animate-in fade-in duration-200">
+            {/* ---------------- DIRECTIONS FORM (OPENS ON BUTTON CLICK) ---------------- */}
+            {showDirections && (
+              <div className="space-y-3 pb-3 border-b border-slate-200/80 dark:border-slate-800/80 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="p-3.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3">
                   <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
                     <span className="text-[10px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400 font-mono flex items-center gap-1.5">
@@ -504,6 +383,126 @@ export const MapPage: React.FC<MapPageProps> = ({
                 )}
               </div>
             )}
+
+            {/* ---------------- CAMPUS DIRECTORY (ALWAYS VISIBLE BELOW) ---------------- */}
+            <div className="space-y-4">
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search campus buildings..."
+                  className="w-full py-2 pl-9 pr-8 bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Category Chips */}
+              <div>
+                <CategoryFilter
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={setSelectedCategory}
+                />
+              </div>
+
+              {/* Selected Location Card Inspector */}
+              {selectedLocation ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400 font-mono">
+                      Selected Entity Inspector
+                    </span>
+                    <button
+                      onClick={() => onSelectLocation(null)}
+                      className="text-[10px] text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 font-semibold"
+                    >
+                      Back to List
+                    </button>
+                  </div>
+                  <LocationCard
+                    location={selectedLocation}
+                    onClose={() => onSelectLocation(null)}
+                    onSetAsStart={(loc) => {
+                      setStartLocation(loc);
+                      setShowDirections(true);
+                    }}
+                    onSetAsDestination={(loc) => {
+                      setDestinationLocation(loc);
+                      setShowDirections(true);
+                    }}
+                  />
+                </div>
+              ) : (
+                /* Filtered Locations List */
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 px-1">
+                    <span>{filteredLocations.length} Locations Found</span>
+                    <span className="text-[10px] text-amber-500 font-mono">Double-click to zoom</span>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    {filteredLocations.map((loc) => {
+                      const cat = CATEGORIES.find((c) => c.id === loc.category);
+                      const isSelected = selectedLocation?.id === loc.id;
+                      const entranceCount = loc.entrances?.length || 0;
+
+                      return (
+                        <div
+                          key={loc.id}
+                          onClick={() => onSelectLocation(loc)}
+                          onDoubleClick={() => handleBuildingDoubleClick(loc)}
+                          className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between group ${
+                            isSelected
+                              ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-400 dark:border-purple-600 text-purple-900 dark:text-purple-200 shadow-sm ring-1 ring-purple-500/30'
+                              : 'bg-white/80 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800/70 hover:border-slate-300 dark:hover:border-slate-700'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span
+                              style={{ backgroundColor: cat?.color || '#9333EA' }}
+                              className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm"
+                            />
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold truncate leading-tight group-hover:text-purple-600 dark:group-hover:text-purple-300">
+                                {loc.name}
+                              </h4>
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono truncate">
+                                {cat?.name || loc.category} • [{Math.round(loc.position.x)}, {Math.round(loc.position.z)}]
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1 shrink-0 ml-2">
+                            {entranceCount > 0 && (
+                              <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                {entranceCount} 🚪
+                              </span>
+                            )}
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {filteredLocations.length === 0 && (
+                      <div className="p-6 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2">
+                        <Building2 className="w-8 h-8 mx-auto opacity-30 text-purple-400" />
+                        <p>No locations match your search or filter.</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </aside>
       )}

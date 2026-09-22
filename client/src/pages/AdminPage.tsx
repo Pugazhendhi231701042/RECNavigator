@@ -10,7 +10,7 @@ import {
   calculateEuclideanDistance,
   ensureLocationEntrances,
 } from '../data/recCampusData';
-import { ASSET_MANIFEST } from '../data/assetManifest';
+import { CAMPUS_GLB_MODELS } from '../data/assetManifest';
 import { CampusScene } from '../components/3d/CampusScene';
 import { calculateDijkstraRoute } from '../utils/routing/dijkstra';
 import {
@@ -284,24 +284,37 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   // BUILDING ACTIONS
   // ----------------------------------------------------
   const handleCreateBuilding = () => {
-    const defaultNodeId = nodes[0]?.id || 'node_main_gate';
     const newId = `building_${Date.now().toString().slice(-4)}`;
+    const mainEntNodeId = `node_${newId}_entrance`;
+    const initialPos: Vector3D = { x: 0, y: 0, z: 0 };
+    const initialEntPos: Vector3D = { x: 0, y: 0.2, z: 15 };
+
+    // Automatically create a dedicated Main Entrance junction node for the new building
+    const mainEntNode: PathNode = {
+      id: mainEntNodeId,
+      name: 'New Building Entrance',
+      position: initialEntPos,
+    };
+    onAddNode?.(mainEntNode);
+
     const newBuilding: Location = {
       id: newId,
       name: 'New Campus Building',
       category: 'academic',
       description: 'Campus facility structure',
-      position: { x: 0, y: 0, z: 0 },
+      position: initialPos,
       rotationY: 0,
       scale: [1, 1, 1],
-      nodeId: defaultNodeId,
-      entranceNodeIds: [defaultNodeId],
+      modelKey: CAMPUS_GLB_MODELS[0]?.id || 'block-a-optimized.glb',
+      nodeId: mainEntNodeId,
+      entranceNodeIds: [mainEntNodeId],
       entrances: [
         {
           id: `${newId}_ent_1`,
           name: 'Main Entrance',
           buildingId: newId,
-          junctionId: defaultNodeId,
+          junctionId: mainEntNodeId,
+          position: initialEntPos,
         },
       ],
     };
@@ -315,6 +328,22 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     if (!currentBuilding) return;
     const updated = { ...currentBuilding, [key]: value };
     onUpdateLocation(updated);
+    setHasUnsavedChanges(true);
+  };
+
+  const handleUpdateEntrancePosition = (entranceId: string, junctionId: string, newPos: Vector3D) => {
+    const linkedNode = nodes.find(n => n.id === junctionId);
+    if (linkedNode) {
+      onUpdateNode?.({ ...linkedNode, position: newPos });
+    }
+    if (currentBuilding) {
+      const existing = ensureLocationEntrances(currentBuilding, nodes);
+      const updatedEntrances = existing.map(e => (e.id === entranceId ? { ...e, position: newPos } : e));
+      onUpdateLocation({
+        ...currentBuilding,
+        entrances: updatedEntrances,
+      });
+    }
     setHasUnsavedChanges(true);
   };
 
@@ -1317,15 +1346,29 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
 
                   {/* Scale */}
                   <div>
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 mb-1">
                       <span>Scale Factor</span>
-                      <span className="font-bold text-purple-600 dark:text-purple-400">
-                        {Array.isArray(currentBuilding.scale)
-                          ? currentBuilding.scale[0]
-                          : typeof currentBuilding.scale === 'number'
-                            ? currentBuilding.scale
-                            : 1}x
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min="0.1"
+                          max="10"
+                          step="0.05"
+                          value={
+                            Array.isArray(currentBuilding.scale)
+                              ? currentBuilding.scale[0]
+                              : typeof currentBuilding.scale === 'number'
+                                ? currentBuilding.scale
+                                : 1
+                          }
+                          onChange={(e) => {
+                            const val = Math.max(0.05, Number(e.target.value) || 1);
+                            handleUpdateBuildingProperty('scale', [val, val, val]);
+                          }}
+                          className="w-16 px-1.5 py-0.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-purple-600 dark:text-purple-400 text-right focus:outline-none focus:border-purple-500"
+                        />
+                        <span className="font-bold text-purple-600 dark:text-purple-400">x</span>
+                      </div>
                     </div>
                     <input
                       type="range"
@@ -1343,7 +1386,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                         const val = Number(e.target.value);
                         handleUpdateBuildingProperty('scale', [val, val, val]);
                       }}
-                      className="w-full mt-1 accent-purple-500 cursor-pointer"
+                      className="w-full accent-purple-500 cursor-pointer"
                     />
                   </div>
                 </div>
@@ -1385,14 +1428,17 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                         3D GLB Model
                       </label>
                       <select
-                        value={currentBuilding.modelKey || ''}
-                        onChange={(e) => handleUpdateBuildingProperty('modelKey', e.target.value || undefined)}
-                        className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                        value={
+                          CAMPUS_GLB_MODELS.some(m => m.id === currentBuilding.modelKey)
+                            ? currentBuilding.modelKey
+                            : (CAMPUS_GLB_MODELS.find(m => m.id.toLowerCase().includes(currentBuilding.modelKey?.toLowerCase() || ''))?.id || CAMPUS_GLB_MODELS[0]?.id || '')
+                        }
+                        onChange={(e) => handleUpdateBuildingProperty('modelKey', e.target.value)}
+                        className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 font-mono"
                       >
-                        <option value="">Procedural Fallback</option>
-                        {Object.keys(ASSET_MANIFEST).map(key => (
-                          <option key={key} value={key}>
-                            {ASSET_MANIFEST[key].name}
+                        {CAMPUS_GLB_MODELS.map(m => (
+                          <option key={m.id} value={m.id}>
+                            {m.filename}
                           </option>
                         ))}
                       </select>
@@ -1426,30 +1472,85 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                     </div>
                   </div>
 
-                  {/* List of Entrances */}
-                  <div className="space-y-1.5">
+                  {/* List of Entrances with Editable Coordinates */}
+                  <div className="space-y-2">
                     {ensureLocationEntrances(currentBuilding, nodes).map((entrance) => {
                       const linkedNode = nodes.find(n => n.id === entrance.junctionId);
+                      const entPos = linkedNode?.position || entrance.position || { x: 0, y: 0.2, z: 0 };
                       return (
                         <div
                           key={entrance.id}
-                          className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-2 rounded-lg flex items-center justify-between gap-2 shadow-sm"
+                          className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-2.5 rounded-lg space-y-2 shadow-sm"
                         >
-                          <div className="min-w-0 flex-1">
-                            <div className="font-bold text-xs text-emerald-600 dark:text-emerald-300 truncate">
-                              🚪 {entrance.name}
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="min-w-0 flex-1">
+                              <div className="font-bold text-xs text-emerald-600 dark:text-emerald-300 truncate">
+                                🚪 {entrance.name}
+                              </div>
+                              <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-mono">
+                                ➔ Node: {linkedNode ? linkedNode.name : entrance.junctionId}
+                              </div>
                             </div>
-                            <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                              ➔ {linkedNode ? linkedNode.name : entrance.junctionId}
+                            <button
+                              onClick={() => handleRemoveBuildingEntrance(entrance.id)}
+                              className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1 rounded transition-colors cursor-pointer"
+                              title="Remove Entrance"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          {/* Editable Coordinates [X, Y, Z] */}
+                          <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                            <div className="flex items-center justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+                              <span className="font-bold uppercase text-emerald-600 dark:text-emerald-400">Entrance Coordinates (m)</span>
+                              <span className="text-[9px] text-slate-400">[{entPos.x}, {entPos.y}, {entPos.z}]</span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-1.5">
+                              <div>
+                                <span className="text-[9px] font-bold text-slate-400">X</span>
+                                <input
+                                  type="number"
+                                  value={entPos.x}
+                                  onChange={(e) =>
+                                    handleUpdateEntrancePosition(entrance.id, entrance.junctionId, {
+                                      ...entPos,
+                                      x: Number(e.target.value),
+                                    })
+                                  }
+                                  className="w-full px-1.5 py-0.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                                />
+                              </div>
+                              <div>
+                                <span className="text-[9px] font-bold text-slate-400">Y</span>
+                                <input
+                                  type="number"
+                                  value={entPos.y}
+                                  onChange={(e) =>
+                                    handleUpdateEntrancePosition(entrance.id, entrance.junctionId, {
+                                      ...entPos,
+                                      y: Number(e.target.value),
+                                    })
+                                  }
+                                  className="w-full px-1.5 py-0.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                                />
+                              </div>
+                              <div>
+                                <span className="text-[9px] font-bold text-slate-400">Z</span>
+                                <input
+                                  type="number"
+                                  value={entPos.z}
+                                  onChange={(e) =>
+                                    handleUpdateEntrancePosition(entrance.id, entrance.junctionId, {
+                                      ...entPos,
+                                      z: Number(e.target.value),
+                                    })
+                                  }
+                                  className="w-full px-1.5 py-0.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                                />
+                              </div>
                             </div>
                           </div>
-                          <button
-                            onClick={() => handleRemoveBuildingEntrance(entrance.id)}
-                            className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1 rounded transition-colors cursor-pointer"
-                            title="Remove Entrance"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
                         </div>
                       );
                     })}

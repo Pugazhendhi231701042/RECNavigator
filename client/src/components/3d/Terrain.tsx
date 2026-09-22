@@ -13,7 +13,7 @@ function TexturedMapGround({ onMapClick }: TerrainProps) {
 
   return (
     <mesh
-      rotation={[-Math.PI / 2, 0, 0]}
+      rotation={[-Math.PI / 2, 0, Math.PI]}
       position={[0, -0.1, 0]}
       onPointerDown={(e) => {
         if (onMapClick) {
@@ -35,7 +35,7 @@ function TexturedMapGround({ onMapClick }: TerrainProps) {
 function FallbackGround({ onMapClick }: TerrainProps) {
   return (
     <mesh
-      rotation={[-Math.PI / 2, 0, 0]}
+      rotation={[-Math.PI / 2, 0, Math.PI]}
       position={[0, -0.2, 0]}
       onPointerDown={(e) => {
         if (onMapClick) {
