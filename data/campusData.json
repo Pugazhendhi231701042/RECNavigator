@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-22T15:33:49.708Z",
+  "updatedAt": "2026-09-22T19:20:07.202Z",
   "locations": [
     {
       "id": "main-gate",
@@ -1121,5 +1121,6 @@
       }
     }
   ],
-  "categories": []
+  "categories": [],
+  "lastLabel": "Rotate Building B"
 }
