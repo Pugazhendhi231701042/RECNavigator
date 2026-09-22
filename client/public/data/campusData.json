@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-22T19:20:05.094Z",
+  "updatedAt": "2026-09-22T19:20:07.202Z",
   "locations": [
     {
       "id": "main-gate",
@@ -1122,5 +1122,5 @@
     }
   ],
   "categories": [],
-  "lastLabel": "Move Building A"
+  "lastLabel": "Rotate Building B"
 }
