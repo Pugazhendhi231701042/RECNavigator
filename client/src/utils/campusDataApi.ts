@@ -83,18 +83,16 @@ let cloudSaveQueue: Promise<void> = Promise.resolve();
 export async function fetchCampusDataFromServer(): Promise<CampusDataPayload | null> {
   const timestamp = Date.now();
 
-  // 1. Primary: Fetch from GitHub Live Shared Repository Database
+  // 1. Primary: Unauthenticated public read from GitHub API
+  // Being a public repo, this requires no token and triggers no preflight CORS issues
   try {
     const gitHubApiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_DATA_PATH}?ref=main&_t=${timestamp}`;
-    const token = getGitHubToken();
-    const headers: Record<string, string> = {
-      Accept: 'application/vnd.github.v3+json',
-    };
-    if (token) {
-      headers['Authorization'] = `token ${token}`;
-    }
+    const res = await fetch(gitHubApiUrl, {
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+      },
+    });
 
-    const res = await fetch(gitHubApiUrl, { headers });
     if (res.ok) {
       const meta = await res.json();
       if (meta.sha) lastKnownSha = meta.sha;
@@ -102,34 +100,63 @@ export async function fetchCampusDataFromServer(): Promise<CampusDataPayload | n
         const decodedJson = fromBase64Unicode(meta.content);
         const parsed = JSON.parse(decodedJson);
         if (parsed && Array.isArray(parsed.locations) && Array.isArray(parsed.nodes) && Array.isArray(parsed.roads)) {
-          console.log('[Cloud DB] Loaded live campus layout from GitHub repository database:', parsed.updatedAt);
+          console.log('[Cloud DB] Loaded live campus layout from GitHub repository (public read):', parsed.updatedAt);
           return parsed as CampusDataPayload;
         }
       }
     }
   } catch (err) {
-    console.warn('[Cloud DB] GitHub API direct read fallback:', err);
+    console.warn('[Cloud DB] GitHub API public read notice:', err);
   }
 
-  // 2. Secondary: Raw GitHub UserContent CDN
+  // 2. Secondary: Authenticated GitHub API read (in case unauthenticated hit 60/hr limit)
+  try {
+    const token = getGitHubToken();
+    if (token) {
+      const gitHubApiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_DATA_PATH}?ref=main&_t=${timestamp}`;
+      const res = await fetch(gitHubApiUrl, {
+        headers: {
+          Accept: 'application/vnd.github.v3+json',
+          Authorization: `token ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const meta = await res.json();
+        if (meta.sha) lastKnownSha = meta.sha;
+        if (meta.content) {
+          const decodedJson = fromBase64Unicode(meta.content);
+          const parsed = JSON.parse(decodedJson);
+          if (parsed && Array.isArray(parsed.locations) && Array.isArray(parsed.nodes) && Array.isArray(parsed.roads)) {
+            console.log('[Cloud DB] Loaded live campus layout with token:', parsed.updatedAt);
+            return parsed as CampusDataPayload;
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[Cloud DB] GitHub API token read notice:', err);
+  }
+
+  // 3. Tertiary: Raw GitHub UserContent CDN with cache buster
   try {
     const rawUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/${GITHUB_DATA_PATH}?_t=${timestamp}`;
-    const rawRes = await fetch(rawUrl);
+    const rawRes = await fetch(rawUrl, { cache: 'no-store' });
     if (rawRes.ok) {
       const parsed = await rawRes.json();
-      if (parsed && Array.isArray(parsed.locations)) {
+      if (parsed && Array.isArray(parsed.locations) && Array.isArray(parsed.nodes) && Array.isArray(parsed.roads)) {
         console.log('[Cloud DB] Loaded from raw GitHub CDN:', parsed.updatedAt);
         return parsed as CampusDataPayload;
       }
     }
   } catch {}
 
-  // 3. Tertiary: Local Vite dev middleware or static data JSON
+  // 4. Quaternary: Local Vite dev middleware or static data JSON with cache buster
   const candidateEndpoints = [
-    `${BASE_URL}api/campus-data`.replace(/\/+/g, '/'),
-    '/api/campus-data',
-    `${BASE_URL}data/campusData.json`.replace(/\/+/g, '/'),
-    '/data/campusData.json',
+    `${BASE_URL}api/campus-data?_t=${timestamp}`.replace(/\/+/g, '/'),
+    `/api/campus-data?_t=${timestamp}`,
+    `${BASE_URL}data/campusData.json?_t=${timestamp}`.replace(/\/+/g, '/'),
+    `/data/campusData.json?_t=${timestamp}`,
   ];
 
   for (const url of candidateEndpoints) {
@@ -143,9 +170,7 @@ export async function fetchCampusDataFromServer(): Promise<CampusDataPayload | n
           return data as CampusDataPayload;
         }
       }
-    } catch {
-      // Continue to next endpoint candidate
-    }
+    } catch {}
   }
 
   return null;

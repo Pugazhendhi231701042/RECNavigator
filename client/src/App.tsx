@@ -19,24 +19,33 @@ import { AdminPage } from './pages/AdminPage';
 import { calculateMultiEntranceRoute } from './utils/routing/dijkstra';
 import { ThemeProvider } from './context/ThemeContext';
 import defaultCampusData from './data/campusData.json';
+import { Loader2 } from 'lucide-react';
 import {
   fetchCampusDataFromServer,
   saveCampusDataToServer,
 } from './utils/campusDataApi';
 
-const INITIAL_LOCATIONS_SOURCE: Location[] = (defaultCampusData?.locations && defaultCampusData.locations.length > 0)
+const INITIAL_LOCATIONS_SOURCE: Location[] = (defaultCampusData && Array.isArray(defaultCampusData.locations))
   ? (defaultCampusData.locations as unknown as Location[])
   : INITIAL_LOCATIONS;
 
-const INITIAL_NODES_SOURCE: PathNode[] = (defaultCampusData?.nodes && defaultCampusData.nodes.length > 0)
+const INITIAL_NODES_SOURCE: PathNode[] = (defaultCampusData && Array.isArray(defaultCampusData.nodes))
   ? (defaultCampusData.nodes as unknown as PathNode[])
   : INITIAL_NODES;
 
-const INITIAL_ROADS_SOURCE: Road[] = (defaultCampusData?.roads && defaultCampusData.roads.length > 0)
+const INITIAL_ROADS_SOURCE: Road[] = (defaultCampusData && Array.isArray(defaultCampusData.roads))
   ? (defaultCampusData.roads as unknown as Road[])
   : INITIAL_ROADS;
 
 function AppContent() {
+  // Check if this browser already has cached campus data
+  const hasCachedData = typeof window !== 'undefined' && !!localStorage.getItem('rec_campus_updated_at');
+
+  const [isCloudLoaded, setIsCloudLoaded] = useState<boolean>(() => {
+    // If we have cached data in localStorage, we can render immediately without waiting
+    return hasCachedData;
+  });
+
   // Application State with LocalStorage and Server/Disk Persistence
   const [locations, setLocations] = useState<Location[]>(() => {
     try {
@@ -65,23 +74,32 @@ function AppContent() {
     }
   });
 
+  // Track user edits so background hydration NEVER triggers auto-save!
+  const hasUserEditedRef = useRef(false);
+
   // Hydrate from Server / Disk data on mount
   useEffect(() => {
     let isMounted = true;
-    fetchCampusDataFromServer().then(serverData => {
-      if (!isMounted || !serverData) return;
-      if (serverData.locations && serverData.nodes && serverData.roads) {
-        setLocations(serverData.locations);
-        setNodes(serverData.nodes);
-        setRoads(serverData.roads);
-        try {
-          localStorage.setItem('rec_locations', JSON.stringify(serverData.locations));
-          localStorage.setItem('rec_nodes', JSON.stringify(serverData.nodes));
-          localStorage.setItem('rec_roads', JSON.stringify(serverData.roads));
-          localStorage.setItem('rec_campus_updated_at', serverData.updatedAt || new Date().toISOString());
-        } catch {}
-      }
-    });
+    fetchCampusDataFromServer()
+      .then(serverData => {
+        if (!isMounted) return;
+        if (serverData && Array.isArray(serverData.locations) && Array.isArray(serverData.nodes) && Array.isArray(serverData.roads)) {
+          setLocations(serverData.locations);
+          setNodes(serverData.nodes);
+          setRoads(serverData.roads);
+          try {
+            localStorage.setItem('rec_locations', JSON.stringify(serverData.locations));
+            localStorage.setItem('rec_nodes', JSON.stringify(serverData.nodes));
+            localStorage.setItem('rec_roads', JSON.stringify(serverData.roads));
+            localStorage.setItem('rec_campus_updated_at', serverData.updatedAt || new Date().toISOString());
+          } catch {}
+        }
+        setIsCloudLoaded(true);
+      })
+      .catch(() => {
+        if (isMounted) setIsCloudLoaded(true);
+      });
+
     return () => {
       isMounted = false;
     };
@@ -95,11 +113,9 @@ function AppContent() {
   // Mobile Bottom Sheet State
   const [mobileSheetMode, setMobileSheetMode] = useState<'none' | 'location' | 'directions'>('none');
 
-  // Debounced auto-sync to localStorage and server/cloud database
-  const isFirstRender = useRef(true);
+  // Debounced auto-sync to localStorage and server/cloud database (ONLY ON EXPLICIT USER ADMIN EDITS)
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+    if (!isCloudLoaded || !hasUserEditedRef.current) {
       return;
     }
 
@@ -110,11 +126,14 @@ function AppContent() {
     } catch {}
 
     const timer = setTimeout(() => {
-      saveCampusDataToServer({ locations, nodes, roads });
+      if (hasUserEditedRef.current) {
+        hasUserEditedRef.current = false;
+        saveCampusDataToServer({ locations, nodes, roads });
+      }
     }, 1200);
 
     return () => clearTimeout(timer);
-  }, [locations, nodes, roads]);
+  }, [locations, nodes, roads, isCloudLoaded]);
 
   // Handle Location Selection
   const handleSelectLocation = (loc: Location | null) => {
@@ -134,27 +153,33 @@ function AppContent() {
 
   // Building Admin Handlers
   const handleAddLocation = (newLoc: Location) => {
+    hasUserEditedRef.current = true;
     setLocations(prev => [...prev, newLoc]);
   };
 
   const handleUpdateLocation = (updatedLoc: Location) => {
+    hasUserEditedRef.current = true;
     setLocations(prev => prev.map(l => l.id === updatedLoc.id ? updatedLoc : l));
   };
 
   const handleDeleteLocation = (id: string) => {
+    hasUserEditedRef.current = true;
     setLocations(prev => prev.filter(l => l.id !== id));
   };
 
   // Junction Admin Handlers
   const handleAddNode = (newNode: PathNode) => {
+    hasUserEditedRef.current = true;
     setNodes(prev => [...prev, newNode]);
   };
 
   const handleUpdateNode = (updatedNode: PathNode) => {
+    hasUserEditedRef.current = true;
     setNodes(prev => prev.map(n => n.id === updatedNode.id ? updatedNode : n));
   };
 
   const handleDeleteNode = (id: string) => {
+    hasUserEditedRef.current = true;
     setNodes(prev => prev.filter(n => n.id !== id));
     // Remove from road junction sequences
     setRoads(prev => prev.map(r => ({
@@ -174,19 +199,23 @@ function AppContent() {
 
   // Road Admin Handlers
   const handleAddRoad = (newRoad: Road) => {
+    hasUserEditedRef.current = true;
     setRoads(prev => [...prev, newRoad]);
   };
 
   const handleUpdateRoad = (updatedRoad: Road) => {
+    hasUserEditedRef.current = true;
     setRoads(prev => prev.map(r => r.id === updatedRoad.id ? updatedRoad : r));
   };
 
   const handleDeleteRoad = (id: string) => {
+    hasUserEditedRef.current = true;
     setRoads(prev => prev.filter(r => r.id !== id));
   };
 
   // Reset to Factory Campus Defaults
   const handleResetDefaults = () => {
+    hasUserEditedRef.current = false;
     setLocations(INITIAL_LOCATIONS);
     setNodes(INITIAL_NODES);
     setRoads(INITIAL_ROADS);
@@ -202,6 +231,7 @@ function AppContent() {
 
   // Reset System: Delete all buildings, roads and junctions
   const handleResetSystem = () => {
+    hasUserEditedRef.current = false;
     setLocations([]);
     setNodes([]);
     setRoads([]);
@@ -217,6 +247,7 @@ function AppContent() {
 
   // Import custom campus dataset
   const handleImportCampusData = (data: { locations: Location[]; nodes: PathNode[]; roads: Road[] }) => {
+    hasUserEditedRef.current = false;
     setLocations(data.locations);
     setNodes(data.nodes);
     setRoads(data.roads);
@@ -235,6 +266,27 @@ function AppContent() {
     }
     return null;
   }, [startLocation, destinationLocation, nodes, activeEdges]);
+
+  // If initial cloud data is still loading for a first-time device/visitor, show a sleek loading screen
+  if (!isCloudLoaded) {
+    return (
+      <div className="fixed inset-0 bg-[#080B11] text-white flex flex-col items-center justify-center z-50 p-6 space-y-5 font-sans select-none">
+        <div className="relative">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600/30 to-purple-400/20 border border-purple-500/40 flex items-center justify-center shadow-2xl shadow-purple-500/20 animate-pulse">
+            <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
+          </div>
+        </div>
+        <div className="text-center space-y-1.5 max-w-sm">
+          <h2 className="text-base font-black tracking-tight text-white flex items-center justify-center gap-2">
+            <span>REC NAVIGATOR</span>
+          </h2>
+          <p className="text-xs text-slate-400 font-medium leading-relaxed">
+            Connecting to shared cloud database...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-[#080B11] text-slate-900 dark:text-slate-100 font-sans flex flex-col antialiased transition-colors">
