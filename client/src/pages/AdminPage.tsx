@@ -46,11 +46,14 @@ import {
   Download,
   Upload,
   Loader2,
+  Cloud,
 } from 'lucide-react';
 import {
   saveCampusDataToServer,
   downloadCampusDataBackup,
   parseCampusDataBackup,
+  subscribeToCloudSync,
+  type CloudSyncStatus,
 } from '../utils/campusDataApi';
 
 const ADMIN_PASSWORD = 'Admin@2711';
@@ -208,15 +211,28 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   };
 
   // ----------------------------------------------------
-  // SAVE / PERSISTENCE (SERVER & DISK SYNC)
+  // SAVE / PERSISTENCE (SERVER, DISK & SHARED CLOUD DB)
   // ----------------------------------------------------
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [saveFeedbackText, setSaveFeedbackText] = useState<string>('Saved to disk!');
+  const [saveFeedbackText, setSaveFeedbackText] = useState<string>('Saved to Cloud Database!');
+  const [cloudSyncStatus, setCloudSyncStatus] = useState<CloudSyncStatus>('idle');
   const backupFileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    return subscribeToCloudSync((status, msg) => {
+      setCloudSyncStatus(status);
+      if (status === 'saved') {
+        setShowSavedFeedback(true);
+        setSaveFeedbackText(msg);
+        setHasUnsavedChanges(false);
+        setTimeout(() => setShowSavedFeedback(false), 3000);
+      }
+    });
+  }, []);
 
   const handleManualSave = async () => {
     setIsSaving(true);
-    setSaveFeedbackText('Saving to disk...');
+    setSaveFeedbackText('Saving to shared cloud...');
     try {
       const result = await saveCampusDataToServer({
         locations,
@@ -225,7 +241,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       });
       setHasUnsavedChanges(false);
       setShowSavedFeedback(true);
-      setSaveFeedbackText(result.savedToServer ? 'Saved to Server & Disk!' : 'Saved to Browser');
+      setSaveFeedbackText(
+        result.savedToCloud
+          ? 'Saved to Cloud Database!'
+          : result.savedToServer
+            ? 'Saved to Server & Disk!'
+            : 'Saved to Browser'
+      );
       setTimeout(() => setShowSavedFeedback(false), 3000);
     } catch (err: any) {
       console.error('Failed to save to server', err);
@@ -851,18 +873,24 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
 
         {/* Right: Actions, Save, Export, Logout */}
         <div className="flex items-center gap-2">
-          {/* Save Status */}
-          {showSavedFeedback ? (
+          {/* Cloud Auto-Sync Indicator */}
+          {cloudSyncStatus === 'syncing' ? (
+            <span className="text-xs font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1.5 bg-sky-50 dark:bg-sky-950/60 px-2 py-1 rounded-lg border border-sky-300 dark:border-sky-500/40 animate-pulse">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-500" />
+              <span>Cloud Auto-Saving...</span>
+            </span>
+          ) : showSavedFeedback ? (
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-300 dark:border-emerald-500/40">
               <CheckCircle2 className="w-3.5 h-3.5" /> {saveFeedbackText}
             </span>
           ) : hasUnsavedChanges ? (
             <span className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 px-2 py-1 rounded-lg border border-amber-300 dark:border-amber-500/40 animate-pulse">
-              ● Unsaved edits
+              ● Auto-syncing...
             </span>
           ) : (
-            <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
-              Saved to disk
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono hidden sm:flex items-center gap-1 bg-emerald-50/70 dark:bg-emerald-950/40 px-2 py-0.5 rounded-lg border border-emerald-200 dark:border-emerald-900/50">
+              <Cloud className="w-3.5 h-3.5" />
+              <span>Cloud Synced</span>
             </span>
           )}
 

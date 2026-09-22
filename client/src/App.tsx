@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import type { Location, PathNode, Road } from './types';
 import {
   LOCATIONS as INITIAL_LOCATIONS,
@@ -95,8 +95,14 @@ function AppContent() {
   // Mobile Bottom Sheet State
   const [mobileSheetMode, setMobileSheetMode] = useState<'none' | 'location' | 'directions'>('none');
 
-  // Debounced auto-sync to localStorage and server/disk
+  // Debounced auto-sync to localStorage and server/cloud database
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     try {
       localStorage.setItem('rec_locations', JSON.stringify(locations));
       localStorage.setItem('rec_nodes', JSON.stringify(nodes));
@@ -105,7 +111,7 @@ function AppContent() {
 
     const timer = setTimeout(() => {
       saveCampusDataToServer({ locations, nodes, roads });
-    }, 2000);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [locations, nodes, roads]);
