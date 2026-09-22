@@ -43,7 +43,15 @@ import {
   AlertTriangle,
   ChevronDown,
   ChevronUp,
+  Download,
+  Upload,
+  Loader2,
 } from 'lucide-react';
+import {
+  saveCampusDataToServer,
+  downloadCampusDataBackup,
+  parseCampusDataBackup,
+} from '../utils/campusDataApi';
 
 const ADMIN_PASSWORD = 'Admin@2711';
 
@@ -62,6 +70,7 @@ interface AdminPageProps {
   onDeleteRoad?: (id: string) => void;
   onResetDefaults?: () => void;
   onResetSystem?: () => void;
+  onImportCampusData?: (data: { locations: Location[]; nodes: PathNode[]; roads: Road[] }) => void;
 }
 
 type AdminSection = 'buildings' | 'junctions-roads';
@@ -83,6 +92,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   onDeleteRoad,
   onResetDefaults,
   onResetSystem,
+  onImportCampusData,
 }) => {
   // ----------------------------------------------------
   // AUTHENTICATION
@@ -198,19 +208,79 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   };
 
   // ----------------------------------------------------
-  // SAVE / PERSISTENCE
+  // SAVE / PERSISTENCE (SERVER & DISK SYNC)
   // ----------------------------------------------------
-  const handleManualSave = () => {
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [saveFeedbackText, setSaveFeedbackText] = useState<string>('Saved to disk!');
+  const backupFileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleManualSave = async () => {
+    setIsSaving(true);
+    setSaveFeedbackText('Saving to disk...');
     try {
-      localStorage.setItem('rec_locations', JSON.stringify(locations));
-      localStorage.setItem('rec_nodes', JSON.stringify(nodes));
-      localStorage.setItem('rec_roads', JSON.stringify(roads));
+      const result = await saveCampusDataToServer({
+        locations,
+        nodes,
+        roads,
+      });
       setHasUnsavedChanges(false);
       setShowSavedFeedback(true);
-      setTimeout(() => setShowSavedFeedback(false), 2500);
-    } catch (err) {
-      console.error('Failed to save to localStorage', err);
+      setSaveFeedbackText(result.savedToServer ? 'Saved to Server & Disk!' : 'Saved to Browser');
+      setTimeout(() => setShowSavedFeedback(false), 3000);
+    } catch (err: any) {
+      console.error('Failed to save to server', err);
+      try {
+        localStorage.setItem('rec_locations', JSON.stringify(locations));
+        localStorage.setItem('rec_nodes', JSON.stringify(nodes));
+        localStorage.setItem('rec_roads', JSON.stringify(roads));
+      } catch {}
+      setHasUnsavedChanges(false);
+      setShowSavedFeedback(true);
+      setSaveFeedbackText('Saved Locally');
+      setTimeout(() => setShowSavedFeedback(false), 3000);
+    } finally {
+      setIsSaving(false);
     }
+  };
+
+  const handleDownloadBackupJson = () => {
+    downloadCampusDataBackup({ locations, nodes, roads });
+  };
+
+  const handleTriggerUploadJson = () => {
+    backupFileInputRef.current?.click();
+  };
+
+  const handleBackupFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const text = evt.target?.result as string;
+        const backup = parseCampusDataBackup(text);
+        if (
+          confirm(
+            `Restore backup containing ${backup.locations.length} buildings, ${backup.nodes.length} junctions, and ${backup.roads.length} roads? This will overwrite the current campus layout.`
+          )
+        ) {
+          if (onImportCampusData) {
+            onImportCampusData(backup);
+          } else {
+            await saveCampusDataToServer(backup);
+            window.location.reload();
+          }
+          setHasUnsavedChanges(false);
+          setShowSavedFeedback(true);
+          setSaveFeedbackText('Backup Restored & Saved!');
+          setTimeout(() => setShowSavedFeedback(false), 3000);
+        }
+      } catch (err: any) {
+        alert(`Failed to restore backup: ${err.message}`);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
   };
 
   // Protective System Wipe Handler - verifies admin password
@@ -784,7 +854,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
           {/* Save Status */}
           {showSavedFeedback ? (
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-300 dark:border-emerald-500/40">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Saved!
+              <CheckCircle2 className="w-3.5 h-3.5" /> {saveFeedbackText}
             </span>
           ) : hasUnsavedChanges ? (
             <span className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 px-2 py-1 rounded-lg border border-amber-300 dark:border-amber-500/40 animate-pulse">
@@ -792,17 +862,44 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
             </span>
           ) : (
             <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
-              All synced
+              Saved to disk
             </span>
           )}
 
           {/* Save Button */}
           <button
             onClick={handleManualSave}
-            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold rounded-xl shadow transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            disabled={isSaving}
+            className={`px-3 py-1.5 ${isSaving ? 'bg-emerald-700 opacity-80' : 'bg-emerald-600 hover:bg-emerald-500'} text-white text-xs font-extrabold rounded-xl shadow transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer`}
+            title="Save changes permanently to disk & server"
           >
-            <Save className="w-3.5 h-3.5" />
-            <span>Save</span>
+            {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+            <span>{isSaving ? 'Saving...' : 'Save'}</span>
+          </button>
+
+          {/* Download JSON Backup */}
+          <button
+            onClick={handleDownloadBackupJson}
+            className="p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-xl text-xs transition-all cursor-pointer shadow-sm"
+            title="Download JSON Backup"
+          >
+            <Download className="w-4 h-4" />
+          </button>
+
+          {/* Restore JSON Backup */}
+          <input
+            type="file"
+            ref={backupFileInputRef}
+            onChange={handleBackupFileSelected}
+            accept=".json"
+            className="hidden"
+          />
+          <button
+            onClick={handleTriggerUploadJson}
+            className="p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-xl text-xs transition-all cursor-pointer shadow-sm"
+            title="Restore from JSON Backup"
+          >
+            <Upload className="w-4 h-4" />
           </button>
 
           {/* Export Code */}

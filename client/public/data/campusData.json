@@ -1,0 +1,1125 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-22T15:34:24.724Z",
+  "locations": [
+    {
+      "id": "main-gate",
+      "name": "REC Main Gate",
+      "category": "entrance",
+      "description": "Primary security arch and main vehicular entrance for Rajalakshmi Engineering College on National Highway.",
+      "position": {
+        "x": -80,
+        "y": 0,
+        "z": -150
+      },
+      "modelKey": "main-gate",
+      "image": "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "gate",
+        "entrance",
+        "arch",
+        "security",
+        "main entrance"
+      ],
+      "aliases": [
+        "gate 1",
+        "entrance",
+        "front gate"
+      ],
+      "facilities": [
+        "24/7 Security Checkpost",
+        "Visitor Registration",
+        "Bus Drop-off Zone"
+      ],
+      "nodeId": "node_main_gate",
+      "entranceNodeIds": [
+        "node_main_gate",
+        "node_flagpole"
+      ]
+    },
+    {
+      "id": "flagpole",
+      "name": "Campus Flagpole",
+      "category": "entrance",
+      "description": "Iconic national flagpole landmark located right inside the main gate entrance circle.",
+      "position": {
+        "x": -85,
+        "y": 0,
+        "z": -170
+      },
+      "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "flag",
+        "landmark",
+        "tricolor",
+        "assembly"
+      ],
+      "aliases": [
+        "flag",
+        "tricolor",
+        "national flag"
+      ],
+      "facilities": [
+        "Assembly Area",
+        "Landmark Circle"
+      ],
+      "nodeId": "node_flagpole",
+      "entranceNodeIds": [
+        "node_flagpole"
+      ]
+    },
+    {
+      "id": "parking-area",
+      "name": "Student & Visitor Parking",
+      "category": "parking",
+      "description": "Spacious multi-zone parking area for two-wheelers, four-wheelers, and college transport buses.",
+      "position": {
+        "x": -240,
+        "y": 0,
+        "z": -250
+      },
+      "image": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "parking",
+        "bikes",
+        "cars",
+        "bus",
+        "vehicles"
+      ],
+      "aliases": [
+        "parking",
+        "bike parking",
+        "car park",
+        "bus stand"
+      ],
+      "facilities": [
+        "2-Wheeler Parking",
+        "4-Wheeler Parking",
+        "EV Charging Spot",
+        "Security Guards"
+      ],
+      "nodeId": "node_parking",
+      "entranceNodeIds": [
+        "node_parking"
+      ]
+    },
+    {
+      "id": "block-a",
+      "name": "Block A (Academic & Admin)",
+      "category": "academic",
+      "description": "Major academic block housing Computer Science Engineering (CSE), Information Technology (IT), and ECE departments.",
+      "position": {
+        "x": 120,
+        "y": 0,
+        "z": -20
+      },
+      "modelKey": "block-a",
+      "image": "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "a block",
+        "cse",
+        "it",
+        "ece",
+        "academic",
+        "classrooms",
+        "labs"
+      ],
+      "aliases": [
+        "block a",
+        "a-block",
+        "computer science department",
+        "it dept",
+        "ece dept"
+      ],
+      "facilities": [
+        "CSE Computer Labs",
+        "IT Smart Classrooms",
+        "ECE VLSI & Embedded Labs",
+        "HOD Offices",
+        "Seminar Hall A"
+      ],
+      "block": "Block A",
+      "floorCount": 4,
+      "nodeId": "node_a_block_center",
+      "entranceNodeIds": [
+        "node_a_block_center",
+        "node_a_block_west",
+        "node_tech_lounge"
+      ]
+    },
+    {
+      "id": "block-b",
+      "name": "Block B (Engineering Block)",
+      "category": "academic",
+      "description": "U-shaped engineering block housing Mechanical, Electrical (EEE), Civil Engineering departments, and research centers.",
+      "position": {
+        "x": 20,
+        "y": 0,
+        "z": 40
+      },
+      "modelKey": "block-b",
+      "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "b block",
+        "mech",
+        "eee",
+        "civil",
+        "robotics",
+        "cad lab"
+      ],
+      "aliases": [
+        "block b",
+        "b-block",
+        "mechanical block",
+        "electrical block"
+      ],
+      "facilities": [
+        "CAD/CAM Lab",
+        "Robotics & Automation Lab",
+        "Electrical Machines Lab",
+        "Faculty Cabins"
+      ],
+      "block": "Block B",
+      "floorCount": 4,
+      "nodeId": "node_b_block_north",
+      "entranceNodeIds": [
+        "node_b_block_north",
+        "node_b_block_east"
+      ]
+    },
+    {
+      "id": "block-c",
+      "name": "Block C (Biotech & Science)",
+      "category": "academic",
+      "description": "Academic wing dedicated to Bio-Technology, Bio-Medical, Chemical Engineering, and General Sciences.",
+      "position": {
+        "x": -20,
+        "y": 0,
+        "z": 150
+      },
+      "modelKey": "block-c",
+      "image": "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "c block",
+        "biotech",
+        "biomedical",
+        "chemical",
+        "chemistry lab",
+        "physics lab"
+      ],
+      "aliases": [
+        "block c",
+        "c-block",
+        "biotech block"
+      ],
+      "facilities": [
+        "Bioprocess Lab",
+        "Chemistry Research Lab",
+        "Physics Lab",
+        "Lecture Theatre C"
+      ],
+      "block": "Block C",
+      "floorCount": 3,
+      "nodeId": "node_c_block",
+      "entranceNodeIds": [
+        "node_c_block",
+        "node_c_d_block"
+      ]
+    },
+    {
+      "id": "block-d",
+      "name": "Block D (Management & Humanities)",
+      "category": "academic",
+      "description": "Houses Management Studies (MBA), Humanities & Sciences, and Training & Placement Division.",
+      "position": {
+        "x": -70,
+        "y": 0,
+        "z": 150
+      },
+      "modelKey": "block-d",
+      "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "d block",
+        "mba",
+        "placement",
+        "humanities",
+        "training"
+      ],
+      "aliases": [
+        "block d",
+        "d-block",
+        "mba block",
+        "placement cell"
+      ],
+      "facilities": [
+        "Training & Placement Cell",
+        "MBA GD Rooms",
+        "Language Lab",
+        "Auditorium D"
+      ],
+      "block": "Block D",
+      "floorCount": 3,
+      "nodeId": "node_d_block",
+      "entranceNodeIds": [
+        "node_d_block",
+        "node_c_d_block"
+      ]
+    },
+    {
+      "id": "tech-lounge",
+      "name": "Tech Lounge",
+      "category": "services",
+      "description": "Modern collaborative student hub with high-speed Wi-Fi, project discussion pods, and lounge seating.",
+      "position": {
+        "x": 190,
+        "y": 0,
+        "z": -20
+      },
+      "image": "https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "tech lounge",
+        "wifi",
+        "study",
+        "project",
+        "coworking"
+      ],
+      "aliases": [
+        "lounge",
+        "tech hub",
+        "student lounge"
+      ],
+      "facilities": [
+        "High-Speed Wi-Fi",
+        "Charging Outlets",
+        "Brainstorming Boards",
+        "Coffee Vending"
+      ],
+      "nodeId": "node_tech_lounge"
+    },
+    {
+      "id": "rec-cafe",
+      "name": "REC Café",
+      "category": "food",
+      "description": "Main central multi-cuisine campus cafeteria serving breakfast, hot meals, snacks, fresh juices, and ice creams.",
+      "position": {
+        "x": -60,
+        "y": 0,
+        "z": 80
+      },
+      "modelKey": "rec-cafe",
+      "image": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "cafe",
+        "food",
+        "canteen",
+        "lunch",
+        "snacks",
+        "juice",
+        "coffee"
+      ],
+      "aliases": [
+        "rec cafe",
+        "canteen",
+        "main canteen",
+        "cafeteria"
+      ],
+      "facilities": [
+        "South Indian Meals",
+        "North Indian Thali",
+        "Fresh Juice Bar",
+        "Digital Payment Acceptance"
+      ],
+      "nodeId": "node_rec_cafe"
+    },
+    {
+      "id": "hut-cafe",
+      "name": "Hut Café",
+      "category": "food",
+      "description": "Popular open-air aesthetic café famous for quick bites, cold coffee, sandwiches, and student hangouts.",
+      "position": {
+        "x": 20,
+        "y": 0,
+        "z": 150
+      },
+      "modelKey": "hut-cafe",
+      "image": "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "hut cafe",
+        "coffee",
+        "snacks",
+        "sandwich",
+        "hangout"
+      ],
+      "aliases": [
+        "hut cafe",
+        "the hut",
+        "open cafe"
+      ],
+      "facilities": [
+        "Outdoor Shaded Seating",
+        "Specialty Coffee",
+        "Grilled Sandwiches & Mocktails"
+      ],
+      "nodeId": "node_hut_cafe"
+    },
+    {
+      "id": "dominos",
+      "name": "Domino's Pizza Express",
+      "category": "food",
+      "description": "On-campus official Domino's Pizza counter serving fresh pizzas, garlic bread, and beverages.",
+      "position": {
+        "x": -20,
+        "y": 0,
+        "z": -50
+      },
+      "modelKey": "dominos",
+      "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "dominos",
+        "pizza",
+        "fast food",
+        "beverages"
+      ],
+      "aliases": [
+        "dominos",
+        "pizza hut",
+        "dominoes"
+      ],
+      "facilities": [
+        "Fresh Hot Pizzas",
+        "Choco Lava Cake",
+        "Quick Service Counter"
+      ],
+      "nodeId": "node_dominos"
+    },
+    {
+      "id": "blackbucks",
+      "name": "Blackbucks Coffee",
+      "category": "food",
+      "description": "Premium coffee kiosk offering espresso, cold brews, pastries, and snacks.",
+      "position": {
+        "x": -35,
+        "y": 0,
+        "z": -50
+      },
+      "image": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "blackbucks",
+        "coffee",
+        "espresso",
+        "pastry"
+      ],
+      "aliases": [
+        "blackbucks",
+        "coffee shop"
+      ],
+      "facilities": [
+        "Espresso Bar",
+        "Bakery Snacks",
+        "Cold Brews"
+      ],
+      "nodeId": "node_dominos"
+    },
+    {
+      "id": "rec-mart",
+      "name": "REC Mart & Hotspot",
+      "category": "services",
+      "description": "Convenience store for stationeries, snacks, packaged drinking water, printouts, and daily essential items.",
+      "position": {
+        "x": 40,
+        "y": 0,
+        "z": 80
+      },
+      "image": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "mart",
+        "stationery",
+        "xerox",
+        "printout",
+        "store"
+      ],
+      "aliases": [
+        "rec mart",
+        "hotspot",
+        "stationery shop",
+        "xerox shop"
+      ],
+      "facilities": [
+        "Stationery & Notebooks",
+        "Xerox & Color Printing",
+        "Packaged Snacks & Ice Creams"
+      ],
+      "nodeId": "node_rec_mart"
+    },
+    {
+      "id": "atm",
+      "name": "Campus ATM (City Union Bank)",
+      "category": "services",
+      "description": "24/7 automated teller machine for cash withdrawals and banking transactions.",
+      "position": {
+        "x": -20,
+        "y": 0,
+        "z": -70
+      },
+      "image": "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "atm",
+        "bank",
+        "cash",
+        "cub"
+      ],
+      "aliases": [
+        "atm",
+        "bank atm",
+        "cub atm"
+      ],
+      "facilities": [
+        "24/7 Cash Withdrawal",
+        "Passbook Printing",
+        "Cardless Cash"
+      ],
+      "nodeId": "node_atm_junc"
+    },
+    {
+      "id": "sports-ground",
+      "name": "Main Sports Stadium & Football Ground",
+      "category": "sports",
+      "description": "Standard 400m running track with a lush green football field, cricket pitch, and spectator stands.",
+      "position": {
+        "x": 160,
+        "y": 0,
+        "z": 100
+      },
+      "modelKey": "sports-ground",
+      "image": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "ground",
+        "sports",
+        "football",
+        "cricket",
+        "running track",
+        "athletics"
+      ],
+      "aliases": [
+        "main ground",
+        "football ground",
+        "sports field",
+        "stadium"
+      ],
+      "facilities": [
+        "400m Athletic Track",
+        "Full-size Football Pitch",
+        "Cricket Nets",
+        "Floodlights"
+      ],
+      "nodeId": "node_ground_west"
+    },
+    {
+      "id": "outdoor-courts",
+      "name": "Basketball & Tennis Courts",
+      "category": "sports",
+      "description": "Synthetic rubberized basketball court, volleyball court, and synthetic tennis court with night lighting.",
+      "position": {
+        "x": 80,
+        "y": 0,
+        "z": 150
+      },
+      "image": "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "basketball",
+        "tennis",
+        "volleyball",
+        "court",
+        "sports"
+      ],
+      "aliases": [
+        "basketball court",
+        "tennis court",
+        "volleyball court"
+      ],
+      "facilities": [
+        "Synthetic Basketball Court",
+        "Tennis Court",
+        "Volleyball Net",
+        "LED Night Lighting"
+      ],
+      "nodeId": "node_sports_courts"
+    },
+    {
+      "id": "swimming-pool",
+      "name": "REC Swimming Pool",
+      "category": "sports",
+      "description": "Half-Olympic size swimming pool with trained lifeguards and filtration plant.",
+      "position": {
+        "x": 220,
+        "y": 0,
+        "z": 40
+      },
+      "image": "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "swimming pool",
+        "pool",
+        "swimming",
+        "water sports"
+      ],
+      "aliases": [
+        "swimming pool",
+        "pool"
+      ],
+      "facilities": [
+        "Half-Olympic Pool",
+        "Changing Rooms & Showers",
+        "Certified Lifeguard"
+      ],
+      "nodeId": "node_pool"
+    },
+    {
+      "id": "indoor-auditorium",
+      "name": "Indoor Auditorium",
+      "category": "sports",
+      "description": "Air-conditioned multi-purpose indoor stadium and grand auditorium seating 3,000+ people for cultural events and convocations.",
+      "position": {
+        "x": 230,
+        "y": 0,
+        "z": 110
+      },
+      "modelKey": "auditorium",
+      "image": "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "auditorium",
+        "convocation",
+        "indoor stadium",
+        "events",
+        "hall"
+      ],
+      "aliases": [
+        "audi",
+        "indoor audi",
+        "main auditorium"
+      ],
+      "facilities": [
+        "3000+ Air-Conditioned Seating",
+        "Surround Sound & Acoustic Stage",
+        "Green Rooms"
+      ],
+      "nodeId": "node_auditorium"
+    },
+    {
+      "id": "nri-hostel",
+      "name": "NRI & Executive Boys Hostel",
+      "category": "hostel",
+      "description": "Air-conditioned premium hostel rooms for international and NRI male students with attached dining.",
+      "position": {
+        "x": 10,
+        "y": 0,
+        "z": 210
+      },
+      "image": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "nri hostel",
+        "boys hostel",
+        "accommodation",
+        "hostel"
+      ],
+      "aliases": [
+        "nri hostel",
+        "nri boys hostel"
+      ],
+      "facilities": [
+        "AC Single/Double Sharing",
+        "High-Speed Wi-Fi",
+        "24/7 Security"
+      ],
+      "nodeId": "node_nri_hostel"
+    },
+    {
+      "id": "hostel-mess",
+      "name": "Central Hostel Mess",
+      "category": "hostel",
+      "description": "Hygienic multi-floor dining hall serving nutritious vegetarian and non-vegetarian meals for hostellers.",
+      "position": {
+        "x": 60,
+        "y": 0,
+        "z": 210
+      },
+      "image": "https://images.unsplash.com/photo-1567521464027-f127ff144326?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "mess",
+        "dining",
+        "hostel food",
+        "breakfast",
+        "dinner"
+      ],
+      "aliases": [
+        "mess",
+        "hostel mess",
+        "dining hall"
+      ],
+      "facilities": [
+        "4-Time Meal Service",
+        "Steam Cookers & RO Water",
+        "Spacious Seating"
+      ],
+      "nodeId": "node_hostel_mess"
+    },
+    {
+      "id": "girls-hostel",
+      "name": "Girls Hostel Complex (Blocks 1, 2, 3)",
+      "category": "hostel",
+      "description": "Secure, modern residential complex for female students with 24/7 security, wardens, indoor games, and solar hot water.",
+      "position": {
+        "x": 140,
+        "y": 0,
+        "z": 210
+      },
+      "modelKey": "girls-hostel",
+      "image": "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "girls hostel",
+        "female hostel",
+        "hostel 1",
+        "hostel 2",
+        "hostel 3",
+        "accommodation"
+      ],
+      "aliases": [
+        "girls hostel",
+        "lh",
+        "ladies hostel",
+        "girls hostel 1 2 3"
+      ],
+      "facilities": [
+        "Biometric Entry Gate",
+        "Resident Wardens",
+        "Study Room & Gym",
+        "Badminton Court"
+      ],
+      "nodeId": "node_girls_hostel"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node_parking",
+      "name": "Student Parking Road",
+      "position": {
+        "x": -240,
+        "y": 0.2,
+        "z": -250
+      }
+    },
+    {
+      "id": "node_entry_road",
+      "name": "Main Approach Road",
+      "position": {
+        "x": -160,
+        "y": 0.2,
+        "z": -200
+      }
+    },
+    {
+      "id": "node_flagpole",
+      "name": "Flag Pole Circle",
+      "position": {
+        "x": -85,
+        "y": 0.2,
+        "z": -170
+      }
+    },
+    {
+      "id": "node_main_gate",
+      "name": "REC Main Gate",
+      "position": {
+        "x": -80,
+        "y": 0.2,
+        "z": -150
+      }
+    },
+    {
+      "id": "node_central_road",
+      "name": "Central Boulevard",
+      "position": {
+        "x": -40,
+        "y": 0.2,
+        "z": -90
+      }
+    },
+    {
+      "id": "node_atm_junc",
+      "name": "ATM & Square Junction",
+      "position": {
+        "x": -20,
+        "y": 0.2,
+        "z": -50
+      }
+    },
+    {
+      "id": "node_dominos",
+      "name": "Food Square Entrance",
+      "position": {
+        "x": -35,
+        "y": 0.2,
+        "z": -20
+      }
+    },
+    {
+      "id": "node_a_block_west",
+      "name": "A-Block West Junction",
+      "position": {
+        "x": 50,
+        "y": 0.2,
+        "z": -40
+      }
+    },
+    {
+      "id": "node_a_block_center",
+      "name": "A-Block Main Entrance",
+      "position": {
+        "x": 120,
+        "y": 0.2,
+        "z": -40
+      }
+    },
+    {
+      "id": "node_tech_lounge",
+      "name": "Tech Lounge Corner",
+      "position": {
+        "x": 190,
+        "y": 0.2,
+        "z": -40
+      }
+    },
+    {
+      "id": "node_b_block_north",
+      "name": "B-Block Arch Entrance",
+      "position": {
+        "x": 20,
+        "y": 0.2,
+        "z": 0
+      }
+    },
+    {
+      "id": "node_rec_cafe",
+      "name": "REC Cafe Plaza",
+      "position": {
+        "x": -60,
+        "y": 0.2,
+        "z": 80
+      }
+    },
+    {
+      "id": "node_b_block_east",
+      "name": "B-Block East Pathway",
+      "position": {
+        "x": 80,
+        "y": 0.2,
+        "z": 40
+      }
+    },
+    {
+      "id": "node_rec_mart",
+      "name": "REC Mart & Hotspot",
+      "position": {
+        "x": 40,
+        "y": 0.2,
+        "z": 80
+      }
+    },
+    {
+      "id": "node_c_d_block",
+      "name": "C & D Block Junction",
+      "position": {
+        "x": -45,
+        "y": 0.2,
+        "z": 120
+      }
+    },
+    {
+      "id": "node_c_block",
+      "name": "C-Block Entrance",
+      "position": {
+        "x": -20,
+        "y": 0.2,
+        "z": 150
+      }
+    },
+    {
+      "id": "node_d_block",
+      "name": "D-Block Entrance",
+      "position": {
+        "x": -70,
+        "y": 0.2,
+        "z": 150
+      }
+    },
+    {
+      "id": "node_hut_cafe",
+      "name": "Hut Cafe Corner",
+      "position": {
+        "x": 20,
+        "y": 0.2,
+        "z": 150
+      }
+    },
+    {
+      "id": "node_sports_courts",
+      "name": "Basketball & Tennis Courts",
+      "position": {
+        "x": 80,
+        "y": 0.2,
+        "z": 150
+      }
+    },
+    {
+      "id": "node_ground_north",
+      "name": "Sports Ground North Entry",
+      "position": {
+        "x": 160,
+        "y": 0.2,
+        "z": 20
+      }
+    },
+    {
+      "id": "node_ground_west",
+      "name": "Sports Ground West Lane",
+      "position": {
+        "x": 110,
+        "y": 0.2,
+        "z": 100
+      }
+    },
+    {
+      "id": "node_pool",
+      "name": "Swimming Pool & East Arch",
+      "position": {
+        "x": 220,
+        "y": 0.2,
+        "z": 40
+      }
+    },
+    {
+      "id": "node_auditorium",
+      "name": "Indoor Auditorium Entrance",
+      "position": {
+        "x": 230,
+        "y": 0.2,
+        "z": 110
+      }
+    },
+    {
+      "id": "node_ground_south",
+      "name": "Sports Ground South Loop",
+      "position": {
+        "x": 160,
+        "y": 0.2,
+        "z": 170
+      }
+    },
+    {
+      "id": "node_nri_hostel",
+      "name": "NRI Hostel Entrance",
+      "position": {
+        "x": 10,
+        "y": 0.2,
+        "z": 210
+      }
+    },
+    {
+      "id": "node_hostel_mess",
+      "name": "Central Hostel Mess",
+      "position": {
+        "x": 60,
+        "y": 0.2,
+        "z": 210
+      }
+    },
+    {
+      "id": "node_girls_hostel",
+      "name": "Girls Hostels 1,2,3 Complex",
+      "position": {
+        "x": 140,
+        "y": 0.2,
+        "z": 210
+      }
+    },
+    {
+      "id": "node_boys_hostel",
+      "name": "Boys Hostel Lane",
+      "position": {
+        "x": 80,
+        "y": 0.2,
+        "z": 190
+      }
+    }
+  ],
+  "roads": [
+    {
+      "id": "road_main_entry",
+      "name": "Campus Main Approach Drive",
+      "junctionIds": [
+        "node_parking",
+        "node_entry_road",
+        "node_flagpole",
+        "node_main_gate"
+      ],
+      "width": 12,
+      "description": "Main highway approach and security entrance road",
+      "segmentDistances": {
+        "node_entry_road:::node_parking": 180,
+        "node_entry_road:::node_flagpole": 140,
+        "node_flagpole:::node_main_gate": 40
+      }
+    },
+    {
+      "id": "road_central_avenue",
+      "name": "Central Boulevard",
+      "junctionIds": [
+        "node_main_gate",
+        "node_central_road",
+        "node_atm_junc"
+      ],
+      "width": 12,
+      "description": "Central avenue connecting main gate to core campus",
+      "segmentDistances": {
+        "node_central_road:::node_main_gate": 110,
+        "node_atm_junc:::node_central_road": 80
+      }
+    },
+    {
+      "id": "road_a_block_front",
+      "name": "A-Block Front Drive",
+      "junctionIds": [
+        "node_atm_junc",
+        "node_a_block_west",
+        "node_a_block_center",
+        "node_tech_lounge"
+      ],
+      "width": 10,
+      "description": "Main academic avenue along front of Block A",
+      "segmentDistances": {
+        "node_a_block_west:::node_atm_junc": 160,
+        "node_a_block_center:::node_a_block_west": 90,
+        "node_a_block_center:::node_tech_lounge": 120
+      }
+    },
+    {
+      "id": "road_food_court_lane",
+      "name": "Food Court & Promenade",
+      "junctionIds": [
+        "node_atm_junc",
+        "node_dominos",
+        "node_rec_cafe"
+      ],
+      "width": 9,
+      "description": "Path linking ATM junction, Food Square, and REC Central Cafeteria",
+      "segmentDistances": {
+        "node_atm_junc:::node_dominos": 60,
+        "node_dominos:::node_rec_cafe": 220
+      }
+    },
+    {
+      "id": "road_inter_block",
+      "name": "Inter-Block Engineering Pathway",
+      "junctionIds": [
+        "node_a_block_west",
+        "node_b_block_north",
+        "node_b_block_east",
+        "node_rec_mart"
+      ],
+      "width": 8,
+      "description": "Walkway connecting Block A and Block B",
+      "segmentDistances": {
+        "node_a_block_west:::node_b_block_north": 100,
+        "node_b_block_east:::node_b_block_north": 130,
+        "node_b_block_east:::node_rec_mart": 50
+      }
+    },
+    {
+      "id": "road_science_street",
+      "name": "Science & Cafeteria Street",
+      "junctionIds": [
+        "node_rec_cafe",
+        "node_c_d_block",
+        "node_c_block",
+        "node_hut_cafe",
+        "node_sports_courts"
+      ],
+      "width": 8,
+      "description": "Southern walkway between REC Cafe, Blocks C & D, Hut Cafe, and sports courts",
+      "segmentDistances": {
+        "node_c_d_block:::node_rec_cafe": 60,
+        "node_c_block:::node_c_d_block": 50,
+        "node_c_block:::node_hut_cafe": 70,
+        "node_hut_cafe:::node_sports_courts": 110
+      }
+    },
+    {
+      "id": "road_d_block_approach",
+      "name": "D-Block Approach Walk",
+      "junctionIds": [
+        "node_c_d_block",
+        "node_d_block"
+      ],
+      "width": 8,
+      "description": "Dedicated walkway to Block D entrance",
+      "segmentDistances": {
+        "node_c_d_block:::node_d_block": 50
+      }
+    },
+    {
+      "id": "road_stadium_perimeter",
+      "name": "Stadium Perimeter Track",
+      "junctionIds": [
+        "node_a_block_center",
+        "node_ground_north",
+        "node_ground_west",
+        "node_ground_south"
+      ],
+      "width": 9,
+      "description": "Loop around sports grounds and turf",
+      "segmentDistances": {
+        "node_a_block_center:::node_ground_north": 110,
+        "node_ground_north:::node_ground_west": 140,
+        "node_ground_south:::node_ground_west": 140
+      }
+    },
+    {
+      "id": "road_auditorium_boulevard",
+      "name": "Auditorium Boulevard",
+      "junctionIds": [
+        "node_ground_north",
+        "node_pool",
+        "node_auditorium",
+        "node_ground_south"
+      ],
+      "width": 10,
+      "description": "Eastern avenue leading to Swimming Pool and Indoor Auditorium",
+      "segmentDistances": {
+        "node_ground_north:::node_pool": 150,
+        "node_auditorium:::node_pool": 110,
+        "node_auditorium:::node_ground_south": 130
+      }
+    },
+    {
+      "id": "road_hostel_avenue",
+      "name": "Hostel Complex Avenue",
+      "junctionIds": [
+        "node_sports_courts",
+        "node_boys_hostel",
+        "node_nri_hostel",
+        "node_hostel_mess",
+        "node_girls_hostel",
+        "node_ground_south"
+      ],
+      "width": 8,
+      "description": "Access corridor for Boys, NRI, and Girls Hostels and Mess",
+      "segmentDistances": {
+        "node_boys_hostel:::node_sports_courts": 80,
+        "node_boys_hostel:::node_nri_hostel": 70,
+        "node_hostel_mess:::node_nri_hostel": 90,
+        "node_girls_hostel:::node_hostel_mess": 130,
+        "node_girls_hostel:::node_ground_south": 60
+      }
+    }
+  ],
+  "categories": []
+}

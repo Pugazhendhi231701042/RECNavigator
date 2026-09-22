@@ -120,3 +120,65 @@ router.post('/navigation/route', (req: Request, res: Response) => {
     path: [startLoc.name, 'Central Junction', destLoc.name],
   });
 });
+
+// GET: /api/campus-data
+router.get('/campus-data', async (req: Request, res: Response) => {
+  const fs = await import('fs');
+  const path = await import('path');
+  try {
+    const filePath = path.resolve(__dirname, '../data/campusData.json');
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, 'utf-8');
+      res.setHeader('Content-Type', 'application/json');
+      return res.send(data);
+    }
+  } catch (e) {}
+  return res.json({
+    version: 1,
+    updatedAt: new Date().toISOString(),
+    locations: memoryLocations,
+    nodes: [],
+    roads: [],
+    categories: CATEGORIES,
+  });
+});
+
+// POST: /api/campus-data or /api/save-campus-data
+const handleSaveCampusData = async (req: Request, res: Response) => {
+  const fs = await import('fs');
+  const path = await import('path');
+  try {
+    const { locations, nodes, roads, categories } = req.body;
+    const payload = {
+      version: 1,
+      updatedAt: new Date().toISOString(),
+      locations: locations || [],
+      nodes: nodes || [],
+      roads: roads || [],
+      categories: categories || CATEGORIES,
+    };
+    const jsonStr = JSON.stringify(payload, null, 2);
+
+    const localDataDir = path.resolve(__dirname, '../data');
+    if (!fs.existsSync(localDataDir)) fs.mkdirSync(localDataDir, { recursive: true });
+    fs.writeFileSync(path.join(localDataDir, 'campusData.json'), jsonStr, 'utf-8');
+
+    // Also sync to client public data if available
+    const clientPublicDataDir = path.resolve(__dirname, '../../../client/public/data');
+    if (fs.existsSync(clientPublicDataDir)) {
+      fs.writeFileSync(path.join(clientPublicDataDir, 'campusData.json'), jsonStr, 'utf-8');
+    }
+
+    if (Array.isArray(locations) && locations.length > 0) {
+      memoryLocations = locations;
+    }
+
+    console.log(`[Express API] Campus data saved: ${payload.locations.length} locations, ${payload.nodes.length} nodes, ${payload.roads.length} roads`);
+    return res.json({ success: true, message: 'Campus data saved to disk', updatedAt: payload.updatedAt });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+router.post('/campus-data', handleSaveCampusData);
+router.post('/save-campus-data', handleSaveCampusData);

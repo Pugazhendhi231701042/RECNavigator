@@ -18,35 +18,74 @@ import { AboutPage } from './pages/AboutPage';
 import { AdminPage } from './pages/AdminPage';
 import { calculateMultiEntranceRoute } from './utils/routing/dijkstra';
 import { ThemeProvider } from './context/ThemeContext';
+import defaultCampusData from './data/campusData.json';
+import {
+  fetchCampusDataFromServer,
+  saveCampusDataToServer,
+} from './utils/campusDataApi';
+
+const INITIAL_LOCATIONS_SOURCE: Location[] = (defaultCampusData?.locations && defaultCampusData.locations.length > 0)
+  ? (defaultCampusData.locations as unknown as Location[])
+  : INITIAL_LOCATIONS;
+
+const INITIAL_NODES_SOURCE: PathNode[] = (defaultCampusData?.nodes && defaultCampusData.nodes.length > 0)
+  ? (defaultCampusData.nodes as unknown as PathNode[])
+  : INITIAL_NODES;
+
+const INITIAL_ROADS_SOURCE: Road[] = (defaultCampusData?.roads && defaultCampusData.roads.length > 0)
+  ? (defaultCampusData.roads as unknown as Road[])
+  : INITIAL_ROADS;
 
 function AppContent() {
-  // Application State with LocalStorage Persistence
+  // Application State with LocalStorage and Server/Disk Persistence
   const [locations, setLocations] = useState<Location[]>(() => {
     try {
       const saved = localStorage.getItem('rec_locations');
-      return saved !== null ? JSON.parse(saved) : INITIAL_LOCATIONS;
+      return saved !== null ? JSON.parse(saved) : INITIAL_LOCATIONS_SOURCE;
     } catch {
-      return INITIAL_LOCATIONS;
+      return INITIAL_LOCATIONS_SOURCE;
     }
   });
 
   const [nodes, setNodes] = useState<PathNode[]>(() => {
     try {
       const saved = localStorage.getItem('rec_nodes');
-      return saved !== null ? JSON.parse(saved) : INITIAL_NODES;
+      return saved !== null ? JSON.parse(saved) : INITIAL_NODES_SOURCE;
     } catch {
-      return INITIAL_NODES;
+      return INITIAL_NODES_SOURCE;
     }
   });
 
   const [roads, setRoads] = useState<Road[]>(() => {
     try {
       const saved = localStorage.getItem('rec_roads');
-      return saved !== null ? JSON.parse(saved) : INITIAL_ROADS;
+      return saved !== null ? JSON.parse(saved) : INITIAL_ROADS_SOURCE;
     } catch {
-      return INITIAL_ROADS;
+      return INITIAL_ROADS_SOURCE;
     }
   });
+
+  // Hydrate from Server / Disk data on mount
+  useEffect(() => {
+    let isMounted = true;
+    fetchCampusDataFromServer().then(serverData => {
+      if (!isMounted || !serverData) return;
+      if (serverData.locations && serverData.nodes && serverData.roads) {
+        setLocations(serverData.locations);
+        setNodes(serverData.nodes);
+        setRoads(serverData.roads);
+        try {
+          localStorage.setItem('rec_locations', JSON.stringify(serverData.locations));
+          localStorage.setItem('rec_nodes', JSON.stringify(serverData.nodes));
+          localStorage.setItem('rec_roads', JSON.stringify(serverData.roads));
+          localStorage.setItem('rec_campus_updated_at', serverData.updatedAt || new Date().toISOString());
+        } catch {}
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [startLocation, setStartLocation] = useState<Location | null>(null);
@@ -56,13 +95,19 @@ function AppContent() {
   // Mobile Bottom Sheet State
   const [mobileSheetMode, setMobileSheetMode] = useState<'none' | 'location' | 'directions'>('none');
 
-  // Sync to localStorage
+  // Debounced auto-sync to localStorage and server/disk
   useEffect(() => {
     try {
       localStorage.setItem('rec_locations', JSON.stringify(locations));
       localStorage.setItem('rec_nodes', JSON.stringify(nodes));
       localStorage.setItem('rec_roads', JSON.stringify(roads));
     } catch {}
+
+    const timer = setTimeout(() => {
+      saveCampusDataToServer({ locations, nodes, roads });
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, [locations, nodes, roads]);
 
   // Handle Location Selection
@@ -136,28 +181,40 @@ function AppContent() {
 
   // Reset to Factory Campus Defaults
   const handleResetDefaults = () => {
-    localStorage.setItem('rec_locations', JSON.stringify(INITIAL_LOCATIONS));
-    localStorage.setItem('rec_nodes', JSON.stringify(INITIAL_NODES));
-    localStorage.setItem('rec_roads', JSON.stringify(INITIAL_ROADS));
     setLocations(INITIAL_LOCATIONS);
     setNodes(INITIAL_NODES);
     setRoads(INITIAL_ROADS);
     setSelectedLocation(null);
     setStartLocation(null);
     setDestinationLocation(null);
+    saveCampusDataToServer({
+      locations: INITIAL_LOCATIONS,
+      nodes: INITIAL_NODES,
+      roads: INITIAL_ROADS,
+    });
   };
 
   // Reset System: Delete all buildings, roads and junctions
   const handleResetSystem = () => {
-    localStorage.setItem('rec_locations', JSON.stringify([]));
-    localStorage.setItem('rec_nodes', JSON.stringify([]));
-    localStorage.setItem('rec_roads', JSON.stringify([]));
     setLocations([]);
     setNodes([]);
     setRoads([]);
     setSelectedLocation(null);
     setStartLocation(null);
     setDestinationLocation(null);
+    saveCampusDataToServer({
+      locations: [],
+      nodes: [],
+      roads: [],
+    });
+  };
+
+  // Import custom campus dataset
+  const handleImportCampusData = (data: { locations: Location[]; nodes: PathNode[]; roads: Road[] }) => {
+    setLocations(data.locations);
+    setNodes(data.nodes);
+    setRoads(data.roads);
+    saveCampusDataToServer(data);
   };
 
   // Dynamically derive active navigation graph edges from roads & junctions
@@ -248,6 +305,7 @@ function AppContent() {
               onDeleteRoad={handleDeleteRoad}
               onResetDefaults={handleResetDefaults}
               onResetSystem={handleResetSystem}
+              onImportCampusData={handleImportCampusData}
             />
           </div>
         )}
