@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T05:19:07.420Z",
+  "updatedAt": "2026-09-23T05:20:00.121Z",
   "locations": [
     {
       "id": "building_8782",
@@ -49,9 +49,9 @@
       },
       "rotationY": 0,
       "scale": [
-        175,
-        175,
-        175
+        150,
+        150,
+        150
       ],
       "modelKey": "Gym-optimized.glb",
       "nodeId": "node_building_4271_entrance",
