@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:57:10.856Z",
+  "updatedAt": "2026-09-23T10:57:16.354Z",
   "locations": [
     {
       "id": "building_8912",
@@ -437,9 +437,9 @@
       },
       "rotationY": 0,
       "scale": [
-        1,
-        1,
-        1
+        111,
+        111,
+        111
       ],
       "modelKey": "Indoor Auditorium-optimized.glb",
       "nodeId": "node_building_7317_entrance",
