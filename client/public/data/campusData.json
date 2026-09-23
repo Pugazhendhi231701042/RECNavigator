@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:57:07.537Z",
+  "updatedAt": "2026-09-23T10:57:10.856Z",
   "locations": [
     {
       "id": "building_8912",
@@ -441,7 +441,7 @@
         1,
         1
       ],
-      "modelKey": "Blackbuck-optimized.glb",
+      "modelKey": "Indoor Auditorium-optimized.glb",
       "nodeId": "node_building_7317_entrance",
       "entranceNodeIds": [
         "node_building_7317_entrance"
