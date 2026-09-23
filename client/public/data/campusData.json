@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:03:57.216Z",
+  "updatedAt": "2026-09-23T10:04:01.872Z",
   "locations": [
     {
       "id": "building_8912",
@@ -22,7 +22,6 @@
       "nodeId": "node_building_8912_entrance",
       "entranceNodeIds": [
         "node_building_8912_entrance",
-        "node_ent_9426",
         "node_ent_6010"
       ],
       "entrances": [
@@ -35,17 +34,6 @@
             "x": -263,
             "y": 0.2,
             "z": 38
-          }
-        },
-        {
-          "id": "building_8912_ent_2",
-          "name": "Entrance 2",
-          "buildingId": "building_8912",
-          "junctionId": "node_ent_9426",
-          "position": {
-            "x": -263,
-            "y": 0.2,
-            "z": -81
           }
         },
         {
