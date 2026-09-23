@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:34:40.607Z",
+  "updatedAt": "2026-09-23T10:34:48.424Z",
   "locations": [
     {
       "id": "building_8912",
@@ -283,6 +283,15 @@
         "x": 244,
         "y": 0.2,
         "z": -280
+      }
+    },
+    {
+      "id": "node_ent_6899",
+      "name": "Rajalakshmi School of Architecture (TIFAC) Entrance 2",
+      "position": {
+        "x": 198,
+        "y": 0.2,
+        "z": -279
       }
     }
   ],
