@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:42:54.216Z",
+  "updatedAt": "2026-09-23T10:43:03.280Z",
   "locations": [
     {
       "id": "building_8912",
@@ -280,7 +280,8 @@
       "modelKey": "C - Block-optimized.glb",
       "nodeId": "node_building_4404_entrance",
       "entranceNodeIds": [
-        "node_building_4404_entrance"
+        "node_building_4404_entrance",
+        "node_ent_2077"
       ],
       "entrances": [
         {
@@ -292,6 +293,17 @@
             "x": 36,
             "y": 0.2,
             "z": -386
+          }
+        },
+        {
+          "id": "building_4404_ent_2",
+          "name": "Entrance 2",
+          "buildingId": "building_4404",
+          "junctionId": "node_ent_2077",
+          "position": {
+            "x": 39,
+            "y": 0.2,
+            "z": -433
           }
         }
       ]
@@ -422,6 +434,15 @@
         "x": 36,
         "y": 0.2,
         "z": -386
+      }
+    },
+    {
+      "id": "node_ent_2077",
+      "name": "C Block Entrance 2",
+      "position": {
+        "x": 39,
+        "y": 0.2,
+        "z": -433
       }
     }
   ],
