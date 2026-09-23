@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:46:49.985Z",
+  "updatedAt": "2026-09-23T10:46:55.099Z",
   "locations": [
     {
       "id": "building_8912",
@@ -324,7 +324,7 @@
         1,
         1
       ],
-      "modelKey": "Blackbuck-optimized.glb",
+      "modelKey": "Tech lounge-optimized.glb",
       "nodeId": "node_building_7013_entrance",
       "entranceNodeIds": [
         "node_building_7013_entrance"
