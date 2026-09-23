@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:58:13.904Z",
+  "updatedAt": "2026-09-23T10:58:28.506Z",
   "locations": [
     {
       "id": "building_8912",
@@ -472,9 +472,9 @@
       },
       "rotationY": 0,
       "scale": [
-        1,
-        1,
-        1
+        3.5,
+        3.5,
+        3.5
       ],
       "modelKey": "Mart (1)-optimized.glb",
       "nodeId": "node_building_4085_entrance",
