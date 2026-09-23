@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:58:01.837Z",
+  "updatedAt": "2026-09-23T10:58:08.921Z",
   "locations": [
     {
       "id": "building_8912",
@@ -462,7 +462,7 @@
     },
     {
       "id": "building_4085",
-      "name": "New Campus Building",
+      "name": "REC Mart",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
