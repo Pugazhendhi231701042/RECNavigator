@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:46:08.216Z",
+  "updatedAt": "2026-09-23T10:46:49.985Z",
   "locations": [
     {
       "id": "building_8912",
@@ -310,7 +310,7 @@
     },
     {
       "id": "building_7013",
-      "name": "New Campus Building",
+      "name": "Tech  Lounge",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
