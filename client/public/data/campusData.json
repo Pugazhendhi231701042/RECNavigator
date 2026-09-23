@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:39:21.413Z",
+  "updatedAt": "2026-09-23T10:40:10.245Z",
   "locations": [
     {
       "id": "building_8912",
@@ -325,7 +325,7 @@
     },
     {
       "id": "node_building_2229_entrance",
-      "name": "New Building Entrance",
+      "name": "TIFAC Main Entra",
       "position": {
         "x": 257,
         "y": 0.2,
