@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:56:28.520Z",
+  "updatedAt": "2026-09-23T10:56:50.720Z",
   "locations": [
     {
       "id": "building_8912",
@@ -427,7 +427,7 @@
     },
     {
       "id": "building_7317",
-      "name": "New Campus Building",
+      "name": "New Campus BuildingA",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
