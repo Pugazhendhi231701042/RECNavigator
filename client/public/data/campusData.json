@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:05:51.266Z",
+  "updatedAt": "2026-09-23T10:05:56.550Z",
   "locations": [
     {
       "id": "building_8912",
@@ -95,7 +95,7 @@
     },
     {
       "id": "node_ent_6010",
-      "name": "A Block Entrance",
+      "name": "A Block Right Entrance",
       "position": {
         "x": -372,
         "y": 0.2,
