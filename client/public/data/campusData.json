@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:04:16.188Z",
+  "updatedAt": "2026-09-23T10:04:27.170Z",
   "locations": [
     {
       "id": "building_8912",
@@ -22,7 +22,8 @@
       "nodeId": "node_building_8912_entrance",
       "entranceNodeIds": [
         "node_building_8912_entrance",
-        "node_ent_4967"
+        "node_ent_4967",
+        "node_ent_9426"
       ],
       "entrances": [
         {
@@ -45,6 +46,17 @@
             "x": -153,
             "y": 0.2,
             "z": -35
+          }
+        },
+        {
+          "id": "building_8912_ent_5953",
+          "name": "A Block Entrance 2 Gate",
+          "buildingId": "building_8912",
+          "junctionId": "node_ent_9426",
+          "position": {
+            "x": -263,
+            "y": 0.2,
+            "z": -81
           }
         }
       ]
