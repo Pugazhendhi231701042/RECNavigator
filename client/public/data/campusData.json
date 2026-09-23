@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:28:00.354Z",
+  "updatedAt": "2026-09-23T10:28:17.137Z",
   "locations": [
     {
       "id": "building_8912",
@@ -92,7 +92,8 @@
       "modelKey": "block-b-optimized.glb",
       "nodeId": "node_building_2972_entrance",
       "entranceNodeIds": [
-        "node_building_2972_entrance"
+        "node_building_2972_entrance",
+        "node_ent_5923"
       ],
       "entrances": [
         {
@@ -104,6 +105,17 @@
             "x": -64,
             "y": 0.2,
             "z": -72
+          }
+        },
+        {
+          "id": "building_2972_ent_2",
+          "name": "Entrance 2",
+          "buildingId": "building_2972",
+          "junctionId": "node_ent_5923",
+          "position": {
+            "x": -70,
+            "y": 0.2,
+            "z": -134
           }
         }
       ]
@@ -153,6 +165,15 @@
         "x": -64,
         "y": 0.2,
         "z": -72
+      }
+    },
+    {
+      "id": "node_ent_5923",
+      "name": "B Block Entrance 2",
+      "position": {
+        "x": -70,
+        "y": 0.2,
+        "z": -134
       }
     }
   ],
