@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:49:05.500Z",
+  "updatedAt": "2026-09-23T10:49:10.583Z",
   "locations": [
     {
       "id": "building_8912",
@@ -327,7 +327,8 @@
       "modelKey": "Tech lounge-optimized.glb",
       "nodeId": "node_building_7013_entrance",
       "entranceNodeIds": [
-        "node_building_7013_entrance"
+        "node_building_7013_entrance",
+        "node_ent_9245"
       ],
       "entrances": [
         {
@@ -339,6 +340,17 @@
             "x": 0,
             "y": 0.2,
             "z": 15
+          }
+        },
+        {
+          "id": "building_7013_ent_2",
+          "name": "Entrance 2",
+          "buildingId": "building_7013",
+          "junctionId": "node_ent_9245",
+          "position": {
+            "x": -416,
+            "y": 0.2,
+            "z": -44
           }
         }
       ]
@@ -487,6 +499,15 @@
         "x": -420,
         "y": 0.2,
         "z": 31
+      }
+    },
+    {
+      "id": "node_ent_9245",
+      "name": "Tech  Lounge Entrance 2",
+      "position": {
+        "x": -416,
+        "y": 0.2,
+        "z": -44
       }
     }
   ],
