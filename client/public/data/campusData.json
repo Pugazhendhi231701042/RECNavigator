@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:26:09.185Z",
+  "updatedAt": "2026-09-23T10:26:13.467Z",
   "locations": [
     {
       "id": "building_8912",
@@ -75,7 +75,7 @@
     },
     {
       "id": "building_2972",
-      "name": "B Blovk",
+      "name": "B Block",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
