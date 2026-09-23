@@ -326,18 +326,20 @@ function AppContent() {
         )}
 
         {activeTab === 'places' && (
-          <PlacesPage
-            locations={locations}
-            onSelectLocation={(loc) => {
-              handleSelectLocation(loc);
-              setActiveTab('map');
-            }}
-            onNavigateToMap={() => setActiveTab('map')}
-            onSetAsDestination={(loc) => {
-              setDestinationLocation(loc);
-              setActiveTab('map');
-            }}
-          />
+          <div className="h-[calc(100vh-65px)] w-full overflow-y-auto overscroll-contain">
+            <PlacesPage
+              locations={locations}
+              onSelectLocation={(loc) => {
+                handleSelectLocation(loc);
+                setActiveTab('map');
+              }}
+              onNavigateToMap={() => setActiveTab('map')}
+              onSetAsDestination={(loc) => {
+                setDestinationLocation(loc);
+                setActiveTab('map');
+              }}
+            />
+          </div>
         )}
 
         {activeTab === 'about' && (

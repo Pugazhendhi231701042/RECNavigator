@@ -120,8 +120,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   const [resetSuccessToast, setResetSuccessToast] = useState<string>('');
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
 
-  // Map Click Interactive Mode ('none' | 'add-junction' | 'add-entrance')
-  const [mapClickMode, setMapClickMode] = useState<'none' | 'add-junction' | 'add-entrance'>('none');
+  // Map Click Interactive Mode ('none' | 'add-junction' | 'add-entrance' | 'set-main-entrance' | 'set-entrance-position')
+  const [mapClickMode, setMapClickMode] = useState<
+    'none' | 'add-junction' | 'add-entrance' | 'set-main-entrance' | 'set-entrance-position'
+  >('none');
+  const [targetEntranceId, setTargetEntranceId] = useState<string | null>(null);
+  const [targetEntranceJunctionId, setTargetEntranceJunctionId] = useState<string | null>(null);
+  const [targetEntranceName, setTargetEntranceName] = useState<string>('Main Entrance');
 
   // Selected Entities
   const [selectedBuildingId, setSelectedBuildingId] = useState<string>(locations[0]?.id || '');
@@ -184,6 +189,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setMapClickMode('none');
+        setTargetEntranceId(null);
+        setTargetEntranceJunctionId(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -328,37 +335,112 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   // 3D MAP GROUND CLICK RAYCASTING HANDLER
   // ----------------------------------------------------
   const handleMapGroundClick = (point: Vector3D) => {
-    if (mapClickMode === 'add-junction') {
+    const roundedPos: Vector3D = {
+      x: Math.round(point.x * 10) / 10,
+      y: 0.2,
+      z: Math.round(point.z * 10) / 10,
+    };
+
+    if (mapClickMode === 'set-main-entrance' && currentBuilding) {
+      const entrances = ensureLocationEntrances(currentBuilding, nodes);
+      const mainEnt = entrances[0] || {
+        id: `${currentBuilding.id}_ent_1`,
+        name: 'Main Entrance',
+        buildingId: currentBuilding.id,
+        junctionId: currentBuilding.nodeId || `node_${currentBuilding.id}_entrance`,
+        position: roundedPos,
+      };
+
+      // 1. Update the linked junction node in campus graph
+      const linkedNode = nodes.find(n => n.id === mainEnt.junctionId);
+      if (linkedNode) {
+        onUpdateNode?.({ ...linkedNode, position: roundedPos });
+      } else {
+        onAddNode?.({
+          id: mainEnt.junctionId,
+          name: `${currentBuilding.name} Main Entrance`,
+          position: roundedPos,
+        });
+      }
+
+      // 2. Update building entrances and nodeId
+      let updatedEntrances: Entrance[];
+      if (entrances.length === 0) {
+        updatedEntrances = [{ ...mainEnt, position: roundedPos }];
+      } else {
+        updatedEntrances = entrances.map((e, idx) =>
+          idx === 0 ? { ...e, position: roundedPos } : e
+        );
+      }
+
+      const updatedLoc: Location = {
+        ...currentBuilding,
+        nodeId: mainEnt.junctionId,
+        entrances: updatedEntrances,
+        entranceNodeIds: updatedEntrances.map(e => e.junctionId),
+      };
+
+      onUpdateLocation(updatedLoc);
+      setMapClickMode('none');
+      setTargetEntranceId(null);
+      setTargetEntranceJunctionId(null);
+      setHasUnsavedChanges(true);
+      setResetSuccessToast(`🎯 Placed Main Entrance at (${roundedPos.x}, ${roundedPos.z})`);
+      setTimeout(() => setResetSuccessToast(''), 3000);
+    } else if (mapClickMode === 'set-entrance-position' && currentBuilding && targetEntranceId) {
+      if (targetEntranceJunctionId) {
+        const linkedNode = nodes.find(n => n.id === targetEntranceJunctionId);
+        if (linkedNode) {
+          onUpdateNode?.({ ...linkedNode, position: roundedPos });
+        }
+      }
+      const existing = ensureLocationEntrances(currentBuilding, nodes);
+      const updatedEntrances = existing.map(e =>
+        e.id === targetEntranceId ? { ...e, position: roundedPos } : e
+      );
+      onUpdateLocation({
+        ...currentBuilding,
+        entrances: updatedEntrances,
+      });
+      setMapClickMode('none');
+      setTargetEntranceId(null);
+      setTargetEntranceJunctionId(null);
+      setHasUnsavedChanges(true);
+      setResetSuccessToast(`🎯 Placed ${targetEntranceName} at (${roundedPos.x}, ${roundedPos.z})`);
+      setTimeout(() => setResetSuccessToast(''), 3000);
+    } else if (mapClickMode === 'add-junction') {
       const newJuncId = `node_${Date.now().toString().slice(-4)}`;
-      const newJuncName = `Junction (${point.x}, ${point.z})`;
+      const newJuncName = `Junction (${roundedPos.x}, ${roundedPos.z})`;
       const newNode: PathNode = {
         id: newJuncId,
         name: newJuncName,
-        position: { x: point.x, y: 0.2, z: point.z },
+        position: roundedPos,
       };
       onAddNode?.(newNode);
       setSelectedJunctionId(newJuncId);
       setNetworkSubTab('junctions');
       setMapClickMode('none');
       setHasUnsavedChanges(true);
+      setResetSuccessToast(`Created Junction at (${roundedPos.x}, ${roundedPos.z})`);
+      setTimeout(() => setResetSuccessToast(''), 3000);
     } else if (mapClickMode === 'add-entrance' && currentBuilding) {
       const newJuncId = `node_ent_${Date.now().toString().slice(-4)}`;
-      const newJuncName = `${currentBuilding.name} Gate`;
+      const existingEntrances = ensureLocationEntrances(currentBuilding, nodes);
+      const entName = `Entrance ${existingEntrances.length + 1}`;
       const newNode: PathNode = {
         id: newJuncId,
-        name: newJuncName,
-        position: { x: point.x, y: 0.2, z: point.z },
+        name: `${currentBuilding.name} ${entName}`,
+        position: roundedPos,
       };
       onAddNode?.(newNode);
 
       // Link to building entrances
-      const existingEntrances = ensureLocationEntrances(currentBuilding, nodes);
       const newEntranceObj: Entrance = {
         id: `${currentBuilding.id}_ent_${existingEntrances.length + 1}`,
-        name: `Entrance ${existingEntrances.length + 1}`,
+        name: entName,
         buildingId: currentBuilding.id,
         junctionId: newJuncId,
-        position: { x: point.x, y: 0.2, z: point.z },
+        position: roundedPos,
       };
       const updatedEntrances = [...existingEntrances, newEntranceObj];
       const updatedLoc: Location = {
@@ -369,6 +451,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       onUpdateLocation(updatedLoc);
       setMapClickMode('none');
       setHasUnsavedChanges(true);
+      setResetSuccessToast(`Added ${entName} at (${roundedPos.x}, ${roundedPos.z})`);
+      setTimeout(() => setResetSuccessToast(''), 3000);
     }
   };
 
@@ -784,182 +868,177 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
   // ----------------------------------------------------
   return (
     <div className="w-full h-[calc(100vh-65px)] bg-slate-100 dark:bg-[#080B11] text-slate-900 dark:text-white relative overflow-hidden flex flex-col select-none transition-colors duration-300">
-      {/* 1. TOP FLOATING COMMAND BAR */}
-      <header className="h-14 bg-white/90 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/90 dark:border-slate-800/80 px-4 flex items-center justify-between z-30 shrink-0">
-        {/* Left: Studio Branding & Mode Switcher */}
+      {/* 1. TOP FLOATING COMMAND BAR - GROUPED & DECLUTTERED */}
+      <header className="h-14 bg-white/95 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/90 dark:border-slate-800/80 px-4 flex items-center justify-between z-30 shrink-0 gap-3">
+        {/* GROUP 1: STUDIO BRAND & MODULES */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black tracking-widest text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-400/30 uppercase font-mono">
+            <span className="text-[11px] font-black tracking-widest text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/30 uppercase font-mono flex items-center gap-1.5 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
               CAD STUDIO
             </span>
           </div>
 
-          {/* TWO MAJOR ADMIN MODES SWITCHER */}
-          <div className="flex items-center bg-slate-200/60 dark:bg-slate-900/90 border border-slate-300/60 dark:border-slate-800 rounded-xl p-1 shadow-inner">
+          {/* STUDIO MODULE SWITCHER (Buildings / Junctions & Roads / Route Tester) */}
+          <div className="flex items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-0.5 shadow-inner">
             <button
               onClick={() => {
                 setActiveSection('buildings');
                 setMapClickMode('none');
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeSection === 'buildings'
-                  ? 'bg-purple-600 text-white shadow-md'
+                  ? 'bg-purple-600 text-white shadow'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <Building className="w-3.5 h-3.5 text-amber-300" />
-              <span>Section 1: Buildings</span>
+              <Building className="w-3.5 h-3.5" />
+              <span>Buildings</span>
             </button>
             <button
               onClick={() => {
                 setActiveSection('junctions-roads');
                 setMapClickMode('none');
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeSection === 'junctions-roads'
-                  ? 'bg-purple-600 text-white shadow-md'
+                  ? 'bg-purple-600 text-white shadow'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <Route className="w-3.5 h-3.5 text-cyan-300" />
-              <span>Section 2: Junctions & Roads</span>
+              <Route className="w-3.5 h-3.5" />
+              <span>Junctions & Roads</span>
+            </button>
+            <button
+              onClick={() => setShowRouteTester(prev => !prev)}
+              className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                showRouteTester
+                  ? 'bg-amber-500 text-slate-950 shadow'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+              title="Test shortest-path routing between nodes"
+            >
+              <Navigation className="w-3.5 h-3.5" />
+              <span>Test Route</span>
             </button>
           </div>
         </div>
 
-        {/* Center: Camera Mode Toggle & Tools */}
-        <div className="hidden md:flex items-center gap-2">
-          {/* Camera Perspective vs Top-down */}
-          <div className="flex items-center bg-slate-200/60 dark:bg-slate-900/90 border border-slate-300/60 dark:border-slate-800 rounded-xl p-0.5">
-            <button
-              onClick={() => setCameraMode('perspective')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-all ${
-                cameraMode === 'perspective'
-                  ? 'bg-white dark:bg-slate-800 text-purple-700 dark:text-amber-300 shadow'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-              title="3D Orbit Perspective View"
-            >
-              <Compass className="w-3.5 h-3.5" />
-              <span>3D Orbit</span>
-            </button>
-            <button
-              onClick={() => setCameraMode('top')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-all ${
-                cameraMode === 'top'
-                  ? 'bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-300 shadow'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-              title="Top-down 2D Map View (GIS Alignment)"
-            >
-              <Ruler className="w-3.5 h-3.5" />
-              <span>2D Top View</span>
-            </button>
-          </div>
-
-          {/* Shortest Route Tester Toggle */}
+        {/* GROUP 2: CAMERA VIEW CONTROLS */}
+        <div className="hidden lg:flex items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-0.5 shadow-inner">
           <button
-            onClick={() => setShowRouteTester(prev => !prev)}
-            className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
-              showRouteTester
-                ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/50 shadow-lg'
-                : 'bg-white dark:bg-slate-900/90 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:text-purple-600 dark:hover:text-white'
+            onClick={() => setCameraMode('perspective')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+              cameraMode === 'perspective'
+                ? 'bg-white dark:bg-slate-800 text-purple-700 dark:text-amber-300 shadow'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
+            title="3D Orbit Perspective View"
           >
-            <Navigation className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-            <span>Path Tester</span>
+            <Compass className="w-3.5 h-3.5" />
+            <span>3D Orbit</span>
+          </button>
+          <button
+            onClick={() => setCameraMode('top')}
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+              cameraMode === 'top'
+                ? 'bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-300 shadow'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+            title="Top-down 2D Map View (GIS Alignment)"
+          >
+            <Ruler className="w-3.5 h-3.5" />
+            <span>2D Top View</span>
           </button>
         </div>
 
-        {/* Right: Actions, Save, Export, Logout */}
+        {/* GROUP 3: CLOUD, DATA & SYSTEM OPS */}
         <div className="flex items-center gap-2">
           {/* Cloud Auto-Sync Indicator */}
           {cloudSyncStatus === 'syncing' ? (
-            <span className="text-xs font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1.5 bg-sky-50 dark:bg-sky-950/60 px-2 py-1 rounded-lg border border-sky-300 dark:border-sky-500/40 animate-pulse">
+            <span className="text-xs font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1.5 bg-sky-50 dark:bg-sky-950/60 px-2.5 py-1 rounded-xl border border-sky-300 dark:border-sky-500/40 animate-pulse">
               <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-500" />
-              <span>Cloud Auto-Saving...</span>
+              <span>Saving...</span>
             </span>
           ) : showSavedFeedback ? (
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-300 dark:border-emerald-500/40">
+            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-xl border border-emerald-300 dark:border-emerald-500/40">
               <CheckCircle2 className="w-3.5 h-3.5" /> {saveFeedbackText}
             </span>
           ) : hasUnsavedChanges ? (
-            <span className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 px-2 py-1 rounded-lg border border-amber-300 dark:border-amber-500/40 animate-pulse">
+            <span className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-xl border border-amber-300 dark:border-amber-500/40 animate-pulse">
               ● Auto-syncing...
             </span>
           ) : (
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono hidden sm:flex items-center gap-1 bg-emerald-50/70 dark:bg-emerald-950/40 px-2 py-0.5 rounded-lg border border-emerald-200 dark:border-emerald-900/50">
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono hidden sm:flex items-center gap-1 bg-emerald-50/70 dark:bg-emerald-950/40 px-2 py-1 rounded-xl border border-emerald-200 dark:border-emerald-900/50">
               <Cloud className="w-3.5 h-3.5" />
               <span>Cloud Synced</span>
             </span>
           )}
 
-          {/* Save Button */}
+          {/* Primary Save Button */}
           <button
             onClick={handleManualSave}
             disabled={isSaving}
             className={`px-3 py-1.5 ${isSaving ? 'bg-emerald-700 opacity-80' : 'bg-emerald-600 hover:bg-emerald-500'} text-white text-xs font-extrabold rounded-xl shadow transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer`}
-            title="Save changes permanently to disk & server"
+            title="Save changes permanently to shared cloud & disk"
           >
             {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             <span>{isSaving ? 'Saving...' : 'Save'}</span>
           </button>
 
-          {/* Download JSON Backup */}
-          <button
-            onClick={handleDownloadBackupJson}
-            className="p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-xl text-xs transition-all cursor-pointer shadow-sm"
-            title="Download JSON Backup"
-          >
-            <Download className="w-4 h-4" />
-          </button>
+          {/* Data Actions Cluster (Backup / Restore / Export) */}
+          <div className="flex items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-0.5">
+            <button
+              onClick={handleDownloadBackupJson}
+              className="p-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg text-xs transition-all cursor-pointer"
+              title="Download JSON Backup"
+            >
+              <Download className="w-3.5 h-3.5" />
+            </button>
+            <input
+              type="file"
+              ref={backupFileInputRef}
+              onChange={handleBackupFileSelected}
+              accept=".json"
+              className="hidden"
+            />
+            <button
+              onClick={handleTriggerUploadJson}
+              className="p-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg text-xs transition-all cursor-pointer"
+              title="Restore from JSON Backup"
+            >
+              <Upload className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setShowExportModal(true)}
+              className="p-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-lg text-xs transition-all cursor-pointer"
+              title="Export recCampusData.ts Code"
+            >
+              <Copy className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
-          {/* Restore JSON Backup */}
-          <input
-            type="file"
-            ref={backupFileInputRef}
-            onChange={handleBackupFileSelected}
-            accept=".json"
-            className="hidden"
-          />
-          <button
-            onClick={handleTriggerUploadJson}
-            className="p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-xl text-xs transition-all cursor-pointer shadow-sm"
-            title="Restore from JSON Backup"
-          >
-            <Upload className="w-4 h-4" />
-          </button>
-
-          {/* Export Code */}
-          <button
-            onClick={() => setShowExportModal(true)}
-            className="p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-xl text-xs transition-all cursor-pointer shadow-sm"
-            title="Export recCampusData.ts Code"
-          >
-            <Copy className="w-4 h-4" />
-          </button>
-
-          {/* RESET SYSTEM Button */}
+          {/* Danger System Operations: RESET SYSTEM */}
           <button
             onClick={() => {
               setShowResetModal(true);
               setResetPasswordInput('');
               setResetError('');
             }}
-            className="px-3 py-1.5 bg-red-100 dark:bg-red-950/70 hover:bg-red-600 hover:text-white border border-red-300 dark:border-red-800/60 text-red-700 dark:text-red-300 rounded-xl text-xs font-black transition-all shadow-sm active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            className="px-2.5 py-1.5 bg-red-50 dark:bg-red-950/60 hover:bg-red-600 hover:text-white border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-300 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 flex items-center gap-1 cursor-pointer"
             title="Reset System - Delete All Buildings, Roads and Junctions"
           >
-            <Trash2 className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
-            <span>RESET SYSTEM</span>
+            <Trash2 className="w-3.5 h-3.5 text-red-500 group-hover:text-white" />
+            <span className="hidden sm:inline">RESET</span>
           </button>
 
           {/* Logout */}
           <button
             onClick={handleLogout}
             className="p-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 rounded-xl text-xs transition-all cursor-pointer shadow-sm"
-            title="Logout"
+            title="Logout Admin"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-3.5 h-3.5" />
           </button>
         </div>
       </header>
@@ -976,16 +1055,24 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
       <div className="flex-1 relative w-full h-full overflow-hidden">
         {/* Active Map Click Banner if Armed */}
         {mapClickMode !== 'none' && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 bg-amber-500 text-slate-950 px-4 py-2 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs animate-bounce border-2 border-white">
-            <Crosshair className="w-4 h-4 animate-spin" />
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 bg-amber-500 text-slate-950 px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs border-2 border-white ring-4 ring-amber-500/30 animate-pulse">
+            <Crosshair className="w-4 h-4 animate-spin text-slate-950" />
             <span>
               {mapClickMode === 'add-junction'
-                ? 'CLICK ANYWHERE ON MAP TO PLACE A NEW JUNCTION'
-                : `CLICK ON MAP NEAR "${currentBuilding?.name}" TO PLACE ENTRANCE`}
+                ? 'CLICK ANYWHERE ON MAP TO PLACE A NEW ROAD JUNCTION'
+                : mapClickMode === 'set-main-entrance'
+                ? `CLICK ON 3D GROUND TO PLACE MAIN ENTRANCE FOR "${currentBuilding?.name?.toUpperCase()}"`
+                : mapClickMode === 'set-entrance-position'
+                ? `CLICK ON 3D GROUND TO PLACE ${targetEntranceName.toUpperCase()}`
+                : `CLICK ON MAP NEAR "${currentBuilding?.name?.toUpperCase()}" TO PLACE ENTRANCE`}
             </span>
             <button
-              onClick={() => setMapClickMode('none')}
-              className="px-2 py-0.5 bg-slate-950 text-white text-[10px] rounded-lg font-mono hover:bg-slate-800 cursor-pointer"
+              onClick={() => {
+                setMapClickMode('none');
+                setTargetEntranceId(null);
+                setTargetEntranceJunctionId(null);
+              }}
+              className="px-2.5 py-1 bg-slate-950 text-white text-[11px] rounded-lg font-mono hover:bg-slate-800 cursor-pointer shadow"
             >
               Cancel (ESC)
             </button>
@@ -1351,173 +1438,16 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
 
               {/* Body */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
-                {/* 3D Transform Gizmo Mode Toolbar */}
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <Move className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                    <span>3D Scene Transform Gizmo</span>
-                  </label>
-                  <div className="grid grid-cols-4 gap-1 bg-slate-200/60 dark:bg-slate-900 p-1 rounded-xl border border-slate-300/60 dark:border-slate-800">
-                    <button
-                      onClick={() => setTransformMode('translate')}
-                      className={`py-1 rounded-lg font-bold text-[11px] cursor-pointer transition-all ${
-                        transformMode === 'translate'
-                          ? 'bg-purple-600 text-white shadow'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                    >
-                      Move
-                    </button>
-                    <button
-                      onClick={() => setTransformMode('rotate')}
-                      className={`py-1 rounded-lg font-bold text-[11px] cursor-pointer transition-all ${
-                        transformMode === 'rotate'
-                          ? 'bg-purple-600 text-white shadow'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                    >
-                      Rotate
-                    </button>
-                    <button
-                      onClick={() => setTransformMode('scale')}
-                      className={`py-1 rounded-lg font-bold text-[11px] cursor-pointer transition-all ${
-                        transformMode === 'scale'
-                          ? 'bg-purple-600 text-white shadow'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                    >
-                      Scale
-                    </button>
-                    <button
-                      onClick={() => setTransformMode(null)}
-                      className={`py-1 rounded-lg font-bold text-[11px] cursor-pointer transition-all ${
-                        transformMode === null
-                          ? 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-300 shadow'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                      }`}
-                    >
-                      Off
-                    </button>
-                  </div>
-                </div>
-
-                {/* Direct Transform Input Fields */}
-                <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800/80 space-y-3">
-                  {/* Position Coordinates */}
-                  <div>
-                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase">World Position (meters)</span>
-                    <div className="grid grid-cols-3 gap-2 mt-1">
-                      <div>
-                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">X</span>
-                        <input
-                          type="number"
-                          value={currentBuilding.position.x}
-                          onChange={(e) =>
-                            handleUpdateBuildingProperty('position', {
-                              ...currentBuilding.position,
-                              x: Number(e.target.value),
-                            })
-                          }
-                          className="w-full px-2 py-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">Y (elev)</span>
-                        <input
-                          type="number"
-                          value={currentBuilding.position.y}
-                          onChange={(e) =>
-                            handleUpdateBuildingProperty('position', {
-                              ...currentBuilding.position,
-                              y: Number(e.target.value),
-                            })
-                          }
-                          className="w-full px-2 py-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
-                        />
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">Z</span>
-                        <input
-                          type="number"
-                          value={currentBuilding.position.z}
-                          onChange={(e) =>
-                            handleUpdateBuildingProperty('position', {
-                              ...currentBuilding.position,
-                              z: Number(e.target.value),
-                            })
-                          }
-                          className="w-full px-2 py-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
-                        />
-                      </div>
-                    </div>
+                {/* CARD 1: BUILDING DETAILS (FIRST) */}
+                <div className="bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 space-y-3 shadow-sm">
+                  <div className="flex items-center gap-2 pb-2 border-b border-slate-200/80 dark:border-slate-800/80">
+                    <Building className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                    <h4 className="font-black text-xs text-slate-900 dark:text-white uppercase tracking-wide">
+                      1. Building Details
+                    </h4>
                   </div>
 
-                  {/* Rotation Y */}
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                      <span>Rotation Y (Orient to Campus)</span>
-                      <span className="font-bold text-amber-600 dark:text-amber-400">{currentBuilding.rotationY || 0}°</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="360"
-                      step="5"
-                      value={currentBuilding.rotationY || 0}
-                      onChange={(e) => handleUpdateBuildingProperty('rotationY', Number(e.target.value))}
-                      className="w-full mt-1 accent-purple-500 cursor-pointer"
-                    />
-                  </div>
-
-                  {/* Scale */}
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 mb-1">
-                      <span>Scale Factor</span>
-                      <div className="flex items-center gap-1">
-                        <input
-                          type="number"
-                          min="0.1"
-                          max="10"
-                          step="0.05"
-                          value={
-                            Array.isArray(currentBuilding.scale)
-                              ? currentBuilding.scale[0]
-                              : typeof currentBuilding.scale === 'number'
-                                ? currentBuilding.scale
-                                : 1
-                          }
-                          onChange={(e) => {
-                            const val = Math.max(0.05, Number(e.target.value) || 1);
-                            handleUpdateBuildingProperty('scale', [val, val, val]);
-                          }}
-                          className="w-16 px-1.5 py-0.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-purple-600 dark:text-purple-400 text-right focus:outline-none focus:border-purple-500"
-                        />
-                        <span className="font-bold text-purple-600 dark:text-purple-400">x</span>
-                      </div>
-                    </div>
-                    <input
-                      type="range"
-                      min="0.2"
-                      max="3.5"
-                      step="0.05"
-                      value={
-                        Array.isArray(currentBuilding.scale)
-                          ? currentBuilding.scale[0]
-                          : typeof currentBuilding.scale === 'number'
-                            ? currentBuilding.scale
-                            : 1
-                      }
-                      onChange={(e) => {
-                        const val = Number(e.target.value);
-                        handleUpdateBuildingProperty('scale', [val, val, val]);
-                      }}
-                      className="w-full accent-purple-500 cursor-pointer"
-                    />
-                  </div>
-                </div>
-
-                {/* Building Details Form */}
-                <div className="space-y-2.5">
+                  {/* Building Name */}
                   <div>
                     <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
                       Building Name
@@ -1526,10 +1456,11 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                       type="text"
                       value={currentBuilding.name}
                       onChange={(e) => handleUpdateBuildingProperty('name', e.target.value)}
-                      className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                      className="w-full px-3 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
                     />
                   </div>
 
+                  {/* Category & 3D GLB Model */}
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
@@ -1538,7 +1469,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                       <select
                         value={currentBuilding.category}
                         onChange={(e) => handleUpdateBuildingProperty('category', e.target.value as CategoryId)}
-                        className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                        className="w-full px-2 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
                       >
                         {CATEGORIES.map(c => (
                           <option key={c.id} value={c.id}>
@@ -1559,7 +1490,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                             : (CAMPUS_GLB_MODELS.find(m => m.id.toLowerCase().includes(currentBuilding.modelKey?.toLowerCase() || ''))?.id || CAMPUS_GLB_MODELS[0]?.id || '')
                         }
                         onChange={(e) => handleUpdateBuildingProperty('modelKey', e.target.value)}
-                        className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 font-mono"
+                        className="w-full px-2 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 font-mono"
                       >
                         {CAMPUS_GLB_MODELS.map(m => (
                           <option key={m.id} value={m.id}>
@@ -1570,6 +1501,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                     </div>
                   </div>
 
+                  {/* Description */}
                   <div>
                     <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">
                       Description
@@ -1578,58 +1510,119 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                       rows={2}
                       value={currentBuilding.description || ''}
                       onChange={(e) => handleUpdateBuildingProperty('description', e.target.value)}
-                      className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 resize-none"
+                      className="w-full px-3 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 resize-none"
                     />
                   </div>
                 </div>
 
-                {/* MULTIPLE ENTRANCES SECTION (CRITICAL FEATURE) */}
-                <div className="p-3 bg-purple-50/80 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-500/30 rounded-xl space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-black text-xs text-slate-900 dark:text-white flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
-                        <span>Building Entrances ({ensureLocationEntrances(currentBuilding, nodes).length})</span>
+                {/* CARD 2: ENTRANCES & NAVIGATION (MIDDLE) */}
+                <div className="bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/90 dark:border-emerald-500/30 rounded-2xl p-3.5 space-y-3 shadow-sm">
+                  <div className="flex items-center justify-between pb-2 border-b border-emerald-200/80 dark:border-emerald-800/40">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <h4 className="font-black text-xs text-slate-900 dark:text-white uppercase tracking-wide">
+                        2. Entrances & Connections
                       </h4>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
-                        Multiple gates/entrances connecting to the road graph.
-                      </p>
                     </div>
+                    <span className="text-[10px] font-mono font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-700/50">
+                      {ensureLocationEntrances(currentBuilding, nodes).length} {ensureLocationEntrances(currentBuilding, nodes).length === 1 ? 'Gate' : 'Gates'}
+                    </span>
                   </div>
 
-                  {/* List of Entrances with Editable Coordinates */}
-                  <div className="space-y-2">
-                    {ensureLocationEntrances(currentBuilding, nodes).map((entrance) => {
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-snug">
+                    Entrances link this building to the campus pedestrian and road network.
+                  </p>
+
+                  {/* Entrances list */}
+                  <div className="space-y-2.5">
+                    {ensureLocationEntrances(currentBuilding, nodes).map((entrance, idx) => {
                       const linkedNode = nodes.find(n => n.id === entrance.junctionId);
                       const entPos = linkedNode?.position || entrance.position || { x: 0, y: 0.2, z: 0 };
+                      const isMain = idx === 0;
+                      const isArmingThis =
+                        (mapClickMode === 'set-main-entrance' && isMain) ||
+                        (mapClickMode === 'set-entrance-position' && targetEntranceId === entrance.id);
+
                       return (
                         <div
                           key={entrance.id}
-                          className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-2.5 rounded-lg space-y-2 shadow-sm"
+                          className={`p-3 rounded-xl border transition-all ${
+                            isMain
+                              ? 'bg-white dark:bg-slate-950 border-emerald-400 dark:border-emerald-500/50 shadow-md ring-1 ring-emerald-400/30'
+                              : 'bg-white/80 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 shadow-sm'
+                          }`}
                         >
-                          <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center justify-between gap-2 mb-2">
                             <div className="min-w-0 flex-1">
-                              <div className="font-bold text-xs text-emerald-600 dark:text-emerald-300 truncate">
-                                🚪 {entrance.name}
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-black text-xs text-slate-900 dark:text-white truncate">
+                                  {isMain ? '🚪 Main Entrance' : `🚪 ${entrance.name}`}
+                                </span>
+                                {isMain && (
+                                  <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-600 text-white tracking-wider">
+                                    Primary
+                                  </span>
+                                )}
                               </div>
-                              <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-mono">
-                                ➔ Node: {linkedNode ? linkedNode.name : entrance.junctionId}
+                              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5 truncate">
+                                ➔ Road Node: {linkedNode ? linkedNode.name : entrance.junctionId}
                               </div>
                             </div>
+
+                            {!isMain && (
+                              <button
+                                onClick={() => handleRemoveBuildingEntrance(entrance.id)}
+                                className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1 rounded transition-colors cursor-pointer"
+                                title="Remove Entrance"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+
+                          {/* USER-FRIENDLY "CLICK ON MAP TO PLACE" BUTTON */}
+                          <div className="mb-2.5">
                             <button
-                              onClick={() => handleRemoveBuildingEntrance(entrance.id)}
-                              className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1 rounded transition-colors cursor-pointer"
-                              title="Remove Entrance"
+                              onClick={() => {
+                                if (isArmingThis) {
+                                  setMapClickMode('none');
+                                  setTargetEntranceId(null);
+                                  setTargetEntranceJunctionId(null);
+                                } else {
+                                  setTargetEntranceId(entrance.id);
+                                  setTargetEntranceJunctionId(entrance.junctionId);
+                                  setTargetEntranceName(entrance.name || 'Entrance');
+                                  setMapClickMode(isMain ? 'set-main-entrance' : 'set-entrance-position');
+                                }
+                              }}
+                              className={`w-full py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm ${
+                                isArmingThis
+                                  ? 'bg-amber-500 text-slate-950 ring-2 ring-amber-300 animate-pulse'
+                                  : isMain
+                                  ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                                  : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700'
+                              }`}
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
+                              <Crosshair className={`w-4 h-4 ${isArmingThis ? 'animate-spin' : ''}`} />
+                              <span>
+                                {isArmingThis
+                                  ? '🎯 Click on 3D Ground to Place...'
+                                  : isMain
+                                  ? '🎯 Click on Map to Place Main Entrance'
+                                  : '🎯 Click on Map to Place'}
+                              </span>
                             </button>
                           </div>
 
                           {/* Editable Coordinates [X, Y, Z] */}
                           <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
                             <div className="flex items-center justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400 mb-1">
-                              <span className="font-bold uppercase text-emerald-600 dark:text-emerald-400">Entrance Coordinates (m)</span>
-                              <span className="text-[9px] text-slate-400">[{entPos.x}, {entPos.y}, {entPos.z}]</span>
+                              <span className="font-bold uppercase text-slate-600 dark:text-slate-300">
+                                Coordinates (m)
+                              </span>
+                              <span className="text-[9px] text-slate-400">
+                                [{entPos.x}, {entPos.y}, {entPos.z}]
+                              </span>
                             </div>
                             <div className="grid grid-cols-3 gap-1.5">
                               <div>
@@ -1681,16 +1674,18 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                     })}
                   </div>
 
-                  {/* Add Entrance Controls */}
-                  <div className="pt-2 border-t border-purple-200 dark:border-purple-500/20 space-y-2">
-                    <span className="text-[10px] font-bold text-purple-700 dark:text-purple-300 uppercase">Connect Another Entrance</span>
+                  {/* Connect Another Entrance */}
+                  <div className="pt-2 border-t border-emerald-200 dark:border-emerald-800/40 space-y-2">
+                    <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 uppercase">
+                      Connect Additional Gate / Entrance
+                    </span>
                     <div className="flex items-center gap-1.5">
                       <select
                         value={entranceJunctionSelect}
                         onChange={(e) => setEntranceJunctionSelect(e.target.value)}
-                        className="flex-1 px-2 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-900 dark:text-white focus:outline-none"
+                        className="flex-1 px-2 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-900 dark:text-white focus:outline-none"
                       >
-                        <option value="">Select Existing Junction...</option>
+                        <option value="">Link Existing Junction...</option>
                         {nodes.map(n => (
                           <option key={n.id} value={n.id}>
                             {n.name}
@@ -1704,24 +1699,217 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                           }
                         }}
                         disabled={!entranceJunctionSelect}
-                        className="px-2.5 py-1.5 bg-purple-600 disabled:opacity-40 hover:bg-purple-500 text-white rounded-lg text-xs font-bold cursor-pointer transition-all"
+                        className="px-2.5 py-1.5 bg-emerald-600 disabled:opacity-40 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold cursor-pointer transition-all shadow-sm"
                       >
                         Add
                       </button>
                     </div>
 
-                    {/* Or Click on Map near building */}
                     <button
                       onClick={() => setMapClickMode('add-entrance')}
                       className={`w-full py-1.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                         mapClickMode === 'add-entrance'
                           ? 'bg-amber-500 text-slate-950 shadow'
-                          : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/30'
+                          : 'bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-slate-800 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/50'
                       }`}
                     >
-                      <Crosshair className="w-3.5 h-3.5" />
-                      <span>Click Map to Place Entrance</span>
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>+ Click Map to Add New Entrance</span>
                     </button>
+                  </div>
+                </div>
+
+                {/* CARD 3: WORLD POSITION & 3D TRANSFORM (LAST) */}
+                <div className="bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 space-y-3 shadow-sm">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-200/80 dark:border-slate-800/80">
+                    <div className="flex items-center gap-2">
+                      <Move className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                      <h4 className="font-black text-xs text-slate-900 dark:text-white uppercase tracking-wide">
+                        3. World Position & 3D Transform
+                      </h4>
+                    </div>
+                  </div>
+
+                  {/* 3D Transform Gizmo Mode Toolbar */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                      Interactive 3D Gizmo
+                    </label>
+                    <div className="grid grid-cols-4 gap-1 bg-white dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800">
+                      <button
+                        onClick={() => setTransformMode('translate')}
+                        className={`py-1 rounded-lg font-bold text-[11px] cursor-pointer transition-all ${
+                          transformMode === 'translate'
+                            ? 'bg-purple-600 text-white shadow'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        Move
+                      </button>
+                      <button
+                        onClick={() => setTransformMode('rotate')}
+                        className={`py-1 rounded-lg font-bold text-[11px] cursor-pointer transition-all ${
+                          transformMode === 'rotate'
+                            ? 'bg-purple-600 text-white shadow'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        Rotate
+                      </button>
+                      <button
+                        onClick={() => setTransformMode('scale')}
+                        className={`py-1 rounded-lg font-bold text-[11px] cursor-pointer transition-all ${
+                          transformMode === 'scale'
+                            ? 'bg-purple-600 text-white shadow'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        Scale
+                      </button>
+                      <button
+                        onClick={() => setTransformMode(null)}
+                        className={`py-1 rounded-lg font-bold text-[11px] cursor-pointer transition-all ${
+                          transformMode === null
+                            ? 'bg-slate-200 dark:bg-slate-800 text-amber-600 dark:text-amber-300 shadow'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        Off
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Direct Transform Input Fields */}
+                  <div className="p-3 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+                    {/* Position Coordinates */}
+                    <div>
+                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase">
+                        World Position (meters)
+                      </span>
+                      <div className="grid grid-cols-3 gap-2 mt-1">
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">X</span>
+                          <input
+                            type="number"
+                            value={currentBuilding.position.x}
+                            onChange={(e) =>
+                              handleUpdateBuildingProperty('position', {
+                                ...currentBuilding.position,
+                                x: Number(e.target.value),
+                              })
+                            }
+                            className="w-full px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                          />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">Y (elev)</span>
+                          <input
+                            type="number"
+                            value={currentBuilding.position.y}
+                            onChange={(e) =>
+                              handleUpdateBuildingProperty('position', {
+                                ...currentBuilding.position,
+                                y: Number(e.target.value),
+                              })
+                            }
+                            className="w-full px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                          />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">Z</span>
+                          <input
+                            type="number"
+                            value={currentBuilding.position.z}
+                            onChange={(e) =>
+                              handleUpdateBuildingProperty('position', {
+                                ...currentBuilding.position,
+                                z: Number(e.target.value),
+                              })
+                            }
+                            className="w-full px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Rotation Y with Direct Numeric Input & Slider */}
+                    <div>
+                      <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+                        <span>Rotation Y (Orient to Campus)</span>
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            min="0"
+                            max="360"
+                            step="1"
+                            value={currentBuilding.rotationY || 0}
+                            onChange={(e) => {
+                              let val = Number(e.target.value);
+                              if (isNaN(val)) val = 0;
+                              val = ((val % 360) + 360) % 360;
+                              handleUpdateBuildingProperty('rotationY', Math.round(val));
+                            }}
+                            className="w-16 px-1.5 py-0.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-amber-600 dark:text-amber-400 text-right focus:outline-none focus:border-amber-500"
+                          />
+                          <span className="font-bold text-amber-600 dark:text-amber-400">°</span>
+                        </div>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="360"
+                        step="1"
+                        value={currentBuilding.rotationY || 0}
+                        onChange={(e) => handleUpdateBuildingProperty('rotationY', Number(e.target.value))}
+                        className="w-full accent-amber-500 cursor-pointer"
+                      />
+                    </div>
+
+                    {/* Scale with Direct Numeric Input & Slider */}
+                    <div>
+                      <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 mb-1">
+                        <span>Scale Factor</span>
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            min="0.05"
+                            max="10"
+                            step="0.05"
+                            value={
+                              Array.isArray(currentBuilding.scale)
+                                ? currentBuilding.scale[0]
+                                : typeof currentBuilding.scale === 'number'
+                                  ? currentBuilding.scale
+                                  : 1
+                            }
+                            onChange={(e) => {
+                              const val = Math.max(0.05, Number(e.target.value) || 1);
+                              handleUpdateBuildingProperty('scale', [val, val, val]);
+                            }}
+                            className="w-16 px-1.5 py-0.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-purple-600 dark:text-purple-400 text-right focus:outline-none focus:border-purple-500"
+                          />
+                          <span className="font-bold text-purple-600 dark:text-purple-400">x</span>
+                        </div>
+                      </div>
+                      <input
+                        type="range"
+                        min="0.1"
+                        max="3.5"
+                        step="0.05"
+                        value={
+                          Array.isArray(currentBuilding.scale)
+                            ? currentBuilding.scale[0]
+                            : typeof currentBuilding.scale === 'number'
+                              ? currentBuilding.scale
+                              : 1
+                        }
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          handleUpdateBuildingProperty('scale', [val, val, val]);
+                        }}
+                        className="w-full accent-purple-500 cursor-pointer"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

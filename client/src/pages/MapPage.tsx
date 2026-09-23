@@ -167,7 +167,7 @@ export const MapPage: React.FC<MapPageProps> = ({
 
       {/* 3. FLOATING CAD STUDIO HUD (Left Side Panel) */}
       {isHudOpen && (
-        <aside className="absolute left-3 top-3 bottom-3 w-[370px] max-w-[calc(100vw-24px)] bg-white/90 dark:bg-slate-950/85 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-800/80 rounded-2xl z-20 shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-left-4 duration-300">
+        <aside className="absolute left-3 top-3 bottom-3 w-[370px] max-w-[calc(100vw-24px)] bg-white/90 dark:bg-slate-950/85 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-800/80 rounded-2xl z-40 shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-left-4 duration-300">
           {/* HUD Header Bar */}
           <div className="p-3.5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-slate-900/40">
             <div className="flex items-center gap-2">

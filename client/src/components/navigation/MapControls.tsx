@@ -75,7 +75,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
   // IF COLLAPSED: RENDER SINGLE GLASS FLOATING TOGGLE BUTTON
   if (!isExpanded) {
     return (
-      <div className="absolute top-4 right-4 z-30">
+      <div className="absolute top-4 right-4 z-20">
         <button
           onClick={() => setIsExpanded(true)}
           title="Expand 3D Camera & Map Controls"
@@ -89,14 +89,14 @@ export const MapControls: React.FC<MapControlsProps> = ({
 
   // IF EXPANDED: RENDER FULL STUDIO GLASS TOOLBAR
   return (
-    <div className="absolute top-4 right-4 z-30 flex flex-col gap-1.5 bg-white/90 dark:bg-slate-950/85 backdrop-blur-2xl p-2 rounded-2xl border border-slate-200/90 dark:border-slate-800/80 shadow-2xl text-slate-900 dark:text-white animate-in fade-in zoom-in-95 duration-200">
+    <div className="absolute top-4 right-4 z-20 flex flex-col gap-1.5 bg-white/90 dark:bg-slate-950/85 backdrop-blur-2xl p-2 rounded-2xl border border-slate-200/90 dark:border-slate-800/80 shadow-2xl text-slate-900 dark:text-white animate-in fade-in zoom-in-95 duration-200">
       {/* Collapse Header Button */}
       <button
         onClick={() => setIsExpanded(false)}
-        title="Collapse Controls Toolbar"
+        title="Collapse Toolbar"
         className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors flex items-center justify-between gap-1 text-[10px] font-bold px-2 mb-0.5 border-b border-slate-100 dark:border-slate-800 cursor-pointer"
       >
-        <span className="text-purple-600 dark:text-purple-400 font-extrabold uppercase tracking-wider text-[10px]">Controls</span>
+        <SlidersHorizontal className="w-3.5 h-3.5 text-amber-500" />
         <ChevronRight className="w-3.5 h-3.5" />
       </button>
 

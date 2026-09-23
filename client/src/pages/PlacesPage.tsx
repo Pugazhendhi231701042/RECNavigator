@@ -36,7 +36,7 @@ export const PlacesPage: React.FC<PlacesPageProps> = ({
   }, [locations, selectedCategory, searchQuery]);
 
   return (
-    <div className="w-full min-h-[calc(100vh-65px)] overflow-y-auto bg-slate-100/70 dark:bg-[#080B11] text-slate-900 dark:text-white select-none transition-colors duration-300">
+    <div className="w-full min-h-full bg-slate-100/70 dark:bg-[#080B11] text-slate-900 dark:text-white transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 pb-32">
         {/* TOP CAD EXPLORER BANNER */}
         <div className="relative overflow-hidden rounded-3xl p-6 sm:p-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-slate-200/90 dark:border-slate-800/80 shadow-xl space-y-4">
