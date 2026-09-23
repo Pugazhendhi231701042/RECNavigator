@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:49:46.100Z",
+  "updatedAt": "2026-09-23T10:49:50.826Z",
   "locations": [
     {
       "id": "building_8912",
@@ -358,7 +358,7 @@
     {
       "id": "building_8973",
       "name": "Fresh Crush",
-      "category": "academic",
+      "category": "food",
       "description": "Campus facility structure",
       "position": {
         "x": 0,
