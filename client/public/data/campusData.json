@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:32:06.656Z",
+  "updatedAt": "2026-09-23T10:32:09.226Z",
   "locations": [
     {
       "id": "building_8912",
@@ -169,7 +169,7 @@
     },
     {
       "id": "building_2229",
-      "name": "Rajalakshmi School of Architecture ()",
+      "name": "Rajalakshmi School of Architecture (TOFAC)",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
