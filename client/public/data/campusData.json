@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:40:12.045Z",
+  "updatedAt": "2026-09-23T10:40:25.295Z",
   "locations": [
     {
       "id": "building_8912",
@@ -316,7 +316,7 @@
     },
     {
       "id": "node_building_6269_entrance",
-      "name": "New Building Entrance",
+      "name": "Idea FactoEntrance",
       "position": {
         "x": 178,
         "y": 0.2,
