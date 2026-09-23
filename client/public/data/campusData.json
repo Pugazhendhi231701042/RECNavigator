@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T05:20:27.251Z",
+  "updatedAt": "2026-09-23T08:10:34.052Z",
   "locations": [
     {
       "id": "building_8782",
@@ -18,7 +18,7 @@
         1,
         1
       ],
-      "modelKey": "block-b-optimized.glb",
+      "modelKey": "Wokon-optimized.glb",
       "nodeId": "node_building_8782_entrance",
       "entranceNodeIds": [
         "node_building_8782_entrance"
