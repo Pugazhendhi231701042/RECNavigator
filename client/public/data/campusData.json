@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:36:27.586Z",
+  "updatedAt": "2026-09-23T10:36:35.436Z",
   "locations": [
     {
       "id": "building_8912",
@@ -214,9 +214,9 @@
       },
       "rotationY": 0,
       "scale": [
-        1,
-        1,
-        1
+        111,
+        111,
+        111
       ],
       "modelKey": "block_d-optimized.glb",
       "nodeId": "node_building_5948_entrance",
