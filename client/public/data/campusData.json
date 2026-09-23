@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:03:14.354Z",
+  "updatedAt": "2026-09-23T10:03:30.826Z",
   "locations": [
     {
       "id": "building_8912",
@@ -30,9 +30,9 @@
           "buildingId": "building_8912",
           "junctionId": "node_building_8912_entrance",
           "position": {
-            "x": 0,
+            "x": -263,
             "y": 0.2,
-            "z": 15
+            "z": 38
           }
         }
       ]
@@ -43,9 +43,9 @@
       "id": "node_building_8912_entrance",
       "name": "New Building Entrance",
       "position": {
-        "x": 0,
+        "x": -263,
         "y": 0.2,
-        "z": 15
+        "z": 38
       }
     }
   ],
