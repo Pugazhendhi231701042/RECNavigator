@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:28:42.100Z",
+  "updatedAt": "2026-09-23T10:28:57.473Z",
   "locations": [
     {
       "id": "building_8912",
@@ -131,6 +131,41 @@
           }
         }
       ]
+    },
+    {
+      "id": "building_6269",
+      "name": "New Campus Building",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationY": 0,
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "modelKey": "Blackbuck-optimized.glb",
+      "nodeId": "node_building_6269_entrance",
+      "entranceNodeIds": [
+        "node_building_6269_entrance"
+      ],
+      "entrances": [
+        {
+          "id": "building_6269_ent_1",
+          "name": "Main Entrance",
+          "buildingId": "building_6269",
+          "junctionId": "node_building_6269_entrance",
+          "position": {
+            "x": 0,
+            "y": 0.2,
+            "z": 15
+          }
+        }
+      ]
     }
   ],
   "nodes": [
@@ -195,6 +230,15 @@
         "x": -181,
         "y": 0.2,
         "z": -109
+      }
+    },
+    {
+      "id": "node_building_6269_entrance",
+      "name": "New Building Entrance",
+      "position": {
+        "x": 0,
+        "y": 0.2,
+        "z": 15
       }
     }
   ],
