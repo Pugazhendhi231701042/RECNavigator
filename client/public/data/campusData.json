@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-23T10:36:17.159Z",
+  "updatedAt": "2026-09-23T10:36:24.026Z",
   "locations": [
     {
       "id": "building_8912",
@@ -204,7 +204,7 @@
     },
     {
       "id": "building_5948",
-      "name": "New Campus Building",
+      "name": "D Block",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
