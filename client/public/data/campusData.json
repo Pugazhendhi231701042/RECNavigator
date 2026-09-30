@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:01:24.008Z",
+  "updatedAt": "2026-09-30T20:01:32.536Z",
   "locations": [
     {
       "id": "building_1358",
@@ -185,7 +185,7 @@
       "category": "food",
       "description": "Food Spot!",
       "position": {
-        "x": 0,
+        "x": 33,
         "y": 0,
         "z": 0
       },
