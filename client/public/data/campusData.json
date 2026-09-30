@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:45:23.056Z",
+  "updatedAt": "2026-09-30T19:45:25.638Z",
   "locations": [
     {
       "id": "building_1358",
@@ -160,7 +160,7 @@
     },
     {
       "id": "building_3710",
-      "name": "Rajalakshmi School of Architecture ()",
+      "name": "Rajalakshmi School of Architecture (TIFAC )",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
