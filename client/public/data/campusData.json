@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:02:21.514Z",
+  "updatedAt": "2026-09-30T20:02:23.966Z",
   "locations": [
     {
       "id": "building_1358",
@@ -203,7 +203,7 @@
     {
       "id": "building_4143",
       "name": "Dominos",
-      "category": "academic",
+      "category": "food",
       "description": "Campus facility structure",
       "position": {
         "x": 0,
