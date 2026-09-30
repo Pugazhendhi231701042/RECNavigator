@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:14:23.026Z",
+  "updatedAt": "2026-09-30T20:14:26.642Z",
   "locations": [
     {
       "id": "building_1358",
@@ -275,9 +275,9 @@
       },
       "rotationY": 180,
       "scale": [
-        92.1,
-        92.1,
-        92.1
+        80,
+        80,
+        80
       ],
       "modelKey": "rec-cafe-optimized.glb",
       "nodeId": "",
