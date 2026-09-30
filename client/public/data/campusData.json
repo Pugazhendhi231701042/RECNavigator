@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T10:58:57.408Z",
+  "updatedAt": "2026-09-30T10:59:13.591Z",
   "locations": [
     {
       "id": "building_8912",
@@ -511,7 +511,7 @@
         1,
         1
       ],
-      "modelKey": "Blackbuck-optimized.glb",
+      "modelKey": "Wokon-optimized.glb",
       "nodeId": "node_building_6202_entrance",
       "entranceNodeIds": [
         "node_building_6202_entrance"
