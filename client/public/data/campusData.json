@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:07:45.818Z",
+  "updatedAt": "2026-09-30T19:07:49.025Z",
   "locations": [
     {
       "id": "building_1358",
@@ -40,7 +40,7 @@
     },
     {
       "id": "building_9936",
-      "name": "B BLock",
+      "name": "B Block",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
