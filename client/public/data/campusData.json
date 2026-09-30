@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:39:18.380Z",
+  "updatedAt": "2026-09-30T19:39:50.145Z",
   "locations": [
     {
       "id": "building_1358",
@@ -120,7 +120,7 @@
       "id": "building_4542",
       "name": "D Block",
       "category": "academic",
-      "description": "Campus facility structure",
+      "description": "Academic Block",
       "position": {
         "x": 0,
         "y": 0,
