@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:28:51.643Z",
+  "updatedAt": "2026-09-30T19:28:53.764Z",
   "locations": [
     {
       "id": "building_1358",
@@ -259,8 +259,8 @@
       "junctionIds": [
         "node_2257",
         "node_3530",
-        "node_0745",
         "node_ent_5718",
+        "node_0745",
         "node_7554",
         "node_9177"
       ],
