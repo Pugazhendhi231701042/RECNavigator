@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:25:31.357Z",
+  "updatedAt": "2026-09-30T18:25:37.292Z",
   "locations": [],
   "nodes": [
     {
@@ -17,8 +17,8 @@
       "name": "Junction (-62, 26)",
       "position": {
         "x": -62,
-        "y": 0.2,
-        "z": 25
+        "y": 0,
+        "z": 37
       }
     }
   ],
