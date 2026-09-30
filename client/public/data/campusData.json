@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:14:30.375Z",
+  "updatedAt": "2026-09-30T20:23:08.560Z",
   "locations": [
     {
       "id": "building_1358",
@@ -280,6 +280,27 @@
         80
       ],
       "modelKey": "rec-cafe-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_7352",
+      "name": "New Campus Building",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationY": 0,
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "modelKey": "Blackbuck-optimized.glb",
       "nodeId": "",
       "entranceNodeIds": [],
       "entrances": []
