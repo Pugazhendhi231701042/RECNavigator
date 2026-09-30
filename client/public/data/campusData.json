@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:09:16.085Z",
+  "updatedAt": "2026-09-30T20:09:21.213Z",
   "locations": [
     {
       "id": "building_1358",
@@ -254,9 +254,9 @@
       },
       "rotationY": 0,
       "scale": [
-        25.1,
-        25.1,
-        25.1
+        27,
+        27,
+        27
       ],
       "modelKey": "Wokon-optimized.glb",
       "nodeId": "",
