@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:52:22.434Z",
+  "updatedAt": "2026-09-30T17:52:25.787Z",
   "locations": [
     {
       "id": "building_8912",
@@ -776,7 +776,7 @@
     },
     {
       "id": "node_7852",
-      "name": "Tech LOunge Left ",
+      "name": "Tech LOunge Left Corner",
       "position": {
         "x": -467,
         "y": 0.2,
