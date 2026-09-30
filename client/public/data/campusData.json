@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:21:22.839Z",
+  "updatedAt": "2026-09-30T19:23:44.961Z",
   "locations": [
     {
       "id": "building_1358",
@@ -19,20 +19,20 @@
         212.05
       ],
       "modelKey": "block-a-optimized.glb",
-      "nodeId": "node_3718",
+      "nodeId": "",
       "entranceNodeIds": [
-        "node_3718"
+        ""
       ],
       "entrances": [
         {
-          "id": "building_1358_ent_3839",
-          "name": "A BlockkMain Entrance Gate",
+          "id": "building_1358_ent_1",
+          "name": "Main Entrance",
           "buildingId": "building_1358",
-          "junctionId": "node_3718",
+          "junctionId": "",
           "position": {
-            "x": -265,
+            "x": -261,
             "y": 0.2,
-            "z": 48
+            "z": 49
           }
         }
       ],
@@ -44,34 +44,21 @@
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
-        "x": -61,
+        "x": 0,
         "y": 0,
-        "z": -132
+        "z": 0
       },
-      "rotationY": 272,
+      "rotationY": 0,
       "scale": [
-        230.05,
-        230.05,
-        230.05
+        1,
+        1,
+        1
       ],
-      "modelKey": "block-b-optimized.glb",
-      "nodeId": "node_ent_8209",
-      "entranceNodeIds": [
-        "node_ent_8209"
-      ],
-      "entrances": [
-        {
-          "id": "building_9936_ent_1",
-          "name": "Entrance 1",
-          "buildingId": "building_9936",
-          "junctionId": "node_ent_8209",
-          "position": {
-            "x": -69,
-            "y": 0.2,
-            "z": -71
-          }
-        }
-      ]
+      "modelKey": "Blackbuck-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": [],
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToHX0vTfuFAVFTQ9o1Ae31qwvK9B5-lG1GB5wulsYx3lIG6WM-F8B6uYY&s=10"
     }
   ],
   "nodes": [
@@ -238,21 +225,12 @@
       }
     },
     {
-      "id": "node_ent_8209",
-      "name": "B Block Main Entrance",
-      "position": {
-        "x": -58,
-        "y": 0,
-        "z": -63
-      }
-    },
-    {
-      "id": "node_3718",
+      "id": "",
       "name": "A Block Main Entrance",
       "position": {
-        "x": -265,
+        "x": -261,
         "y": 0.2,
-        "z": 48
+        "z": 49
       }
     }
   ],
@@ -263,7 +241,6 @@
       "junctionIds": [
         "node_2257",
         "node_3530",
-        "node_3718",
         "node_0745",
         "node_7554",
         "node_9177"
@@ -275,8 +252,7 @@
         "node_2257:::node_7554": 406,
         "node_3530:::node_9177": 439,
         "node_0745:::node_9177": 211,
-        "node_8663:::node_9177": 466,
-        "node_3718:::node_9177": 331
+        "node_8663:::node_9177": 466
       }
     },
     {
@@ -287,7 +263,6 @@
         "node_5696",
         "node_1688",
         "node_7003",
-        "node_ent_8209",
         "node_1807"
       ],
       "width": 10,
@@ -298,8 +273,7 @@
         "node_5696:::node_7554": 325,
         "node_1688:::node_5696": 192,
         "node_1688:::node_7003": 36,
-        "node_1807:::node_7003": 208,
-        "node_1807:::node_ent_8209": 128
+        "node_1807:::node_7003": 208
       }
     },
     {
