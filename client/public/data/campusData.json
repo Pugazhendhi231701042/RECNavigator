@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T10:59:34.674Z",
+  "updatedAt": "2026-09-30T10:59:37.257Z",
   "locations": [
     {
       "id": "building_8912",
@@ -498,7 +498,7 @@
     {
       "id": "building_6202",
       "name": "Wokon",
-      "category": "hostel",
+      "category": "food",
       "description": "Campus facility structure",
       "position": {
         "x": 0,
