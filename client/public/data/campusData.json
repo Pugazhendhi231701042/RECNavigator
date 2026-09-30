@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:41:44.669Z",
+  "updatedAt": "2026-09-30T18:41:51.081Z",
   "locations": [],
   "nodes": [
     {
@@ -59,7 +59,7 @@
     },
     {
       "id": "node_5696",
-      "name": "A Block Lefy Corner - Back",
+      "name": "A Block Left Corner - Back",
       "position": {
         "x": -377,
         "y": 0.2,
