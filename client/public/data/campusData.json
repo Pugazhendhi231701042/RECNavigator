@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:51:46.073Z",
+  "updatedAt": "2026-09-30T17:52:19.317Z",
   "locations": [
     {
       "id": "building_8912",
@@ -776,7 +776,7 @@
     },
     {
       "id": "node_7852",
-      "name": "Junction (-467, 36)",
+      "name": "Tech LOunge ",
       "position": {
         "x": -467,
         "y": 0.2,
