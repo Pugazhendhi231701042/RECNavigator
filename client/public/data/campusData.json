@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:46:13.921Z",
+  "updatedAt": "2026-09-30T19:46:19.587Z",
   "locations": [
     {
       "id": "building_1358",
@@ -170,9 +170,9 @@
       },
       "rotationY": 0,
       "scale": [
-        210.1,
-        210.1,
-        210.1
+        210,
+        210,
+        210
       ],
       "modelKey": "TIFFAC-optimized.glb",
       "nodeId": "",
