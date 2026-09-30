@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:19:41.552Z",
+  "updatedAt": "2026-09-30T19:19:44.957Z",
   "locations": [
     {
       "id": "building_1358",
@@ -274,8 +274,7 @@
         "node_3530",
         "node_0745",
         "node_7554",
-        "node_9177",
-        "node_3718"
+        "node_9177"
       ],
       "width": 10,
       "description": "Campus pedestrian walkway",
