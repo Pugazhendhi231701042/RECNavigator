@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:27:41.162Z",
+  "updatedAt": "2026-09-30T19:27:44.629Z",
   "locations": [
     {
       "id": "building_1358",
@@ -36,9 +36,9 @@
       },
       "rotationY": 272,
       "scale": [
-        231,
-        231,
-        231
+        230,
+        230,
+        230
       ],
       "modelKey": "Blackbuck-optimized.glb",
       "nodeId": "",
