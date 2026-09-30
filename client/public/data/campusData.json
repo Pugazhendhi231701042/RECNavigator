@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:42:09.887Z",
+  "updatedAt": "2026-09-30T18:42:28.546Z",
   "locations": [],
   "nodes": [
     {
@@ -113,7 +113,7 @@
     },
     {
       "id": "node_8663",
-      "name": "Junction (34, -446)",
+      "name": "C Block Corner",
       "position": {
         "x": 34,
         "y": 0.2,
