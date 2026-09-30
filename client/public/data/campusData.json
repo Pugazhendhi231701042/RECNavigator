@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:18:34.986Z",
+  "updatedAt": "2026-09-30T19:18:42.841Z",
   "locations": [
     {
       "id": "building_1358",
@@ -257,7 +257,7 @@
     },
     {
       "id": "node_3718",
-      "name": "Junction (-265, 48)",
+      "name": "Main Entrance",
       "position": {
         "x": -265,
         "y": 0.2,
