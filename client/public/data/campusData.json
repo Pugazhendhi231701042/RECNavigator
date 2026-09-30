@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:40:06.362Z",
+  "updatedAt": "2026-09-30T18:40:08.961Z",
   "locations": [],
   "nodes": [
     {
@@ -119,8 +119,6 @@
       "name": "Horizontal Road 2",
       "junctionIds": [
         "node_0411",
-        "node_9177",
-        "node_7554",
         "node_5696"
       ],
       "width": 10,
