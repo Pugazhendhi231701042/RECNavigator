@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:36:33.555Z",
+  "updatedAt": "2026-09-30T20:36:56.238Z",
   "locations": [
     {
       "id": "building_1358",
@@ -359,9 +359,9 @@
       },
       "rotationY": 0,
       "scale": [
-        1,
-        1,
-        1
+        19.1,
+        19.1,
+        19.1
       ],
       "modelKey": "Freshcrush-optimized.glb",
       "nodeId": "",
