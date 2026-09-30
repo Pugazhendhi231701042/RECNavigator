@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:18:49.341Z",
+  "updatedAt": "2026-09-30T19:18:51.427Z",
   "locations": [
     {
       "id": "building_1358",
@@ -257,7 +257,7 @@
     },
     {
       "id": "node_3718",
-      "name": "A BlocMain Entrance",
+      "name": "A BlockkMain Entrance",
       "position": {
         "x": -265,
         "y": 0.2,
