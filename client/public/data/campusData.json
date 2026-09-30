@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:43:49.689Z",
+  "updatedAt": "2026-09-30T19:45:01.494Z",
   "locations": [
     {
       "id": "building_1358",
@@ -139,7 +139,7 @@
     },
     {
       "id": "building_5997",
-      "name": "New Campus Building",
+      "name": "Idea Factory",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
