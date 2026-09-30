@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:46:51.404Z",
+  "updatedAt": "2026-09-30T19:47:05.792Z",
   "locations": [
     {
       "id": "building_1358",
@@ -149,9 +149,9 @@
       },
       "rotationY": 90,
       "scale": [
-        100,
-        100,
-        100
+        85.1,
+        85.1,
+        85.1
       ],
       "modelKey": "idea factory-optimized.glb",
       "nodeId": "",
