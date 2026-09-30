@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:19:19.262Z",
+  "updatedAt": "2026-09-30T19:19:25.047Z",
   "locations": [
     {
       "id": "building_1358",
@@ -20,8 +20,22 @@
       ],
       "modelKey": "block-a-optimized.glb",
       "nodeId": "",
-      "entranceNodeIds": [],
-      "entrances": [],
+      "entranceNodeIds": [
+        "node_3718"
+      ],
+      "entrances": [
+        {
+          "id": "building_1358_ent_3839",
+          "name": "A BlockkMain Entrance Gate",
+          "buildingId": "building_1358",
+          "junctionId": "node_3718",
+          "position": {
+            "x": -265,
+            "y": 0.2,
+            "z": 48
+          }
+        }
+      ],
       "image": "https://pages.rajalakshmi.org/image/banner-1.jpg"
     },
     {
