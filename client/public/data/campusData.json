@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:02:15.364Z",
+  "updatedAt": "2026-09-30T20:02:21.514Z",
   "locations": [
     {
       "id": "building_1358",
@@ -202,7 +202,7 @@
     },
     {
       "id": "building_4143",
-      "name": "New Campus Building",
+      "name": "Dominos",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
