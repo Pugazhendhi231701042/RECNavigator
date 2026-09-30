@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:51:05.291Z",
+  "updatedAt": "2026-09-30T18:51:09.249Z",
   "locations": [],
   "nodes": [
     {
@@ -253,7 +253,7 @@
     },
     {
       "id": "road_7166",
-      "name": "Vertical ",
+      "name": "Vertical Road 2",
       "junctionIds": [
         "node_9177",
         "node_7554"
