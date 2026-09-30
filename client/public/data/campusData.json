@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:18:42.841Z",
+  "updatedAt": "2026-09-30T19:18:47.521Z",
   "locations": [
     {
       "id": "building_1358",
@@ -257,7 +257,7 @@
     },
     {
       "id": "node_3718",
-      "name": "Main Entrance",
+      "name": "A BlovMain Entrance",
       "position": {
         "x": -265,
         "y": 0.2,
