@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:56:09.488Z",
+  "updatedAt": "2026-09-30T17:56:12.603Z",
   "locations": [
     {
       "id": "building_8912",
@@ -704,7 +704,7 @@
     },
     {
       "id": "node_building_7013_entrance",
-      "name": "Tech Lo",
+      "name": "Tech Lounge front ",
       "position": {
         "x": -420,
         "y": 0.2,
