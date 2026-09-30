@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:30:05.076Z",
+  "updatedAt": "2026-09-30T18:30:09.632Z",
   "locations": [],
   "nodes": [
     {
@@ -50,7 +50,7 @@
     },
     {
       "id": "node_0411",
-      "name": "Junction (-469, -48)",
+      "name": "Tech ",
       "position": {
         "x": -466,
         "y": 0,
