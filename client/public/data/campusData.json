@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:39:47.810Z",
+  "updatedAt": "2026-09-30T18:40:06.362Z",
   "locations": [],
   "nodes": [
     {
@@ -120,13 +120,15 @@
       "junctionIds": [
         "node_0411",
         "node_9177",
-        "node_7554"
+        "node_7554",
+        "node_5696"
       ],
       "width": 10,
       "description": "Campus pedestrian walkway",
       "segmentDistances": {
         "node_7554:::node_9177": 127,
-        "node_0411:::node_7554": 411
+        "node_0411:::node_7554": 411,
+        "node_5696:::node_7554": 325
       }
     }
   ]
