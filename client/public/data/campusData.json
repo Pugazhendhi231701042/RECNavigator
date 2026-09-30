@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:46:00.845Z",
+  "updatedAt": "2026-09-30T18:46:12.847Z",
   "locations": [],
   "nodes": [
     {
@@ -131,7 +131,7 @@
     },
     {
       "id": "node_9606",
-      "name": "Junction (-73, -280)",
+      "name": "Hut Entrance",
       "position": {
         "x": -73,
         "y": 0.2,
