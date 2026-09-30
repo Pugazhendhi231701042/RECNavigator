@@ -1,7 +1,29 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:57:30.059Z",
-  "locations": [],
+  "updatedAt": "2026-09-30T18:59:12.654Z",
+  "locations": [
+    {
+      "id": "building_1358",
+      "name": "New Campus Building",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationY": 0,
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "modelKey": "Blackbuck-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    }
+  ],
   "nodes": [
     {
       "id": "node_9177",
