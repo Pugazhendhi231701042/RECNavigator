@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:59:44.630Z",
+  "updatedAt": "2026-09-30T18:59:52.681Z",
   "locations": [
     {
       "id": "building_1358",
       "name": "A Block",
       "category": "academic",
-      "description": "Campus facility structure",
+      "description": "Academic Block",
       "position": {
         "x": 0,
         "y": 0,
