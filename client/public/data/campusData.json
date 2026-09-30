@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:06:00.465Z",
+  "updatedAt": "2026-09-30T20:06:06.036Z",
   "locations": [
     {
       "id": "building_1358",
@@ -233,9 +233,9 @@
       },
       "rotationY": 0,
       "scale": [
-        1,
-        1,
-        1
+        46.1,
+        46.1,
+        46.1
       ],
       "modelKey": "Yippe (1)-optimized.glb",
       "nodeId": "",
