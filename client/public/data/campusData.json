@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:52:43.923Z",
+  "updatedAt": "2026-09-30T18:52:54.608Z",
   "locations": [],
   "nodes": [
     {
@@ -273,12 +273,14 @@
       "name": "Vertical Road 3",
       "junctionIds": [
         "node_9177",
-        "node_7554"
+        "node_7554",
+        "node_8663"
       ],
       "width": 10,
       "description": "Campus pedestrian walkway",
       "segmentDistances": {
-        "node_7554:::node_9177": 127
+        "node_7554:::node_9177": 127,
+        "node_7554:::node_8663": 488
       }
     }
   ]
