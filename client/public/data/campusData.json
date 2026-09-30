@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:25:21.381Z",
+  "updatedAt": "2026-09-30T20:25:24.780Z",
   "locations": [
     {
       "id": "building_1358",
@@ -290,7 +290,7 @@
       "category": "sports",
       "description": "Campus facility structure",
       "position": {
-        "x": -337,
+        "x": -416,
         "y": 0,
         "z": 0
       },
