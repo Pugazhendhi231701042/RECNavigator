@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:41:19.225Z",
+  "updatedAt": "2026-09-30T18:41:27.577Z",
   "locations": [],
   "nodes": [
     {
@@ -95,7 +95,7 @@
     },
     {
       "id": "node_5910",
-      "name": "Girls Hostel ",
+      "name": "Girls Hostel Junction",
       "position": {
         "x": -482,
         "y": 0.2,
