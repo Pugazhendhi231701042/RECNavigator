@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:38:06.740Z",
+  "updatedAt": "2026-09-30T20:38:16.071Z",
   "locations": [
     {
       "id": "building_1358",
@@ -378,11 +378,11 @@
         "y": 0,
         "z": -241
       },
-      "rotationY": 0,
+      "rotationY": 87,
       "scale": [
-        1,
-        1,
-        1
+        43.1,
+        43.1,
+        43.1
       ],
       "modelKey": "Mart (1)-optimized.glb",
       "nodeId": "",
