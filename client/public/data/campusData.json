@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T11:01:11.659Z",
+  "updatedAt": "2026-09-30T11:01:15.307Z",
   "locations": [
     {
       "id": "building_8912",
@@ -507,9 +507,9 @@
       },
       "rotationY": 270,
       "scale": [
-        20,
-        20,
-        20
+        25,
+        25,
+        25
       ],
       "modelKey": "Wokon-optimized.glb",
       "nodeId": "node_building_6202_entrance",
