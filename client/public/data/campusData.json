@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:56:29.871Z",
+  "updatedAt": "2026-09-30T18:56:32.670Z",
   "locations": [],
   "nodes": [
     {
@@ -316,7 +316,6 @@
       "name": "Sub - Road 1",
       "junctionIds": [
         "node_9177",
-        "node_7554",
         "node_7003"
       ],
       "width": 10,
