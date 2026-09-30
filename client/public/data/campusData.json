@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:02:59.374Z",
+  "updatedAt": "2026-09-30T20:03:05.432Z",
   "locations": [
     {
       "id": "building_1358",
@@ -212,9 +212,9 @@
       },
       "rotationY": 277,
       "scale": [
-        36.1,
-        36.1,
-        36.1
+        27.05,
+        27.05,
+        27.05
       ],
       "modelKey": "dominos-optimized.glb",
       "nodeId": "",
