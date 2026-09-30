@@ -112,7 +112,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   // ----------------------------------------------------
   // GENERAL STUDIO STATE
   // ----------------------------------------------------
-  const [activeSection, setActiveSection] = useState<AdminSection>('buildings');
+  const [activeSection, setActiveSectionState] = useState<AdminSection>(() => {
+    try {
+      return (sessionStorage.getItem('rec_admin_section') as AdminSection) || 'buildings';
+    } catch {
+      return 'buildings';
+    }
+  });
+  const setActiveSection = useCallback((section: AdminSection) => {
+    try { sessionStorage.setItem('rec_admin_section', section); } catch {}
+    setActiveSectionState(section);
+  }, []);
+
   const [cameraMode, setCameraMode] = useState<CameraViewMode>('perspective');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
   const [showSavedFeedback, setShowSavedFeedback] = useState<boolean>(false);
@@ -133,11 +144,36 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
   // Selected Entities
   const [selectedBuildingId, setSelectedBuildingId] = useState<string>(locations[0]?.id || '');
-  const [selectedJunctionId, setSelectedJunctionId] = useState<string | null>(null);
+  
+  const [selectedJunctionId, setSelectedJunctionIdState] = useState<string | null>(() => {
+    try {
+      return sessionStorage.getItem('rec_admin_junction_id') || null;
+    } catch {
+      return null;
+    }
+  });
+  const setSelectedJunctionId = useCallback((id: string | null) => {
+    try {
+      if (id) sessionStorage.setItem('rec_admin_junction_id', id);
+      else sessionStorage.removeItem('rec_admin_junction_id');
+    } catch {}
+    setSelectedJunctionIdState(id);
+  }, []);
+
   const [selectedRoadId, setSelectedRoadId] = useState<string | null>(null);
 
   // Active Sub-tab in Junctions & Roads mode ('junctions' | 'roads')
-  const [networkSubTab, setNetworkSubTab] = useState<'junctions' | 'roads'>('junctions');
+  const [networkSubTab, setNetworkSubTabState] = useState<'junctions' | 'roads'>(() => {
+    try {
+      return (sessionStorage.getItem('rec_admin_network_tab') as 'junctions' | 'roads') || 'junctions';
+    } catch {
+      return 'junctions';
+    }
+  });
+  const setNetworkSubTab = useCallback((tab: 'junctions' | 'roads') => {
+    try { sessionStorage.setItem('rec_admin_network_tab', tab); } catch {}
+    setNetworkSubTabState(tab);
+  }, []);
 
   // 3D Gizmo Transform Mode for Selected Building
   const [transformMode, setTransformMode] = useState<TransformGizmoMode>('translate');
@@ -2083,6 +2119,9 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                     type="text"
                     value={currentJunction.name}
                     onChange={(e) => handleUpdateJunction({ ...currentJunction, name: e.target.value })}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                    }}
                     className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500"
                   />
                 </div>

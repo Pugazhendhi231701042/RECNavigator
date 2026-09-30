@@ -18,24 +18,15 @@ import { AboutPage } from './pages/AboutPage';
 import { AdminPage } from './pages/AdminPage';
 import { calculateMultiEntranceRoute } from './utils/routing/dijkstra';
 import { ThemeProvider } from './context/ThemeContext';
-import defaultCampusData from './data/campusData.json';
 import { Loader2 } from 'lucide-react';
 import {
   fetchCampusDataFromServer,
   saveCampusDataToServer,
 } from './utils/campusDataApi';
 
-const INITIAL_LOCATIONS_SOURCE: Location[] = (defaultCampusData && Array.isArray(defaultCampusData.locations))
-  ? (defaultCampusData.locations as unknown as Location[])
-  : INITIAL_LOCATIONS;
-
-const INITIAL_NODES_SOURCE: PathNode[] = (defaultCampusData && Array.isArray(defaultCampusData.nodes))
-  ? (defaultCampusData.nodes as unknown as PathNode[])
-  : INITIAL_NODES;
-
-const INITIAL_ROADS_SOURCE: Road[] = (defaultCampusData && Array.isArray(defaultCampusData.roads))
-  ? (defaultCampusData.roads as unknown as Road[])
-  : INITIAL_ROADS;
+const INITIAL_LOCATIONS_SOURCE: Location[] = INITIAL_LOCATIONS;
+const INITIAL_NODES_SOURCE: PathNode[] = INITIAL_NODES;
+const INITIAL_ROADS_SOURCE: Road[] = INITIAL_ROADS;
 
 function AppContent() {
   // Check if this browser already has cached campus data
@@ -84,15 +75,17 @@ function AppContent() {
       .then(serverData => {
         if (!isMounted) return;
         if (serverData && Array.isArray(serverData.locations) && Array.isArray(serverData.nodes) && Array.isArray(serverData.roads)) {
-          setLocations(serverData.locations);
-          setNodes(serverData.nodes);
-          setRoads(serverData.roads);
-          try {
-            localStorage.setItem('rec_locations', JSON.stringify(serverData.locations));
-            localStorage.setItem('rec_nodes', JSON.stringify(serverData.nodes));
-            localStorage.setItem('rec_roads', JSON.stringify(serverData.roads));
-            localStorage.setItem('rec_campus_updated_at', serverData.updatedAt || new Date().toISOString());
-          } catch {}
+          if (!hasUserEditedRef.current) {
+            setLocations(serverData.locations);
+            setNodes(serverData.nodes);
+            setRoads(serverData.roads);
+            try {
+              localStorage.setItem('rec_locations', JSON.stringify(serverData.locations));
+              localStorage.setItem('rec_nodes', JSON.stringify(serverData.nodes));
+              localStorage.setItem('rec_roads', JSON.stringify(serverData.roads));
+              localStorage.setItem('rec_campus_updated_at', serverData.updatedAt || new Date().toISOString());
+            } catch {}
+          }
         }
         setIsCloudLoaded(true);
       })

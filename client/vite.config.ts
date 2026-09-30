@@ -38,9 +38,7 @@ function campusDataStoragePlugin(): Plugin {
             try {
               const parsed = JSON.parse(body);
               const publicDataDir = path.resolve(__dirname, 'public/data');
-              const srcDataDir = path.resolve(__dirname, 'src/data');
               if (!fs.existsSync(publicDataDir)) fs.mkdirSync(publicDataDir, { recursive: true });
-              if (!fs.existsSync(srcDataDir)) fs.mkdirSync(srcDataDir, { recursive: true });
 
               const payload = {
                 version: 1,
@@ -53,7 +51,6 @@ function campusDataStoragePlugin(): Plugin {
 
               const jsonStr = JSON.stringify(payload, null, 2);
               fs.writeFileSync(path.join(publicDataDir, 'campusData.json'), jsonStr, 'utf-8');
-              fs.writeFileSync(path.join(srcDataDir, 'campusData.json'), jsonStr, 'utf-8');
 
               // Also sync to server directory if it exists
               const serverDataDir = path.resolve(__dirname, '../server/src/data');
@@ -99,4 +96,13 @@ function campusDataStoragePlugin(): Plugin {
 export default defineConfig({
   plugins: [react(), tailwindcss(), campusDataStoragePlugin()],
   base: '/RECNavigator/',
+  server: {
+    watch: {
+      ignored: [
+        '**/public/data/**',
+        '**/src/data/**',
+        '**/campusData.json',
+      ],
+    },
+  },
 });

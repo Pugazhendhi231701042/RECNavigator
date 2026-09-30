@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T11:03:48.980Z",
+  "updatedAt": "2026-09-30T17:40:29.129Z",
   "locations": [
     {
       "id": "building_8912",
@@ -773,7 +773,17 @@
         "y": 0.2,
         "z": -404
       }
+    },
+    {
+      "id": "node_7852",
+      "name": "Junction (-467, 36)",
+      "position": {
+        "x": -467,
+        "y": 0.2,
+        "z": 36
+      }
     }
   ],
-  "roads": []
+  "roads": [],
+  "categories": []
 }
