@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:30:13.494Z",
+  "updatedAt": "2026-09-30T18:30:20.664Z",
   "locations": [],
   "nodes": [
     {
@@ -50,7 +50,7 @@
     },
     {
       "id": "node_0411",
-      "name": "TechLounge ",
+      "name": "TechLounge Corner - Back",
       "position": {
         "x": -466,
         "y": 0,
