@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T11:01:46.891Z",
+  "updatedAt": "2026-09-30T11:01:58.029Z",
   "locations": [
     {
       "id": "building_8912",
@@ -546,7 +546,7 @@
         1,
         1
       ],
-      "modelKey": "Blackbuck-optimized.glb",
+      "modelKey": "Yippe (1)-optimized.glb",
       "nodeId": "node_building_5682_entrance",
       "entranceNodeIds": [
         "node_building_5682_entrance"
