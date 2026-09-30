@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:53:46.263Z",
+  "updatedAt": "2026-09-30T17:53:49.544Z",
   "locations": [
     {
       "id": "building_8912",
@@ -817,7 +817,6 @@
       "name": "Horizontal Road 1",
       "junctionIds": [
         "node_7852",
-        "node_ent_9426",
         "node_building_8912_entrance"
       ],
       "width": 10,
