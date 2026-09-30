@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:55:43.287Z",
+  "updatedAt": "2026-09-30T18:55:44.770Z",
   "locations": [],
   "nodes": [
     {
@@ -301,7 +301,6 @@
       "name": "D Block Avenue Road",
       "junctionIds": [
         "node_0572",
-        "node_9177",
         "node_6884"
       ],
       "width": 10,
