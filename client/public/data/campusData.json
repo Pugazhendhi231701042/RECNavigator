@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:00:33.827Z",
+  "updatedAt": "2026-09-30T20:00:41.742Z",
   "locations": [
     {
       "id": "building_1358",
@@ -183,7 +183,7 @@
       "id": "building_1257",
       "name": "REC BlackBucks",
       "category": "food",
-      "description": "Campus facility structure",
+      "description": "Food Spot!",
       "position": {
         "x": 0,
         "y": 0,
