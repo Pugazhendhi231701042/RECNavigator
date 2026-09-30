@@ -280,7 +280,7 @@ function BuildingItem({
         description: loc.modelKey,
       }
     : null;
-  const useGLB = manifestEntry && manifestEntry.isVerifiedModel && !subdued;
+  const useGLB = Boolean(manifestEntry && manifestEntry.isVerifiedModel);
 
   const color = subdued
     ? '#475569'

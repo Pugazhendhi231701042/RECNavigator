@@ -47,6 +47,8 @@ import {
   Upload,
   Loader2,
   Cloud,
+  Image as ImageIcon,
+  BookOpen,
 } from 'lucide-react';
 import {
   saveCampusDataToServer,
@@ -55,6 +57,7 @@ import {
   subscribeToCloudSync,
   type CloudSyncStatus,
 } from '../utils/campusDataApi';
+import { AdminRegistryView } from '../components/admin/AdminRegistryView';
 
 const ADMIN_PASSWORD = 'Admin@2711';
 
@@ -76,7 +79,7 @@ interface AdminPageProps {
   onImportCampusData?: (data: { locations: Location[]; nodes: PathNode[]; roads: Road[] }) => void;
 }
 
-type AdminSection = 'buildings' | 'junctions-roads';
+type AdminSection = 'buildings' | 'junctions-roads' | 'registry';
 type CameraViewMode = 'perspective' | 'top';
 type TransformGizmoMode = 'translate' | 'rotate' | 'scale' | null;
 
@@ -870,14 +873,38 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
     <div className="w-full h-[calc(100vh-65px)] bg-slate-100 dark:bg-[#080B11] text-slate-900 dark:text-white relative overflow-hidden flex flex-col select-none transition-colors duration-300">
       {/* 1. TOP FLOATING COMMAND BAR - GROUPED & DECLUTTERED */}
       <header className="h-14 bg-white/95 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/90 dark:border-slate-800/80 px-4 flex items-center justify-between z-30 shrink-0 gap-3">
-        {/* GROUP 1: STUDIO BRAND & MODULES */}
+        {/* GROUP 1: REGISTRY & 3D STUDIO MODULES */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black tracking-widest text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/30 uppercase font-mono flex items-center gap-1.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-              CAD STUDIO
-            </span>
-          </div>
+          {/* USER REQUESTED: Instead of CAD Studio, a Registry button which opens registry page */}
+          <button
+            onClick={() => {
+              if (activeSection === 'registry') {
+                setActiveSection('buildings');
+              } else {
+                setActiveSection('registry');
+                setMapClickMode('none');
+              }
+            }}
+            className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 cursor-pointer shadow-sm active:scale-95 ${
+              activeSection === 'registry'
+                ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50'
+                : 'bg-amber-50 dark:bg-amber-400/10 hover:bg-amber-100 dark:hover:bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-400/30'
+            }`}
+            title={activeSection === 'registry' ? 'Switch to 3D CAD Studio' : 'Open Campus Registry (Edit Photos & Descriptions)'}
+          >
+            {activeSection === 'registry' ? (
+              <>
+                <Compass className="w-3.5 h-3.5 text-amber-300" />
+                <span>3D CAD Studio</span>
+              </>
+            ) : (
+              <>
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                <BookOpen className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+                <span>Registry</span>
+              </>
+            )}
+          </button>
 
           {/* STUDIO MODULE SWITCHER (Buildings / Junctions & Roads / Route Tester) */}
           <div className="flex items-center bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-0.5 shadow-inner">
@@ -1051,9 +1078,24 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
         </div>
       )}
 
-      {/* 2. MAP VIEWPORT & FLOATING PANELS WRAPPER */}
-      <div className="flex-1 relative w-full h-full overflow-hidden">
-        {/* Active Map Click Banner if Armed */}
+      {/* 2. REGISTRY PAGE VIEW OR 3D MAP VIEWPORT */}
+      {activeSection === 'registry' ? (
+        <AdminRegistryView
+          locations={locations}
+          selectedBuildingId={selectedBuildingId}
+          onSelectBuilding={setSelectedBuildingId}
+          onUpdateLocation={onUpdateLocation}
+          onAddLocation={onAddLocation}
+          onDeleteLocation={onDeleteLocation}
+          onSwitchToCadStudio={(bId) => {
+            if (bId) setSelectedBuildingId(bId);
+            setActiveSection('buildings');
+          }}
+        />
+      ) : (
+        /* 2. MAP VIEWPORT & FLOATING PANELS WRAPPER */
+        <div className="flex-1 relative w-full h-full overflow-hidden">
+          {/* Active Map Click Banner if Armed */}
         {mapClickMode !== 'none' && (
           <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 bg-amber-500 text-slate-950 px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs border-2 border-white ring-4 ring-amber-500/30 animate-pulse">
             <Crosshair className="w-4 h-4 animate-spin text-slate-950" />
@@ -1510,8 +1552,57 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                       rows={2}
                       value={currentBuilding.description || ''}
                       onChange={(e) => handleUpdateBuildingProperty('description', e.target.value)}
+                      placeholder="Brief description of this campus building..."
                       className="w-full px-3 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 resize-none"
                     />
+                  </div>
+
+                  {/* Places Photo URL */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-1">
+                        <ImageIcon className="w-3 h-3 text-purple-500" />
+                        <span>Places Photo URL</span>
+                      </label>
+                      {currentBuilding.image && (
+                        <span className="text-[9px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                          ✓ Set
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <input
+                        type="text"
+                        placeholder="https://... or /assets/..."
+                        value={currentBuilding.image || ''}
+                        onChange={(e) => handleUpdateBuildingProperty('image', e.target.value)}
+                        className="flex-1 px-3 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 font-mono text-[11px]"
+                      />
+                      {currentBuilding.image && (
+                        <div className="w-8 h-8 rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 shrink-0 bg-slate-200 dark:bg-slate-800">
+                          <img
+                            src={currentBuilding.image}
+                            alt="preview"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLElement).style.display = 'none';
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Quick Registry Page Switch */}
+                  <div className="pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSection('registry')}
+                      className="w-full py-1.5 px-3 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800/80 rounded-xl text-[11px] font-bold text-purple-700 dark:text-purple-300 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                    >
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>Edit Photos & Details in Registry →</span>
+                    </button>
                   </div>
                 </div>
 
@@ -2464,6 +2555,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
           </div>
         )}
       </div>
+      )}
 
       {/* 6. PROTECTED SYSTEM RESET MODAL */}
       {showResetModal && (

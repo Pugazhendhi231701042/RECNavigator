@@ -58,7 +58,7 @@ export const CampusScene: React.FC<CampusSceneProps> = ({
   edges,
   showJunctionMarkers = false,
   cameraMode = 'perspective',
-  activeSection = 'buildings',
+  activeSection: _activeSection = 'buildings',
   selectedJunctionId,
   onSelectJunction,
   selectedRoadId,
@@ -201,7 +201,7 @@ export const CampusScene: React.FC<CampusSceneProps> = ({
           selectedLocation={selectedLocation}
           onSelectLocation={onSelectLocation}
           onDoubleClickLocation={handleDoubleClickBuilding}
-          subdued={activeSection === 'junctions-roads'}
+          subdued={false}
           transformMode={transformMode}
           onTransformChange={onBuildingTransform}
           onTransformStart={handleTransformStart}
