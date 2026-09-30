@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:59:12.654Z",
+  "updatedAt": "2026-09-30T18:59:33.927Z",
   "locations": [
     {
       "id": "building_1358",
-      "name": "New Campus Building",
+      "name": "A",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
