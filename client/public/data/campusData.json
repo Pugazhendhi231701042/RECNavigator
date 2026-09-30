@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:41:34.510Z",
+  "updatedAt": "2026-09-30T18:41:38.207Z",
   "locations": [],
   "nodes": [
     {
@@ -104,7 +104,7 @@
     },
     {
       "id": "node_3296",
-      "name": "Junction (-192, -440)",
+      "name": "Hos",
       "position": {
         "x": -192,
         "y": 0.2,
