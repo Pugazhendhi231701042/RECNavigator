@@ -163,13 +163,21 @@ export function calculateMultiEntranceRoute(
 ): RouteResult | null {
   if (!startLoc || !destLoc) return null;
 
-  const startEntrances = (startLoc.entranceNodeIds && startLoc.entranceNodeIds.length > 0)
-    ? startLoc.entranceNodeIds
-    : [startLoc.nodeId];
+  const startEntrances = Array.isArray(startLoc.entrances)
+    ? startLoc.entrances.map(e => e.junctionId).filter(Boolean)
+    : (Array.isArray(startLoc.entranceNodeIds)
+        ? startLoc.entranceNodeIds.filter(Boolean)
+        : (startLoc.nodeId ? [startLoc.nodeId] : []));
 
-  const destEntrances = (destLoc.entranceNodeIds && destLoc.entranceNodeIds.length > 0)
-    ? destLoc.entranceNodeIds
-    : [destLoc.nodeId];
+  const destEntrances = Array.isArray(destLoc.entrances)
+    ? destLoc.entrances.map(e => e.junctionId).filter(Boolean)
+    : (Array.isArray(destLoc.entranceNodeIds)
+        ? destLoc.entranceNodeIds.filter(Boolean)
+        : (destLoc.nodeId ? [destLoc.nodeId] : []));
+
+  if (startEntrances.length === 0 || destEntrances.length === 0) {
+    return null;
+  }
 
   let bestRoute: RouteResult | null = null;
 

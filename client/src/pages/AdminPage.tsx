@@ -500,17 +500,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   // ----------------------------------------------------
   const handleCreateBuilding = () => {
     const newId = `building_${Date.now().toString().slice(-4)}`;
-    const mainEntNodeId = `node_${newId}_entrance`;
     const initialPos: Vector3D = { x: 0, y: 0, z: 0 };
-    const initialEntPos: Vector3D = { x: 0, y: 0.2, z: 15 };
-
-    // Automatically create a dedicated Main Entrance junction node for the new building
-    const mainEntNode: PathNode = {
-      id: mainEntNodeId,
-      name: 'New Building Entrance',
-      position: initialEntPos,
-    };
-    onAddNode?.(mainEntNode);
 
     const newBuilding: Location = {
       id: newId,
@@ -521,17 +511,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       rotationY: 0,
       scale: [1, 1, 1],
       modelKey: CAMPUS_GLB_MODELS[0]?.id || 'block-a-optimized.glb',
-      nodeId: mainEntNodeId,
-      entranceNodeIds: [mainEntNodeId],
-      entrances: [
-        {
-          id: `${newId}_ent_1`,
-          name: 'Main Entrance',
-          buildingId: newId,
-          junctionId: mainEntNodeId,
-          position: initialEntPos,
-        },
-      ],
+      nodeId: '',
+      entranceNodeIds: [],
+      entrances: [],
     };
     onAddLocation(newBuilding);
     setSelectedBuildingId(newBuilding.id);
@@ -603,16 +585,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   const handleRemoveBuildingEntrance = (entranceId: string) => {
     if (!currentBuilding) return;
     const existing = ensureLocationEntrances(currentBuilding, nodes);
-    if (existing.length <= 1) {
-      alert('Every building must have at least one valid entrance.');
-      return;
-    }
     const updatedList = existing.filter(e => e.id !== entranceId);
     const updated: Location = {
       ...currentBuilding,
       entrances: updatedList,
       entranceNodeIds: updatedList.map(e => e.junctionId),
-      nodeId: updatedList[0]?.junctionId || currentBuilding.nodeId,
+      nodeId: updatedList[0]?.junctionId || '',
     };
     onUpdateLocation(updated);
     setHasUnsavedChanges(true);
@@ -1694,41 +1672,48 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
 
                   {/* Entrances list */}
                   <div className="space-y-2.5">
-                    {ensureLocationEntrances(currentBuilding, nodes).map((entrance, idx) => {
-                      const linkedNode = nodes.find(n => n.id === entrance.junctionId);
-                      const entPos = linkedNode?.position || entrance.position || { x: 0, y: 0.2, z: 0 };
-                      const isMain = idx === 0;
-                      const isArmingThis =
-                        (mapClickMode === 'set-main-entrance' && isMain) ||
-                        (mapClickMode === 'set-entrance-position' && targetEntranceId === entrance.id);
+                    {ensureLocationEntrances(currentBuilding, nodes).length === 0 ? (
+                      <div className="p-3.5 bg-slate-100 dark:bg-slate-900/60 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-center space-y-1.5">
+                        <div className="text-xs font-bold text-slate-700 dark:text-slate-300">No Entrances Configured</div>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                          This building is a standalone structure without road entrances. Add an entrance below if you want pedestrian routes to lead here.
+                        </p>
+                      </div>
+                    ) : (
+                      ensureLocationEntrances(currentBuilding, nodes).map((entrance, idx) => {
+                        const linkedNode = nodes.find(n => n.id === entrance.junctionId);
+                        const entPos = linkedNode?.position || entrance.position || { x: 0, y: 0.2, z: 0 };
+                        const isMain = idx === 0;
+                        const isArmingThis =
+                          (mapClickMode === 'set-main-entrance' && isMain) ||
+                          (mapClickMode === 'set-entrance-position' && targetEntranceId === entrance.id);
 
-                      return (
-                        <div
-                          key={entrance.id}
-                          className={`p-3 rounded-xl border transition-all ${
-                            isMain
-                              ? 'bg-white dark:bg-slate-950 border-emerald-400 dark:border-emerald-500/50 shadow-md ring-1 ring-emerald-400/30'
-                              : 'bg-white/80 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 shadow-sm'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between gap-2 mb-2">
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-1.5">
-                                <span className="font-black text-xs text-slate-900 dark:text-white truncate">
-                                  {isMain ? '🚪 Main Entrance' : `🚪 ${entrance.name}`}
-                                </span>
-                                {isMain && (
-                                  <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-600 text-white tracking-wider">
-                                    Primary
+                        return (
+                          <div
+                            key={entrance.id}
+                            className={`p-3 rounded-xl border transition-all ${
+                              isMain
+                                ? 'bg-white dark:bg-slate-950 border-emerald-400 dark:border-emerald-500/50 shadow-md ring-1 ring-emerald-400/30'
+                                : 'bg-white/80 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 shadow-sm'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-black text-xs text-slate-900 dark:text-white truncate">
+                                    {isMain ? '🚪 Main Entrance' : `🚪 ${entrance.name}`}
                                   </span>
-                                )}
+                                  {isMain && (
+                                    <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-600 text-white tracking-wider">
+                                      Primary
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5 truncate">
+                                  ➔ Road Node: {linkedNode ? linkedNode.name : entrance.junctionId}
+                                </div>
                               </div>
-                              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5 truncate">
-                                ➔ Road Node: {linkedNode ? linkedNode.name : entrance.junctionId}
-                              </div>
-                            </div>
 
-                            {!isMain && (
                               <button
                                 onClick={() => handleRemoveBuildingEntrance(entrance.id)}
                                 className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1 rounded transition-colors cursor-pointer"
@@ -1736,8 +1721,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
-                            )}
-                          </div>
+                            </div>
 
                           {/* USER-FRIENDLY "CLICK ON MAP TO PLACE" BUTTON */}
                           <div className="mb-2.5">
@@ -1830,7 +1814,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                           </div>
                         </div>
                       );
-                    })}
+                    }))}
                   </div>
 
                   {/* Connect Another Entrance */}

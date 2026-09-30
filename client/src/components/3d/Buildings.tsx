@@ -484,11 +484,13 @@ export const Buildings: React.FC<BuildingsProps> = ({
       {locations.map(loc => {
         const isSelected = selectedLocation?.id === loc.id;
         
-        // Find entrance nodes for this building
-        const entranceIds = (loc.entranceNodeIds && loc.entranceNodeIds.length > 0)
-          ? loc.entranceNodeIds
-          : [loc.nodeId];
-        const entranceNodes = nodes.filter(n => entranceIds.includes(n.id));
+        // Find entrance nodes for this building (safe for 0 entrances)
+        const entranceIds = Array.isArray(loc.entrances)
+          ? loc.entrances.map(e => e.junctionId).filter(Boolean)
+          : (Array.isArray(loc.entranceNodeIds)
+              ? loc.entranceNodeIds.filter(Boolean)
+              : (loc.nodeId ? [loc.nodeId] : []));
+        const entranceNodes = nodes.filter(n => n.id && entranceIds.includes(n.id));
 
         return (
           <BuildingItem

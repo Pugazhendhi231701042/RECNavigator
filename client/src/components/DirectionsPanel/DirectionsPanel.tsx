@@ -23,6 +23,14 @@ export const DirectionsPanel: React.FC<DirectionsPanelProps> = ({
   onClearDirections,
   activeRoute,
 }) => {
+  const hasAnyEntrance = (loc: Location | null): boolean => {
+    if (!loc) return false;
+    if (Array.isArray(loc.entrances) && loc.entrances.length > 0) return true;
+    if (Array.isArray(loc.entranceNodeIds) && loc.entranceNodeIds.length > 0) return true;
+    if (loc.nodeId && loc.nodeId.trim() !== '') return true;
+    return false;
+  };
+
   const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
@@ -77,11 +85,14 @@ export const DirectionsPanel: React.FC<DirectionsPanelProps> = ({
             className="w-full py-2 px-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition-all"
           >
             <option value="">-- Select Starting Location --</option>
-            {locations.map(loc => (
-              <option key={loc.id} value={loc.id}>
-                📍 {loc.name}
-              </option>
-            ))}
+            {locations.map(loc => {
+              const hasEnt = hasAnyEntrance(loc);
+              return (
+                <option key={loc.id} value={loc.id}>
+                  📍 {loc.name} {!hasEnt ? '(No Entrance)' : ''}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -114,11 +125,14 @@ export const DirectionsPanel: React.FC<DirectionsPanelProps> = ({
             className="w-full py-2 px-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition-all"
           >
             <option value="">-- Select Destination --</option>
-            {locations.map(loc => (
-              <option key={loc.id} value={loc.id}>
-                🏁 {loc.name}
-              </option>
-            ))}
+            {locations.map(loc => {
+              const hasEnt = hasAnyEntrance(loc);
+              return (
+                <option key={loc.id} value={loc.id}>
+                  🏁 {loc.name} {!hasEnt ? '(No Entrance)' : ''}
+                </option>
+              );
+            })}
           </select>
         </div>
       </div>
@@ -209,6 +223,34 @@ export const DirectionsPanel: React.FC<DirectionsPanelProps> = ({
               })}
             </div>
           </div>
+        </div>
+      ) : startLocation && destinationLocation ? (
+        <div className="mt-6 p-5 bg-amber-50/90 dark:bg-amber-950/40 rounded-2xl border border-amber-200 dark:border-amber-800/70 text-center space-y-2">
+          {(!hasAnyEntrance(startLocation) || !hasAnyEntrance(destinationLocation)) ? (
+            <>
+              <div className="w-9 h-9 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 mx-auto flex items-center justify-center font-bold text-base">
+                ⚠️
+              </div>
+              <p className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                {!hasAnyEntrance(startLocation) && !hasAnyEntrance(destinationLocation)
+                  ? `Both "${startLocation.name}" and "${destinationLocation.name}" are standalone structures without road entrances.`
+                  : !hasAnyEntrance(startLocation)
+                  ? `"${startLocation.name}" is a standalone structure without road entrances configured.`
+                  : `"${destinationLocation.name}" is a standalone structure without road entrances configured.`}
+              </p>
+              <p className="text-[11px] text-amber-700 dark:text-amber-300 leading-tight">
+                Walking routes require at least one road entrance junction to calculate turn-by-turn guidance.
+              </p>
+            </>
+          ) : (
+            <>
+              <Compass className="w-8 h-8 text-amber-500/60 mx-auto" />
+              <p className="text-xs font-bold text-amber-900 dark:text-amber-200">No Walkable Route Found</p>
+              <p className="text-[11px] text-amber-700 dark:text-amber-300">
+                No connected road pathway connects these two locations in the campus navigation graph.
+              </p>
+            </>
+          )}
         </div>
       ) : (
         <div className="mt-6 p-6 bg-slate-50/80 rounded-2xl border border-dashed border-slate-200 text-center space-y-2">

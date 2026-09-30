@@ -143,12 +143,14 @@ export function calculateEuclideanDistance(nodeA: PathNode, nodeB: PathNode): nu
  * Ensure every location has structured Entrance objects
  */
 export function ensureLocationEntrances(loc: Location, nodes: PathNode[]): Entrance[] {
-  if (loc.entrances && loc.entrances.length > 0) {
+  // If entrances array is explicitly provided (even if empty []), respect it!
+  if (Array.isArray(loc.entrances)) {
     return loc.entrances;
   }
   const nodeIds = (loc.entranceNodeIds && loc.entranceNodeIds.length > 0)
     ? loc.entranceNodeIds
-    : [loc.nodeId];
+    : (loc.nodeId ? [loc.nodeId] : []);
+  if (nodeIds.length === 0) return [];
   return nodeIds.map((nId, idx) => {
     const nodeObj = nodes.find(n => n.id === nId);
     const defaultName = idx === 0 ? 'Main Entrance' : (nodeObj ? `${nodeObj.name} Gate` : `Entrance ${idx + 1}`);

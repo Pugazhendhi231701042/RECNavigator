@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:56:45.962Z",
+  "updatedAt": "2026-09-30T17:56:45.971Z",
   "locations": [
     {
       "id": "building_8912",
@@ -834,5 +834,6 @@
         "node_building_7013_entrance:::node_building_8912_entrance": 155
       }
     }
-  ]
+  ],
+  "categories": []
 }
