@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:50:36.937Z",
+  "updatedAt": "2026-09-30T17:50:43.307Z",
   "locations": [
     {
       "id": "building_8912",
@@ -785,7 +785,7 @@
     },
     {
       "id": "node_5640",
-      "name": "Junction (62, 17)",
+      "name": "Bla",
       "position": {
         "x": 62,
         "y": 0.2,
