@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:40:08.961Z",
+  "updatedAt": "2026-09-30T18:40:18.815Z",
   "locations": [],
   "nodes": [
     {
@@ -119,14 +119,16 @@
       "name": "Horizontal Road 2",
       "junctionIds": [
         "node_0411",
-        "node_5696"
+        "node_5696",
+        "node_1688"
       ],
       "width": 10,
       "description": "Campus pedestrian walkway",
       "segmentDistances": {
         "node_7554:::node_9177": 127,
         "node_0411:::node_7554": 411,
-        "node_5696:::node_7554": 325
+        "node_5696:::node_7554": 325,
+        "node_1688:::node_5696": 192
       }
     }
   ]
