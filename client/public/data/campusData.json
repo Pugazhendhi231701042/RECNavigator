@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:41:38.207Z",
+  "updatedAt": "2026-09-30T18:41:44.669Z",
   "locations": [],
   "nodes": [
     {
@@ -104,7 +104,7 @@
     },
     {
       "id": "node_3296",
-      "name": "Hos",
+      "name": "Mess Junction",
       "position": {
         "x": -192,
         "y": 0.2,
