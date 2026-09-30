@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:34:39.826Z",
+  "updatedAt": "2026-09-30T19:34:41.261Z",
   "locations": [
     {
       "id": "building_1358",
@@ -76,7 +76,7 @@
     },
     {
       "id": "building_9086",
-      "name": "Tech Loungr",
+      "name": "Tech Lounge",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
