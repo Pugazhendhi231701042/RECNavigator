@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:55:01.991Z",
+  "updatedAt": "2026-09-30T17:56:09.488Z",
   "locations": [
     {
       "id": "building_8912",
@@ -704,7 +704,7 @@
     },
     {
       "id": "node_building_7013_entrance",
-      "name": "New Building Entrance",
+      "name": "Tech Lo",
       "position": {
         "x": -420,
         "y": 0.2,
