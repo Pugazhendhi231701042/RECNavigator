@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:32:23.028Z",
+  "updatedAt": "2026-09-30T18:32:29.772Z",
   "locations": [],
   "nodes": [
     {
@@ -86,7 +86,7 @@
     },
     {
       "id": "node_1807",
-      "name": "Junction (59, -72)",
+      "name": "B Blo",
       "position": {
         "x": 59,
         "y": 0.2,
