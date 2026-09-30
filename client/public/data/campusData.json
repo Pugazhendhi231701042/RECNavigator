@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:29:04.901Z",
+  "updatedAt": "2026-09-30T19:30:25.283Z",
   "locations": [
     {
       "id": "building_1358",
@@ -56,8 +56,22 @@
       ],
       "modelKey": "block-b-optimized.glb",
       "nodeId": "",
-      "entranceNodeIds": [],
-      "entrances": [],
+      "entranceNodeIds": [
+        "node_ent_1400"
+      ],
+      "entrances": [
+        {
+          "id": "building_9936_ent_4069",
+          "name": "B Block Entrance 1 Gate",
+          "buildingId": "building_9936",
+          "junctionId": "node_ent_1400",
+          "position": {
+            "x": -62,
+            "y": 0.2,
+            "z": -67
+          }
+        }
+      ],
       "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToHX0vTfuFAVFTQ9o1Ae31qwvK9B5-lG1GB5wulsYx3lIG6WM-F8B6uYY&s=10"
     }
   ],
