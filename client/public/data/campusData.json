@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:06:51.423Z",
+  "updatedAt": "2026-09-30T19:07:41.178Z",
   "locations": [
     {
       "id": "building_1358",
@@ -37,6 +37,27 @@
         }
       ],
       "image": "https://pages.rajalakshmi.org/image/banner-1.jpg"
+    },
+    {
+      "id": "building_9936",
+      "name": "New Campus Building",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationY": 0,
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "modelKey": "Blackbuck-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
     }
   ],
   "nodes": [
