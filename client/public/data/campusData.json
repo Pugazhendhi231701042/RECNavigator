@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:10:35.722Z",
+  "updatedAt": "2026-09-30T20:10:45.931Z",
   "locations": [
     {
       "id": "building_1358",
@@ -248,9 +248,9 @@
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
-        "x": 164,
+        "x": 173,
         "y": 0,
-        "z": -435
+        "z": -433
       },
       "rotationY": 270,
       "scale": [
