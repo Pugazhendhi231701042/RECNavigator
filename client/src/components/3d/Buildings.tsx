@@ -308,14 +308,6 @@ function BuildingItem({
     onDoubleClick?.(loc);
   };
 
-  const fallback = (
-    <ProceduralBuilding
-      loc={loc}
-      color={color}
-      onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
-    />
-  );
   const rotYRad = ((loc.rotationY || 0) * Math.PI) / 180;
   const glbUrl = manifestEntry ? `${baseUrl}${manifestEntry.glbPath}`.replace(/\/+/g, '/') : '';
   const scaleVec: [number, number, number] = Array.isArray(loc.scale)
@@ -323,6 +315,34 @@ function BuildingItem({
     : typeof loc.scale === 'number'
       ? [loc.scale, loc.scale, loc.scale]
       : [1, 1, 1];
+
+  // Safeguard: When scale is scaled for micro GLB models (e.g. 210x),
+  // normalize the procedural fallback scale so it NEVER explodes into a 6,300m - 25,000m camera-blinding monster!
+  const isLargeScale = scaleVec[0] > 5;
+  const proceduralScaleFactor: [number, number, number] = [
+    isLargeScale ? 1 / scaleVec[0] : 1,
+    isLargeScale ? 1 / scaleVec[1] : 1,
+    isLargeScale ? 1 / scaleVec[2] : 1,
+  ];
+
+  const fallback = (
+    <group scale={proceduralScaleFactor}>
+      <ProceduralBuilding
+        loc={loc}
+        color={color}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+      />
+    </group>
+  );
+
+  // During Suspense network loading, render a subtle translucent wireframe outline instead of a solid block
+  const loadingPlaceholder = (
+    <mesh position={[0, 0.1, 0]}>
+      <boxGeometry args={[0.2, 0.12, 0.2]} />
+      <meshBasicMaterial color={color} wireframe transparent opacity={0.3} />
+    </mesh>
+  );
 
   const content = (
     <group
@@ -335,7 +355,7 @@ function BuildingItem({
     >
       {useGLB ? (
         <GLBErrorBoundary fallback={fallback}>
-          <Suspense fallback={fallback}>
+          <Suspense fallback={loadingPlaceholder}>
             <GLBModel
               url={glbUrl}
               onClick={handleClick}

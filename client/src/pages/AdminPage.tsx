@@ -1957,15 +1957,16 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                     </div>
 
                     {/* Scale with Direct Numeric Input & Slider */}
+                    {/* Scale with Direct Numeric Input & Slider & Reset Button */}
                     <div>
                       <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 mb-1">
                         <span>Scale Factor</span>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1.5">
                           <input
                             type="number"
                             min="0.05"
-                            max="10"
-                            step="0.05"
+                            max="500"
+                            step="1"
                             value={
                               Array.isArray(currentBuilding.scale)
                                 ? currentBuilding.scale[0]
@@ -1980,13 +1981,24 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
                             className="w-16 px-1.5 py-0.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-mono font-bold text-purple-600 dark:text-purple-400 text-right focus:outline-none focus:border-purple-500"
                           />
                           <span className="font-bold text-purple-600 dark:text-purple-400">x</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              // Reset scale factor to 1x default
+                              handleUpdateBuildingProperty('scale', [1, 1, 1]);
+                            }}
+                            title="Reset scale to 1x"
+                            className="px-1.5 py-0.5 text-[9px] font-bold text-slate-500 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 rounded border border-slate-200 dark:border-slate-700 cursor-pointer transition-all"
+                          >
+                            Reset
+                          </button>
                         </div>
                       </div>
                       <input
                         type="range"
                         min="0.1"
-                        max="3.5"
-                        step="0.05"
+                        max="300"
+                        step="1"
                         value={
                           Array.isArray(currentBuilding.scale)
                             ? currentBuilding.scale[0]
