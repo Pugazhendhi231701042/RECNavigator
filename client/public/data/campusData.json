@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:32:29.772Z",
+  "updatedAt": "2026-09-30T18:32:34.568Z",
   "locations": [],
   "nodes": [
     {
@@ -86,7 +86,7 @@
     },
     {
       "id": "node_1807",
-      "name": "B Blo",
+      "name": "",
       "position": {
         "x": 59,
         "y": 0.2,
