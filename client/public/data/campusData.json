@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:37:18.597Z",
+  "updatedAt": "2026-09-30T20:37:32.442Z",
   "locations": [
     {
       "id": "building_1358",
@@ -349,7 +349,7 @@
     },
     {
       "id": "building_6535",
-      "name": "New Campus Building",
+      "name": "Fresh Crush",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
