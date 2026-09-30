@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:46:48.136Z",
+  "updatedAt": "2026-09-30T18:47:17.745Z",
   "locations": [],
   "nodes": [
     {
@@ -149,7 +149,7 @@
     },
     {
       "id": "node_6884",
-      "name": "Junction (140, -282)",
+      "name": "REC Logo Junction",
       "position": {
         "x": 140,
         "y": 0.2,
