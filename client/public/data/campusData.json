@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:41:33.438Z",
+  "updatedAt": "2026-09-30T19:41:42.789Z",
   "locations": [
     {
       "id": "building_1358",
@@ -122,9 +122,9 @@
       "category": "academic",
       "description": "Academic Block",
       "position": {
-        "x": 106,
+        "x": 102,
         "y": 0,
-        "z": -345
+        "z": -337
       },
       "rotationY": 353,
       "scale": [
