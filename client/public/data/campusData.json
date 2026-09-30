@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:12:45.786Z",
+  "updatedAt": "2026-09-30T20:12:52.757Z",
   "locations": [
     {
       "id": "building_1358",
@@ -265,7 +265,7 @@
     },
     {
       "id": "building_6930",
-      "name": "New Campus Building",
+      "name": "REC Ca",
       "category": "food",
       "description": "Campus facility structure",
       "position": {
