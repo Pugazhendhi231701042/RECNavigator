@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:52:02.905Z",
+  "updatedAt": "2026-09-30T18:52:06.812Z",
   "locations": [],
   "nodes": [
     {
@@ -217,7 +217,7 @@
     },
     {
       "id": "road_4140",
-      "name": "New Horizot",
+      "name": "New Horizontal Road",
       "junctionIds": [
         "node_6739",
         "node_9606",
