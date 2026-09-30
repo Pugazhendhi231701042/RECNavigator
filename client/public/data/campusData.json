@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:50:43.307Z",
+  "updatedAt": "2026-09-30T17:50:50.399Z",
   "locations": [
     {
       "id": "building_8912",
@@ -785,7 +785,7 @@
     },
     {
       "id": "node_5640",
-      "name": "Bla",
+      "name": "Blackbucks Corner",
       "position": {
         "x": 62,
         "y": 0.2,
