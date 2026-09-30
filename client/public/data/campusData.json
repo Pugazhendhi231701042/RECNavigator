@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:19:58.876Z",
+  "updatedAt": "2026-09-30T19:20:23.714Z",
   "locations": [
     {
       "id": "building_1358",
@@ -19,7 +19,7 @@
         212.05
       ],
       "modelKey": "block-a-optimized.glb",
-      "nodeId": "",
+      "nodeId": "node_3718",
       "entranceNodeIds": [
         "node_3718"
       ],
@@ -55,7 +55,7 @@
         230.05
       ],
       "modelKey": "block-b-optimized.glb",
-      "nodeId": "",
+      "nodeId": "node_ent_8209",
       "entranceNodeIds": [
         "node_ent_8209"
       ],
@@ -235,15 +235,6 @@
         "x": 51,
         "y": 0.2,
         "z": -409
-      }
-    },
-    {
-      "id": "",
-      "name": "A Block Main Entrance",
-      "position": {
-        "x": -261,
-        "y": 0.2,
-        "z": 49
       }
     },
     {
