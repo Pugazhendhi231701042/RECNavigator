@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:51:41.476Z",
+  "updatedAt": "2026-09-30T17:51:46.073Z",
   "locations": [
     {
       "id": "building_8912",
@@ -803,7 +803,7 @@
     },
     {
       "id": "node_0033",
-      "name": "A Block Front Right",
+      "name": "A Block Front Right Corner",
       "position": {
         "x": -149,
         "y": 0.2,
