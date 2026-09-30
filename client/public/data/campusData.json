@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:25:24.780Z",
+  "updatedAt": "2026-09-30T20:25:34.617Z",
   "locations": [
     {
       "id": "building_1358",
@@ -292,7 +292,7 @@
       "position": {
         "x": -416,
         "y": 0,
-        "z": 0
+        "z": -283
       },
       "rotationY": 0,
       "scale": [
