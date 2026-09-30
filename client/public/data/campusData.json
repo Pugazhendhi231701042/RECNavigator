@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:47:17.745Z",
+  "updatedAt": "2026-09-30T18:47:44.549Z",
   "locations": [],
   "nodes": [
     {
@@ -200,7 +200,7 @@
     },
     {
       "id": "road_4847",
-      "name": "New Campus Boulevard",
+      "name": "Horizontal Road 3",
       "junctionIds": [
         "node_5910",
         "node_3296",
