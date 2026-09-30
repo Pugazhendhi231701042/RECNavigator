@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:27:05.447Z",
+  "updatedAt": "2026-09-30T18:27:08.718Z",
   "locations": [],
   "nodes": [
     {
@@ -23,7 +23,7 @@
     },
     {
       "id": "node_0745",
-      "name": "A Block Right Corner ",
+      "name": "A Block Right Corner - Front",
       "position": {
         "x": -146,
         "y": 0,
