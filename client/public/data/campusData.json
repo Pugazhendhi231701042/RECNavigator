@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:52:37.867Z",
+  "updatedAt": "2026-09-30T18:52:43.923Z",
   "locations": [],
   "nodes": [
     {
@@ -270,7 +270,7 @@
     },
     {
       "id": "road_6628",
-      "name": "New Campus Boulevard",
+      "name": "Vertical Road 3",
       "junctionIds": [
         "node_9177",
         "node_7554"
