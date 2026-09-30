@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:20:50.760Z",
+  "updatedAt": "2026-09-30T19:21:03.342Z",
   "locations": [
     {
       "id": "building_1358",
@@ -286,8 +286,8 @@
         "node_0411",
         "node_5696",
         "node_1688",
-        "node_ent_8209",
         "node_7003",
+        "node_ent_8209",
         "node_1807"
       ],
       "width": 10,
