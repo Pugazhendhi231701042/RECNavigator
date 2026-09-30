@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:46:28.480Z",
+  "updatedAt": "2026-09-30T18:46:33.877Z",
   "locations": [],
   "nodes": [
     {
@@ -140,7 +140,7 @@
     },
     {
       "id": "node_7250",
-      "name": "Junction (49, -279)",
+      "name": "REC Cafe ",
       "position": {
         "x": 49,
         "y": 0.2,
