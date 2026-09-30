@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:59:57.513Z",
+  "updatedAt": "2026-09-30T19:00:58.768Z",
   "locations": [
     {
       "id": "building_1358",
@@ -21,7 +21,8 @@
       "modelKey": "block-a-optimized.glb",
       "nodeId": "",
       "entranceNodeIds": [],
-      "entrances": []
+      "entrances": [],
+      "image": "https://pages.rajalakshmi.org/image/banner-1.jpg"
     }
   ],
   "nodes": [
