@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:35:18.402Z",
+  "updatedAt": "2026-09-30T20:35:27.814Z",
   "locations": [
     {
       "id": "building_1358",
@@ -322,6 +322,27 @@
         110.1
       ],
       "modelKey": "Indoor Auditorium-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_6590",
+      "name": "New Campus Building",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationY": 0,
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "modelKey": "Blackbuck-optimized.glb",
       "nodeId": "",
       "entranceNodeIds": [],
       "entrances": []
