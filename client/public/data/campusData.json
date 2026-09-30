@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:45:04.920Z",
+  "updatedAt": "2026-09-30T19:45:10.389Z",
   "locations": [
     {
       "id": "building_1358",
@@ -160,7 +160,7 @@
     },
     {
       "id": "building_3710",
-      "name": "New Campus Building",
+      "name": "Rajalaks",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
