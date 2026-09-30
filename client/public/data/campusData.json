@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:36:04.942Z",
+  "updatedAt": "2026-09-30T19:36:07.518Z",
   "locations": [
     {
       "id": "building_1358",
@@ -86,9 +86,9 @@
       },
       "rotationY": 271,
       "scale": [
-        70.05,
-        70.05,
-        70.05
+        70,
+        70,
+        70
       ],
       "modelKey": "Tech lounge-optimized.glb",
       "nodeId": "",
