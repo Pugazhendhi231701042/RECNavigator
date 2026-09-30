@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:28:53.255Z",
+  "updatedAt": "2026-09-30T18:29:00.735Z",
   "locations": [],
   "nodes": [
     {
@@ -56,6 +56,7 @@
       "junctionIds": [
         "node_2257",
         "node_3530",
+        "node_0745",
         "node_9177"
       ],
       "width": 10,
@@ -63,7 +64,8 @@
       "segmentDistances": {
         "node_7554:::node_9177": 127,
         "node_2257:::node_7554": 406,
-        "node_3530:::node_9177": 439
+        "node_3530:::node_9177": 439,
+        "node_0745:::node_9177": 211
       }
     }
   ]
