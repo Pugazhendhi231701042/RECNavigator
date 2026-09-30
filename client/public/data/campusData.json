@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:19:08.033Z",
+  "updatedAt": "2026-09-30T19:19:13.068Z",
   "locations": [
     {
       "id": "building_1358",
@@ -19,23 +19,11 @@
         212.05
       ],
       "modelKey": "block-a-optimized.glb",
-      "nodeId": "",
+      "nodeId": "node_3718",
       "entranceNodeIds": [
-        "",
         "node_3718"
       ],
       "entrances": [
-        {
-          "id": "building_1358_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_1358",
-          "junctionId": "",
-          "position": {
-            "x": -261,
-            "y": 0.2,
-            "z": 49
-          }
-        },
         {
           "id": "building_1358_ent_6820",
           "name": "A BlockkMain Entrance Gate",
