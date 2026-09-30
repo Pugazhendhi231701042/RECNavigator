@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:24:53.180Z",
+  "updatedAt": "2026-09-30T18:24:56.988Z",
   "locations": [],
   "nodes": [
     {
       "id": "node_9177",
       "name": "Junction (63, 18)",
       "position": {
-        "x": 63,
+        "x": 60,
         "y": 0,
         "z": 20
       }
