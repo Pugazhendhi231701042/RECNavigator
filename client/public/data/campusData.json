@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:40:44.546Z",
+  "updatedAt": "2026-09-30T19:40:46.570Z",
   "locations": [
     {
       "id": "building_1358",
@@ -128,9 +128,9 @@
       },
       "rotationY": 0,
       "scale": [
-        128.05,
-        128.05,
-        128.05
+        127.05,
+        127.05,
+        127.05
       ],
       "modelKey": "block_d-optimized.glb",
       "nodeId": "",
