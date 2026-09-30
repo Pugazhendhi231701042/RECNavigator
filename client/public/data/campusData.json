@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:55:41.544Z",
+  "updatedAt": "2026-09-30T18:55:43.287Z",
   "locations": [],
   "nodes": [
     {
@@ -302,7 +302,6 @@
       "junctionIds": [
         "node_0572",
         "node_9177",
-        "node_7554",
         "node_6884"
       ],
       "width": 10,
