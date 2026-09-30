@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:35:10.169Z",
+  "updatedAt": "2026-09-30T20:35:18.402Z",
   "locations": [
     {
       "id": "building_1358",
@@ -308,7 +308,7 @@
     {
       "id": "building_6706",
       "name": "Indoor Auditorium",
-      "category": "academic",
+      "category": "admin",
       "description": "Campus facility structure",
       "position": {
         "x": -542,
