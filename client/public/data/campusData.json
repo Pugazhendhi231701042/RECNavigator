@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:27:18.336Z",
+  "updatedAt": "2026-09-30T20:35:10.169Z",
   "locations": [
     {
       "id": "building_1358",
@@ -307,7 +307,7 @@
     },
     {
       "id": "building_6706",
-      "name": "New Campus Building",
+      "name": "Indoor Auditorium",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
