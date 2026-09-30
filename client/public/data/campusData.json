@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:08:42.389Z",
+  "updatedAt": "2026-09-30T20:08:44.190Z",
   "locations": [
     {
       "id": "building_1358",
@@ -244,7 +244,7 @@
     },
     {
       "id": "building_2169",
-      "name": "Woko",
+      "name": "Wokon",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
