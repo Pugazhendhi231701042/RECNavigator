@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:51:08.483Z",
+  "updatedAt": "2026-09-30T17:51:14.890Z",
   "locations": [
     {
       "id": "building_8912",
@@ -794,7 +794,7 @@
     },
     {
       "id": "node_7261",
-      "name": "Junction (-58, 31)",
+      "name": "ATM Corner",
       "position": {
         "x": -58,
         "y": 0.2,
