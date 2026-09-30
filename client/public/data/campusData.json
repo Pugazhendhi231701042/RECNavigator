@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:37:11.450Z",
+  "updatedAt": "2026-09-30T19:37:13.668Z",
   "locations": [
     {
       "id": "building_1358",
@@ -97,7 +97,7 @@
     },
     {
       "id": "building_6988",
-      "name": "C Bloc",
+      "name": "C Block",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
