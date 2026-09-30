@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T11:00:59.125Z",
+  "updatedAt": "2026-09-30T11:01:04.294Z",
   "locations": [
     {
       "id": "building_8912",
@@ -501,9 +501,9 @@
       "category": "food",
       "description": "Campus facility structure",
       "position": {
-        "x": 162,
+        "x": 145,
         "y": 0,
-        "z": -471
+        "z": -451
       },
       "rotationY": 270,
       "scale": [
