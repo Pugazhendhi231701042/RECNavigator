@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:46:03.000Z",
+  "updatedAt": "2026-09-30T19:46:08.706Z",
   "locations": [
     {
       "id": "building_1358",
@@ -174,7 +174,7 @@
         121.1,
         121.1
       ],
-      "modelKey": "idea factory-optimized.glb",
+      "modelKey": "TIFFAC-optimized.glb",
       "nodeId": "",
       "entranceNodeIds": [],
       "entrances": []
