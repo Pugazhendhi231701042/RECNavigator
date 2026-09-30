@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:43:16.302Z",
+  "updatedAt": "2026-09-30T18:43:36.151Z",
   "locations": [],
   "nodes": [
     {
@@ -115,8 +115,8 @@
       "id": "node_8663",
       "name": "C Block Corner",
       "position": {
-        "x": 34,
-        "y": 0.2,
+        "x": 108,
+        "y": 0,
         "z": -446
       }
     }
