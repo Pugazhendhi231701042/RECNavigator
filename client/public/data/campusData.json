@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:26:03.138Z",
+  "updatedAt": "2026-09-30T19:26:22.046Z",
   "locations": [
     {
       "id": "building_1358",
@@ -31,7 +31,7 @@
           "junctionId": "",
           "position": {
             "x": -58,
-            "y": 63,
+            "y": -41.8,
             "z": 49
           }
         }
@@ -229,7 +229,7 @@
       "name": "A Block Main Entrance",
       "position": {
         "x": -58,
-        "y": 63,
+        "y": -41.8,
         "z": 49
       }
     }
