@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:56:53.244Z",
+  "updatedAt": "2026-09-30T18:57:06.169Z",
   "locations": [],
   "nodes": [
     {
@@ -331,12 +331,14 @@
       "name": "aSub - Road 2",
       "junctionIds": [
         "node_9177",
-        "node_7554"
+        "node_7554",
+        "node_5696"
       ],
       "width": 10,
       "description": "Campus pedestrian walkway",
       "segmentDistances": {
-        "node_7554:::node_9177": 127
+        "node_7554:::node_9177": 127,
+        "node_5696:::node_7554": 325
       }
     }
   ]
