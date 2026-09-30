@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:27:24.748Z",
+  "updatedAt": "2026-09-30T18:27:38.770Z",
   "locations": [],
   "nodes": [
     {
@@ -32,7 +32,7 @@
     },
     {
       "id": "node_3530",
-      "name": "Junction (-374, 33)",
+      "name": "A Block Left Corner - Front",
       "position": {
         "x": -374,
         "y": 0.2,
