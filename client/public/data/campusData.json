@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:03:21.583Z",
+  "updatedAt": "2026-09-30T20:03:30.290Z",
   "locations": [
     {
       "id": "building_1358",
@@ -206,7 +206,7 @@
       "category": "food",
       "description": "Campus facility structure",
       "position": {
-        "x": -5,
+        "x": 1,
         "y": 0,
         "z": -8
       },
