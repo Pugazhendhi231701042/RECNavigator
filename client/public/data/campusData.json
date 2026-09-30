@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:29:14.541Z",
+  "updatedAt": "2026-09-30T18:29:30.723Z",
   "locations": [],
   "nodes": [
     {
@@ -52,7 +52,7 @@
   "roads": [
     {
       "id": "road_9790",
-      "name": "New Campus Boulevard",
+      "name": "Horizontal Road 1",
       "junctionIds": [
         "node_2257",
         "node_3530",
