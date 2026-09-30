@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:23:14.225Z",
+  "updatedAt": "2026-09-30T20:23:16.615Z",
   "locations": [
     {
       "id": "building_1358",
@@ -286,7 +286,7 @@
     },
     {
       "id": "building_7352",
-      "name": "REC GY",
+      "name": "REC Gym",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
