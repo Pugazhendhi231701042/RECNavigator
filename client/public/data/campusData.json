@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:23:08.560Z",
+  "updatedAt": "2026-09-30T20:23:14.225Z",
   "locations": [
     {
       "id": "building_1358",
@@ -286,7 +286,7 @@
     },
     {
       "id": "building_7352",
-      "name": "New Campus Building",
+      "name": "REC GY",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
