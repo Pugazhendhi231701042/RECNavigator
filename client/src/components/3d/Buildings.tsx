@@ -9,7 +9,6 @@ interface BuildingsProps {
   selectedLocation: Location | null;
   onSelectLocation: (loc: Location) => void;
   onDoubleClickLocation?: (loc: Location) => void;
-  subdued?: boolean;
   transformMode?: 'translate' | 'rotate' | 'scale' | null;
   onTransformChange?: (newPos: Vector3D, newRotY: number, newScale: number) => void;
   onTransformStart?: () => void;
@@ -246,7 +245,6 @@ function ProceduralBuilding({
 interface BuildingItemProps {
   loc: Location;
   isSelected: boolean;
-  subdued?: boolean;
   transformMode?: 'translate' | 'rotate' | 'scale' | null;
   onSelect: (loc: Location) => void;
   onDoubleClick?: (loc: Location) => void;
@@ -259,7 +257,6 @@ interface BuildingItemProps {
 function BuildingItem({
   loc,
   isSelected,
-  subdued,
   transformMode,
   onSelect,
   onDoubleClick,
@@ -282,21 +279,19 @@ function BuildingItem({
     : null;
   const useGLB = Boolean(manifestEntry && manifestEntry.isVerifiedModel);
 
-  const color = subdued
-    ? '#475569'
-    : isSelected
-      ? '#38BDF8'
-      : loc.category === 'academic'
-        ? '#1E40AF'
-        : loc.category === 'food'
-          ? '#D97706'
-          : loc.category === 'hostel'
-            ? '#6D28D9'
-            : loc.category === 'sports'
-              ? '#059669'
-              : loc.category === 'entrance'
-                ? '#DC2626'
-                : '#0284C7';
+  const color = isSelected
+    ? '#38BDF8'
+    : loc.category === 'academic'
+      ? '#1E40AF'
+      : loc.category === 'food'
+        ? '#D97706'
+        : loc.category === 'hostel'
+          ? '#6D28D9'
+          : loc.category === 'sports'
+            ? '#059669'
+            : loc.category === 'entrance'
+              ? '#DC2626'
+              : '#0284C7';
 
   const handleClick = (e: any) => {
     e.stopPropagation();
@@ -478,7 +473,6 @@ export const Buildings: React.FC<BuildingsProps> = ({
   selectedLocation,
   onSelectLocation,
   onDoubleClickLocation,
-  subdued = false,
   transformMode = null,
   onTransformChange,
   onTransformStart,
@@ -501,7 +495,6 @@ export const Buildings: React.FC<BuildingsProps> = ({
             key={loc.id}
             loc={loc}
             isSelected={isSelected}
-            subdued={subdued}
             transformMode={isSelected ? transformMode : null}
             onSelect={onSelectLocation}
             onDoubleClick={onDoubleClickLocation}

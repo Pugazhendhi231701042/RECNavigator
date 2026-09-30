@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sky, Html } from '@react-three/drei';
+import { OrbitControls, Sky, Html, TransformControls } from '@react-three/drei';
 import { MOUSE } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import type { Location, RouteResult, PathNode, PathEdge, Road, Vector3D } from '../../types';
@@ -32,6 +32,7 @@ interface CampusSceneProps {
   activeSection?: 'buildings' | 'junctions-roads';
   selectedJunctionId?: string | null;
   onSelectJunction?: (node: PathNode) => void;
+  onJunctionTransform?: (junctionId: string, newPos: Vector3D) => void;
   selectedRoadId?: string | null;
   onSelectRoad?: (roadId: string) => void;
   onMapClick?: (point: Vector3D) => void;
@@ -39,6 +40,81 @@ interface CampusSceneProps {
   transformMode?: 'translate' | 'rotate' | 'scale' | null;
   onBuildingTransform?: (newPos: Vector3D, newRotY: number, newScale: number) => void;
   roads?: Road[];
+}
+
+function JunctionGizmo({
+  node,
+  onTransform,
+  onTransformStart,
+  onTransformEnd,
+}: {
+  node: PathNode;
+  onTransform?: (junctionId: string, newPos: Vector3D) => void;
+  onTransformStart?: () => void;
+  onTransformEnd?: () => void;
+}) {
+  const groupRef = useRef<any>(null);
+  const isDraggingRef = useRef(false);
+  const lastTimeRef = useRef(0);
+
+  useEffect(() => {
+    if (groupRef.current && !isDraggingRef.current) {
+      groupRef.current.position.set(node.position.x, (node.position.y || 0) + 0.6, node.position.z);
+    }
+  }, [node.position.x, node.position.y, node.position.z]);
+
+  const handleMouseDown = () => {
+    isDraggingRef.current = true;
+    onTransformStart?.();
+  };
+
+  const handleMouseUp = () => {
+    isDraggingRef.current = false;
+    onTransformEnd?.();
+    if (groupRef.current && onTransform) {
+      const pos = groupRef.current.position;
+      onTransform(node.id, {
+        x: Math.round(pos.x),
+        y: 0,
+        z: Math.round(pos.z),
+      });
+    }
+  };
+
+  const handleChange = () => {
+    if (!groupRef.current || !onTransform || !isDraggingRef.current) return;
+    const now = performance.now();
+    if (now - lastTimeRef.current > 50) {
+      lastTimeRef.current = now;
+      const pos = groupRef.current.position;
+      onTransform(node.id, {
+        x: Math.round(pos.x),
+        y: 0,
+        z: Math.round(pos.z),
+      });
+    }
+  };
+
+  return (
+    <>
+      <group ref={groupRef} position={[node.position.x, (node.position.y || 0) + 0.6, node.position.z]}>
+        <mesh visible={false}>
+          <sphereGeometry args={[1.5, 8, 8]} />
+        </mesh>
+      </group>
+      {groupRef.current && (
+        <TransformControls
+          object={groupRef}
+          mode="translate"
+          size={0.8}
+          showY={false}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onChange={handleChange}
+        />
+      )}
+    </>
+  );
 }
 
 export const CampusScene: React.FC<CampusSceneProps> = ({
@@ -58,9 +134,10 @@ export const CampusScene: React.FC<CampusSceneProps> = ({
   edges,
   showJunctionMarkers = false,
   cameraMode = 'perspective',
-  activeSection: _activeSection = 'buildings',
+  activeSection = 'buildings',
   selectedJunctionId,
   onSelectJunction,
+  onJunctionTransform,
   selectedRoadId,
   onSelectRoad,
   onMapClick,
@@ -195,13 +272,22 @@ export const CampusScene: React.FC<CampusSceneProps> = ({
           </group>
         )}
 
-        {/* Buildings Layer with Subdued mode and TransformControls */}
+        {/* Selected Junction Interactive 3D Transform Gizmo */}
+        {activeSection === 'junctions-roads' && selectedJunctionNode && (
+          <JunctionGizmo
+            node={selectedJunctionNode}
+            onTransform={onJunctionTransform}
+            onTransformStart={handleTransformStart}
+            onTransformEnd={handleTransformEnd}
+          />
+        )}
+
+        {/* Buildings Layer with Custom GLB models and TransformControls */}
         <Buildings
           locations={locations}
           selectedLocation={selectedLocation}
           onSelectLocation={onSelectLocation}
           onDoubleClickLocation={handleDoubleClickBuilding}
-          subdued={false}
           transformMode={transformMode}
           onTransformChange={onBuildingTransform}
           onTransformStart={handleTransformStart}

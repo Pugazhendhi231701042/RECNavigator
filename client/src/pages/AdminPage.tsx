@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import type { Location, CategoryId, PathNode, Road, Vector3D, Entrance, RouteResult } from '../types';
 import {
@@ -600,6 +600,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     setHasUnsavedChanges(true);
   };
 
+  const handleJunctionGizmoTransform = useCallback((junctionId: string, newPos: Vector3D) => {
+    const targetNode = nodes.find(n => n.id === junctionId);
+    if (!targetNode) return;
+    const updatedNode: PathNode = {
+      ...targetNode,
+      position: {
+        x: Math.round(newPos.x),
+        y: 0,
+        z: Math.round(newPos.z),
+      },
+    };
+    onUpdateNode?.(updatedNode);
+    setHasUnsavedChanges(true);
+  }, [nodes, onUpdateNode]);
+
   const handleDeleteCurrentJunction = () => {
     if (!currentJunction) return;
     if (confirm(`Delete junction "${currentJunction.name}"? Roads passing through it will be updated.`)) {
@@ -949,6 +964,12 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
               <span>Test Route</span>
             </button>
           </div>
+
+          {/* Active Version Badge */}
+          <span className="hidden xl:inline-flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            v2.5 • Live 3D GLBs
+          </span>
         </div>
 
         {/* GROUP 2: CAMERA VIEW CONTROLS */}
@@ -1127,8 +1148,18 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
             locations={locations}
             selectedLocation={activeSection === 'buildings' ? currentBuilding : null}
             onSelectLocation={(loc) => {
-              setSelectedBuildingId(loc.id);
-              setActiveSection('buildings');
+              if (activeSection === 'buildings') {
+                setSelectedBuildingId(loc.id);
+              } else if (activeSection === 'junctions-roads') {
+                // In junctions-roads mode, selecting a building focuses its entrance junction without kicking user out!
+                const entId = (loc.entranceNodeIds && loc.entranceNodeIds.length > 0)
+                  ? loc.entranceNodeIds[0]
+                  : loc.nodeId;
+                if (entId) {
+                  setSelectedJunctionId(entId);
+                  setNetworkSubTab('junctions');
+                }
+              }
             }}
             activeRoute={testRouteResult}
             startLocation={null}
@@ -1148,6 +1179,7 @@ export const LOCATIONS: Location[] = ${JSON.stringify(locations, null, 2)};
               setActiveSection('junctions-roads');
               setNetworkSubTab('junctions');
             }}
+            onJunctionTransform={handleJunctionGizmoTransform}
             selectedRoadId={selectedRoadId}
             onSelectRoad={(roadId) => {
               setSelectedRoadId(roadId);
