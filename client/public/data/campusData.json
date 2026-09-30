@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:15:59.428Z",
+  "updatedAt": "2026-09-30T19:16:17.371Z",
   "locations": [
     {
       "id": "building_1358",
@@ -248,7 +248,7 @@
     },
     {
       "id": "node_ent_8209",
-      "name": "B Block Entrance 1",
+      "name": "B Block Entrance",
       "position": {
         "x": -69,
         "y": 0.2,
