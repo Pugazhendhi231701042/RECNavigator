@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T19:30:25.283Z",
+  "updatedAt": "2026-09-30T19:34:30.308Z",
   "locations": [
     {
       "id": "building_1358",
@@ -73,6 +73,27 @@
         }
       ],
       "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToHX0vTfuFAVFTQ9o1Ae31qwvK9B5-lG1GB5wulsYx3lIG6WM-F8B6uYY&s=10"
+    },
+    {
+      "id": "building_9086",
+      "name": "New Campus Building",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationY": 0,
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "modelKey": "Blackbuck-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
     }
   ],
   "nodes": [
