@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:51:40.860Z",
+  "updatedAt": "2026-09-30T18:52:02.905Z",
   "locations": [],
   "nodes": [
     {
@@ -217,7 +217,7 @@
     },
     {
       "id": "road_4140",
-      "name": "New Campus Boulevard",
+      "name": "New Horizot",
       "junctionIds": [
         "node_6739",
         "node_9606",
