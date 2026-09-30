@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:52:42.485Z",
+  "updatedAt": "2026-09-30T17:52:46.933Z",
   "locations": [
     {
       "id": "building_8912",
@@ -814,7 +814,7 @@
   "roads": [
     {
       "id": "road_0635",
-      "name": "Front 1",
+      "name": "Front 1 Horizontal",
       "junctionIds": [
         "node_building_8912_entrance",
         "node_ent_9426"
