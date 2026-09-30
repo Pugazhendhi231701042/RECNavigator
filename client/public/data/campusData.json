@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:12:29.637Z",
+  "updatedAt": "2026-09-30T20:12:45.786Z",
   "locations": [
     {
       "id": "building_1358",
@@ -279,7 +279,7 @@
         1,
         1
       ],
-      "modelKey": "Blackbuck-optimized.glb",
+      "modelKey": "rec-cafe-optimized.glb",
       "nodeId": "",
       "entranceNodeIds": [],
       "entrances": []
