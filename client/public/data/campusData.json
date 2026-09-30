@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T11:02:20.475Z",
+  "updatedAt": "2026-09-30T11:02:23.663Z",
   "locations": [
     {
       "id": "building_8912",
@@ -542,9 +542,9 @@
       },
       "rotationY": 0,
       "scale": [
-        21,
-        21,
-        21
+        25,
+        25,
+        25
       ],
       "modelKey": "Yippe (1)-optimized.glb",
       "nodeId": "node_building_5682_entrance",
