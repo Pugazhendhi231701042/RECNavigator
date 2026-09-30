@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:11:10.069Z",
+  "updatedAt": "2026-09-30T20:11:30.382Z",
   "locations": [
     {
       "id": "building_1358",
@@ -245,7 +245,7 @@
     {
       "id": "building_2169",
       "name": "Wokon",
-      "category": "academic",
+      "category": "food",
       "description": "Campus facility structure",
       "position": {
         "x": 173,
