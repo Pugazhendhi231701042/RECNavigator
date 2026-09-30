@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T18:28:34.085Z",
+  "updatedAt": "2026-09-30T18:28:35.889Z",
   "locations": [],
   "nodes": [
     {
@@ -55,7 +55,6 @@
       "name": "New Campus Boulevard",
       "junctionIds": [
         "node_2257",
-        "node_7554",
         "node_9177"
       ],
       "width": 10,
