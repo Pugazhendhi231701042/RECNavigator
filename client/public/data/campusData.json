@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T20:25:05.724Z",
+  "updatedAt": "2026-09-30T20:25:08.918Z",
   "locations": [
     {
       "id": "building_1358",
@@ -296,9 +296,9 @@
       },
       "rotationY": 0,
       "scale": [
-        1,
-        1,
-        1
+        135.1,
+        135.1,
+        135.1
       ],
       "modelKey": "Gym-optimized.glb",
       "nodeId": "",
