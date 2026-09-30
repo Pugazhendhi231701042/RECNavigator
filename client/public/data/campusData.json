@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:56:15.232Z",
+  "updatedAt": "2026-09-30T17:56:31.440Z",
   "locations": [
     {
       "id": "building_8912",
@@ -817,6 +817,7 @@
       "name": "Horizontal Road 1",
       "junctionIds": [
         "node_7852",
+        "node_building_7013_entrance",
         "node_building_8912_entrance",
         "node_0033",
         "node_7261",
@@ -826,10 +827,11 @@
       "description": "Campus pedestrian walkway",
       "segmentDistances": {
         "node_building_8912_entrance:::node_ent_9426": 94,
-        "node_7852:::node_building_8912_entrance": 202,
         "node_0033:::node_building_8912_entrance": 117,
         "node_0033:::node_7261": 91,
-        "node_5640:::node_7261": 121
+        "node_5640:::node_7261": 121,
+        "node_7852:::node_building_7013_entrance": 47,
+        "node_building_7013_entrance:::node_building_8912_entrance": 155
       }
     }
   ]
