@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T05:06:37.599Z",
+  "updatedAt": "2026-10-01T05:29:00.804Z",
   "locations": [
     {
       "id": "building_1358",
@@ -367,41 +367,6 @@
       "nodeId": "",
       "entranceNodeIds": [],
       "entrances": []
-    },
-    {
-      "id": "building_0979",
-      "name": "J Block",
-      "category": "academic",
-      "description": "Campus facility structure",
-      "position": {
-        "x": -9,
-        "y": 0,
-        "z": 45
-      },
-      "rotationY": 88,
-      "scale": [
-        41.1,
-        41.1,
-        41.1
-      ],
-      "modelKey": "J Block-optimized.glb",
-      "nodeId": "",
-      "entranceNodeIds": [
-        "node_ent_6912"
-      ],
-      "entrances": [
-        {
-          "id": "building_0979_ent_1",
-          "name": "Entrance 1",
-          "buildingId": "building_0979",
-          "junctionId": "node_ent_6912",
-          "position": {
-            "x": -5,
-            "y": 0.2,
-            "z": 27
-          }
-        }
-      ]
     }
   ],
   "nodes": [
@@ -584,15 +549,6 @@
         "y": 0.2,
         "z": 46
       }
-    },
-    {
-      "id": "node_ent_6912",
-      "name": "J Block Entrance 1",
-      "position": {
-        "x": -5,
-        "y": 0.2,
-        "z": 27
-      }
     }
   ],
   "roads": [
@@ -605,7 +561,6 @@
         "node_ent_5718",
         "node_0745",
         "node_7554",
-        "node_ent_6912",
         "node_9177"
       ],
       "width": 10,
@@ -792,15 +747,16 @@
     },
     {
       "id": "road_6388",
-      "name": "New Campus Boulevard",
+      "name": "Sub-Road 3",
       "junctionIds": [
-        "node_9177",
-        "node_7554"
+        "node_7554",
+        "node_ent_1400"
       ],
       "width": 10,
       "description": "Campus pedestrian walkway",
       "segmentDistances": {
-        "node_7554:::node_9177": 127
+        "node_7554:::node_9177": 127,
+        "node_7554:::node_ent_1400": 96
       }
     }
   ]
