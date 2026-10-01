@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T05:04:09.793Z",
+  "updatedAt": "2026-10-01T05:04:18.125Z",
   "locations": [
     {
       "id": "building_1358",
@@ -386,8 +386,22 @@
       ],
       "modelKey": "J Block-optimized.glb",
       "nodeId": "",
-      "entranceNodeIds": [],
-      "entrances": []
+      "entranceNodeIds": [
+        "node_ent_6912"
+      ],
+      "entrances": [
+        {
+          "id": "building_0979_ent_1",
+          "name": "Entrance 1",
+          "buildingId": "building_0979",
+          "junctionId": "node_ent_6912",
+          "position": {
+            "x": -5,
+            "y": 0.2,
+            "z": 27
+          }
+        }
+      ]
     }
   ],
   "nodes": [
@@ -569,6 +583,15 @@
         "x": -270,
         "y": 0.2,
         "z": 46
+      }
+    },
+    {
+      "id": "node_ent_6912",
+      "name": "J Block Entrance 1",
+      "position": {
+        "x": -5,
+        "y": 0.2,
+        "z": 27
       }
     }
   ],
