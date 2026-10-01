@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T07:09:32.374Z",
+  "updatedAt": "2026-10-01T07:10:06.252Z",
   "locations": [
     {
       "id": "building_1358",
@@ -253,8 +253,22 @@
       ],
       "modelKey": "Yippe (1)-optimized.glb",
       "nodeId": "",
-      "entranceNodeIds": [],
-      "entrances": []
+      "entranceNodeIds": [
+        "node_ent_6744"
+      ],
+      "entrances": [
+        {
+          "id": "building_8161_ent_5038",
+          "name": "Wokon Entrance 1 Gate",
+          "buildingId": "building_8161",
+          "junctionId": "node_ent_6744",
+          "position": {
+            "x": 169,
+            "y": 0.2,
+            "z": -392
+          }
+        }
+      ]
     },
     {
       "id": "building_2169",
