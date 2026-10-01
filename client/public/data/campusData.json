@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T05:02:32.222Z",
+  "updatedAt": "2026-10-01T05:02:48.092Z",
   "locations": [
     {
       "id": "building_1358",
@@ -370,7 +370,7 @@
     },
     {
       "id": "building_0979",
-      "name": "New Campus Building",
+      "name": "J block",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
