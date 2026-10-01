@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T05:29:00.804Z",
+  "updatedAt": "2026-10-01T05:28:48.208Z",
   "locations": [
     {
       "id": "building_1358",
@@ -549,6 +549,15 @@
         "y": 0.2,
         "z": 46
       }
+    },
+    {
+      "id": "node_ent_6912",
+      "name": "J Block Entrance 1",
+      "position": {
+        "x": -5,
+        "y": 0.2,
+        "z": 27
+      }
     }
   ],
   "roads": [
@@ -561,6 +570,7 @@
         "node_ent_5718",
         "node_0745",
         "node_7554",
+        "node_ent_6912",
         "node_9177"
       ],
       "width": 10,
