@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T07:07:22.240Z",
+  "updatedAt": "2026-10-01T07:09:07.968Z",
   "locations": [
     {
       "id": "building_1358",
@@ -274,8 +274,22 @@
       ],
       "modelKey": "Wokon-optimized.glb",
       "nodeId": "",
-      "entranceNodeIds": [],
-      "entrances": []
+      "entranceNodeIds": [
+        "node_ent_6744"
+      ],
+      "entrances": [
+        {
+          "id": "building_2169_ent_1",
+          "name": "Entrance 1",
+          "buildingId": "building_2169",
+          "junctionId": "node_ent_6744",
+          "position": {
+            "x": 169,
+            "y": 0.2,
+            "z": -392
+          }
+        }
+      ]
     },
     {
       "id": "building_6930",
@@ -626,6 +640,15 @@
         "x": 52,
         "y": 0.2,
         "z": -365
+      }
+    },
+    {
+      "id": "node_ent_6744",
+      "name": "Wokon Entrance 1",
+      "position": {
+        "x": 169,
+        "y": 0.2,
+        "z": -392
       }
     }
   ],
