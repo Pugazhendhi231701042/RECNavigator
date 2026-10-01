@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T06:58:25.860Z",
+  "updatedAt": "2026-10-01T07:00:07.660Z",
   "locations": [
     {
       "id": "building_1358",
@@ -337,8 +337,22 @@
       ],
       "modelKey": "Indoor Auditorium-optimized.glb",
       "nodeId": "",
-      "entranceNodeIds": [],
-      "entrances": []
+      "entranceNodeIds": [
+        "node_ent_6451"
+      ],
+      "entrances": [
+        {
+          "id": "building_6706_ent_1",
+          "name": "Entrance 1",
+          "buildingId": "building_6706",
+          "junctionId": "node_ent_6451",
+          "position": {
+            "x": -195,
+            "y": 0.2,
+            "z": 66
+          }
+        }
+      ]
     },
     {
       "id": "building_6535",
@@ -580,6 +594,15 @@
         "x": -474,
         "y": 0.2,
         "z": -228
+      }
+    },
+    {
+      "id": "node_ent_6451",
+      "name": "Indoor Auditorium Entrance 1",
+      "position": {
+        "x": -195,
+        "y": 0.2,
+        "z": 66
       }
     }
   ],
