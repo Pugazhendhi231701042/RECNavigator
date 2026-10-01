@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T05:05:11.258Z",
+  "updatedAt": "2026-10-01T05:06:20.981Z",
   "locations": [
     {
       "id": "building_1358",
@@ -775,6 +775,19 @@
         "node_7554:::node_9177": 127,
         "node_5696:::node_7554": 325,
         "node_3530:::node_5696": 85
+      }
+    },
+    {
+      "id": "road_9747",
+      "name": "New Campus Boulevard",
+      "junctionIds": [
+        "node_9177",
+        "node_7554"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127
       }
     }
   ]
