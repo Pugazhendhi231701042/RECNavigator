@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T02:32:52.705Z",
+  "updatedAt": "2026-10-01T05:02:32.222Z",
   "locations": [
     {
       "id": "building_1358",
@@ -364,6 +364,27 @@
         30
       ],
       "modelKey": "Mart (1)-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_0979",
+      "name": "New Campus Building",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotationY": 0,
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "modelKey": "Blackbuck-optimized.glb",
       "nodeId": "",
       "entranceNodeIds": [],
       "entrances": []
