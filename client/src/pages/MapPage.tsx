@@ -64,6 +64,14 @@ export const MapPage: React.FC<MapPageProps> = ({
   const [isNavigating, setIsNavigating] = useState<boolean>(false);
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
 
+  const hasAnyEntrance = (loc: Location | null): boolean => {
+    if (!loc) return false;
+    if (Array.isArray(loc.entrances) && loc.entrances.length > 0) return true;
+    if (Array.isArray(loc.entranceNodeIds) && loc.entranceNodeIds.length > 0) return true;
+    if (loc.nodeId && loc.nodeId.trim() !== '') return true;
+    return false;
+  };
+
   // Filter Locations by Search & Category
   const filteredLocations = useMemo(() => {
     return locations.filter((loc) => {
@@ -222,7 +230,7 @@ export const MapPage: React.FC<MapPageProps> = ({
           {/* Scrollable HUD Content Area */}
           <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
             {/* ---------------- DIRECTIONS FORM (OPENS ON BUTTON CLICK) ---------------- */}
-            {showDirections && (
+            {showDirections ? (
               <div className="space-y-3 pb-3 border-b border-slate-200/80 dark:border-slate-800/80 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="p-3.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-3">
                   <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
@@ -256,11 +264,14 @@ export const MapPage: React.FC<MapPageProps> = ({
                       className="w-full py-2 px-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       <option value="">-- Choose Starting Building --</option>
-                      {locations.map((loc) => (
-                        <option key={loc.id} value={loc.id}>
-                          📍 {loc.name}
-                        </option>
-                      ))}
+                      {locations.map((loc) => {
+                        const hasEnt = hasAnyEntrance(loc);
+                        return (
+                          <option key={loc.id} value={loc.id}>
+                            📍 {loc.name} {!hasEnt ? '(No Entrance)' : ''}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
 
@@ -291,11 +302,14 @@ export const MapPage: React.FC<MapPageProps> = ({
                       className="w-full py-2 px-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       <option value="">-- Choose Destination Building --</option>
-                      {locations.map((loc) => (
-                        <option key={loc.id} value={loc.id}>
-                          🏁 {loc.name}
-                        </option>
-                      ))}
+                      {locations.map((loc) => {
+                        const hasEnt = hasAnyEntrance(loc);
+                        return (
+                          <option key={loc.id} value={loc.id}>
+                            🏁 {loc.name} {!hasEnt ? '(No Entrance)' : ''}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>
@@ -377,15 +391,26 @@ export const MapPage: React.FC<MapPageProps> = ({
                 )}
 
                 {!activeRoute && startLocation && destinationLocation && (
-                  <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-xs text-rose-600 dark:text-rose-400">
-                    No connected road path found between the selected buildings. Check entrance connections in CAD Studio.
+                  <div className="p-3 bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-700 dark:text-amber-300 space-y-1">
+                    {!hasAnyEntrance(startLocation) || !hasAnyEntrance(destinationLocation) ? (
+                      <p className="font-semibold">
+                        ⚠️ {!hasAnyEntrance(startLocation) && !hasAnyEntrance(destinationLocation)
+                          ? `Both "${startLocation.name}" and "${destinationLocation.name}" are standalone structures without entrances.`
+                          : !hasAnyEntrance(startLocation)
+                          ? `"${startLocation.name}" is a standalone structure without entrances.`
+                          : `"${destinationLocation.name}" is a standalone structure without entrances.`}
+                      </p>
+                    ) : (
+                      <p>
+                        No connected walking route found between these buildings in the campus navigation graph.
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-
-            {/* ---------------- CAMPUS DIRECTORY (ALWAYS VISIBLE BELOW) ---------------- */}
-            <div className="space-y-4">
+            ) : (
+              /* ---------------- CAMPUS DIRECTORY (DISAPPEARS WHEN DIRECTIONS FORM IS OPENED) ---------------- */
+              <div className="space-y-4">
               {/* Search Bar */}
               <div className="relative">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -503,8 +528,9 @@ export const MapPage: React.FC<MapPageProps> = ({
                 </div>
               )}
             </div>
-          </div>
-        </aside>
+          )}
+        </div>
+      </aside>
       )}
 
       {/* 4. FLOATING MAP CONTROLS TOOLBAR (Right Side) */}

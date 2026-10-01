@@ -3,8 +3,6 @@ import { useFrame } from '@react-three/fiber';
 import {
   Vector3,
   Object3D,
-  CatmullRomCurve3,
-  LineCurve3,
   Shape,
   ExtrudeGeometry,
   InstancedMesh,
@@ -12,6 +10,7 @@ import {
 } from 'three';
 import { Line } from '@react-three/drei';
 import type { RouteResult } from '../../types';
+import { createSmoothPathFromNodes } from '../../utils/curvePath';
 
 interface RouteRendererProps {
   activeRoute: RouteResult | null;
@@ -24,61 +23,58 @@ export const RouteRenderer: React.FC<RouteRendererProps> = ({ activeRoute }) => 
   const destBeaconRef = useRef<Mesh>(null);
   const startRingRef = useRef<Mesh>(null);
 
-  // Construct smooth 3D path curve passing through all route waypoints
+  // Construct smooth 3D path curve strictly following road centerlines with rounded junction fillets
   const curve = useMemo(() => {
     if (!activeRoute || !activeRoute.nodes || activeRoute.nodes.length < 2) return null;
 
-    const pts = activeRoute.nodes.map(
-      n => new Vector3(n.position.x, (n.position.y || 0) + 0.25, n.position.z)
+    // Elevation of 0.12m sits directly on the road surface (road height is 0.09m)
+    return createSmoothPathFromNodes(
+      activeRoute.nodes.map(n => n.position),
+      3.5,
+      0.12
     );
-
-    if (pts.length === 2) {
-      return new LineCurve3(pts[0], pts[1]);
-    }
-    // Centripetal Catmull-Rom curve ensures smooth turning curvature without loops or overshooting
-    return new CatmullRomCurve3(pts, false, 'centripetal', 0.25);
   }, [activeRoute]);
 
   const totalLength = useMemo(() => (curve ? curve.getLength() : 0), [curve]);
 
   // Arrow spacing along the path (in meters)
-  const spacing = 3.6;
+  const spacing = 3.2;
   const maxArrows = useMemo(() => {
     if (totalLength <= 0) return 0;
     return Math.max(2, Math.ceil(totalLength / spacing) + 2);
   }, [totalLength, spacing]);
 
-  // Subtle path points for background route rail
+  // Subtle guide rail on the road surface beneath the flowing arrows
   const railPoints = useMemo(() => {
     if (!curve || totalLength <= 0) return [];
-    const ptsCount = Math.max(16, Math.min(100, Math.round(totalLength / 2.0)));
-    return curve.getPoints(ptsCount).map(p => new Vector3(p.x, p.y + 0.05, p.z));
+    const ptsCount = Math.max(16, Math.min(120, Math.round(totalLength / 2.0)));
+    return curve.getPoints(ptsCount).map(p => new Vector3(p.x, p.y - 0.01, p.z));
   }, [curve, totalLength]);
 
-  // 3D Extruded Sleek Directional Chevron Arrow
+  // 3D Extruded Sleek Directional Chevron Arrow (sized to sit comfortably inside a 10m road)
   const arrowGeometry = useMemo(() => {
     const shape = new Shape();
     // Tip at front (+Y in 2D)
-    shape.moveTo(0, 1.25);
-    // Right outer wing
-    shape.lineTo(1.05, -0.65);
+    shape.moveTo(0, 0.95);
+    // Right outer wing (width = 1.7m, well inside the 10m road)
+    shape.lineTo(0.85, -0.55);
     // Right inner notch
-    shape.lineTo(0.55, -0.65);
+    shape.lineTo(0.42, -0.55);
     // Center notch
     shape.lineTo(0, 0.0);
     // Left inner notch
-    shape.lineTo(-0.55, -0.65);
+    shape.lineTo(-0.42, -0.55);
     // Left outer wing
-    shape.lineTo(-1.05, -0.65);
+    shape.lineTo(-0.85, -0.55);
     shape.closePath();
 
     const geom = new ExtrudeGeometry(shape, {
-      depth: 0.12,
+      depth: 0.06,
       bevelEnabled: true,
       bevelSegments: 2,
       steps: 1,
-      bevelSize: 0.03,
-      bevelThickness: 0.03,
+      bevelSize: 0.02,
+      bevelThickness: 0.02,
     });
     // Rotate so shape lies in the horizontal XZ plane, pointing forward along +Z
     geom.rotateX(Math.PI / 2);
@@ -92,17 +88,17 @@ export const RouteRenderer: React.FC<RouteRendererProps> = ({ activeRoute }) => 
     const time = state.clock.getElapsedTime();
     if (destBeaconRef.current) {
       destBeaconRef.current.rotation.y = time * 2;
-      destBeaconRef.current.position.y = 3.2 + Math.sin(time * 3) * 0.4;
+      destBeaconRef.current.position.y = 3.0 + Math.sin(time * 3) * 0.35;
     }
     if (startRingRef.current) {
-      const ringScale = 1 + Math.sin(time * 4) * 0.15;
+      const ringScale = 1 + Math.sin(time * 4) * 0.12;
       startRingRef.current.scale.set(ringScale, ringScale, 1);
     }
 
     if (!curve || !instancedMeshRef.current || totalLength <= 0) return;
 
-    // Advance flow offset forward at ~5.5 meters per second
-    flowOffset.current = (flowOffset.current + delta * 5.5) % spacing;
+    // Advance flow offset forward at ~5.0 meters per second
+    flowOffset.current = (flowOffset.current + delta * 5.0) % spacing;
 
     for (let i = 0; i < maxArrows; i++) {
       const dist = i * spacing + flowOffset.current;
@@ -129,7 +125,8 @@ export const RouteRenderer: React.FC<RouteRendererProps> = ({ activeRoute }) => 
         const edgeDist = Math.min(dist, totalLength - dist);
         const fade = Math.min(1.0, Math.max(0.05, edgeDist / 2.0));
 
-        dummy.position.set(pt.x, pt.y + 0.35, pt.z);
+        // Position arrow directly on road surface
+        dummy.position.set(pt.x, pt.y, pt.z);
         dummy.rotation.set(pitch, yaw, 0);
         dummy.scale.set(fade, fade, fade);
         dummy.updateMatrix();
@@ -147,13 +144,13 @@ export const RouteRenderer: React.FC<RouteRendererProps> = ({ activeRoute }) => 
 
   return (
     <group>
-      {/* Subtle guide track beneath the flowing arrows */}
+      {/* Subtle guide track inside the road beneath the flowing arrows */}
       {railPoints.length >= 2 && (
         <Line
           points={railPoints}
           color="#0284C7"
-          lineWidth={4}
-          opacity={0.3}
+          lineWidth={2.5}
+          opacity={0.25}
           transparent
         />
       )}
@@ -166,7 +163,7 @@ export const RouteRenderer: React.FC<RouteRendererProps> = ({ activeRoute }) => 
         <meshStandardMaterial
           color="#00F0FF"
           emissive="#00D2FF"
-          emissiveIntensity={2.2}
+          emissiveIntensity={2.4}
           roughness={0.15}
           metalness={0.6}
           toneMapped={false}
@@ -175,25 +172,25 @@ export const RouteRenderer: React.FC<RouteRendererProps> = ({ activeRoute }) => 
 
       {/* Start Location Glowing Pulsing Ring */}
       {startNode && (
-        <group position={[startNode.position.x, (startNode.position.y || 0) + 0.28, startNode.position.z]}>
+        <group position={[startNode.position.x, (startNode.position.y || 0) + 0.12, startNode.position.z]}>
           <mesh ref={startRingRef} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.8, 2.5, 32]} />
-            <meshBasicMaterial color="#00F0FF" toneMapped={false} transparent opacity={0.8} />
+            <ringGeometry args={[1.5, 2.0, 32]} />
+            <meshBasicMaterial color="#00F0FF" toneMapped={false} transparent opacity={0.85} />
           </mesh>
         </group>
       )}
 
       {/* Destination Location Glowing Target Ring & Hovering Beacon */}
       {destNode && (
-        <group position={[destNode.position.x, (destNode.position.y || 0) + 0.28, destNode.position.z]}>
+        <group position={[destNode.position.x, (destNode.position.y || 0) + 0.12, destNode.position.z]}>
           <mesh rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[2.4, 3.2, 32]} />
+            <ringGeometry args={[2.0, 2.7, 32]} />
             <meshBasicMaterial color="#10B981" toneMapped={false} transparent opacity={0.85} />
           </mesh>
 
           {/* Floating animated crystal beacon at destination */}
-          <mesh ref={destBeaconRef} position={[0, 3.2, 0]}>
-            <octahedronGeometry args={[0.9, 0]} />
+          <mesh ref={destBeaconRef} position={[0, 2.8, 0]}>
+            <octahedronGeometry args={[0.85, 0]} />
             <meshStandardMaterial
               color="#10B981"
               emissive="#34D399"

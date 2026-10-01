@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
-import { Vector3, CatmullRomCurve3, LineCurve3, BufferGeometry, Float32BufferAttribute, Curve } from 'three';
+import { Vector3, BufferGeometry, Float32BufferAttribute, Curve } from 'three';
 import type { PathEdge, PathNode, Road } from '../../types';
 import { PATH_NODES as DEFAULT_NODES, PATH_EDGES as DEFAULT_EDGES } from '../../data/recCampusData';
+import { createSmoothPathFromNodes } from '../../utils/curvePath';
 
 interface RoadsProps {
   edges?: PathEdge[];
@@ -155,10 +156,11 @@ const CurvedRoadItem: React.FC<{
       return { roadGeom: null, dashGeom: null };
     }
 
-    // Centripetal Catmull-Rom curve ensures smooth turning curvature without loops or overshooting
-    const curve = pts.length >= 3
-      ? new CatmullRomCurve3(pts, false, 'centripetal', 0.25)
-      : new LineCurve3(pts[0], pts[1]);
+    // Filleted smooth path ensures straight centerlines with rounded corner arcs inside junction hubs
+    const curve = createSmoothPathFromNodes(pts, 3.5, 0);
+    if (!curve) {
+      return { roadGeom: null, dashGeom: null };
+    }
 
     const rG = createCurvedRoadGeometry(curve, roadWidth, roadHeight);
     const dG = createCurvedDashedGeometry(curve, 3.2, 2.4, 0.45, roadHeight + 0.02);
