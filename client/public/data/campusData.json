@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T07:04:42.901Z",
+  "updatedAt": "2026-10-01T07:04:44.133Z",
   "locations": [
     {
       "id": "building_1358",
@@ -695,8 +695,8 @@
       "name": "Vertical Road 1",
       "junctionIds": [
         "node_5910",
-        "node_ent_3393",
         "node_ent_6807",
+        "node_ent_3393",
         "node_0411",
         "node_2257"
       ],
