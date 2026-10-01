@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T07:09:25.890Z",
+  "updatedAt": "2026-10-01T07:09:32.374Z",
   "locations": [
     {
       "id": "building_1358",
@@ -803,8 +803,8 @@
       "name": "D Block Avenue Road",
       "junctionIds": [
         "node_0572",
-        "node_6884",
-        "node_ent_6744"
+        "node_ent_6744",
+        "node_6884"
       ],
       "width": 10,
       "description": "Campus pedestrian walkway",
