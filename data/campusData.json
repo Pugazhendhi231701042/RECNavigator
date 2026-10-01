@@ -1,146 +1,151 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-30T17:56:45.971Z",
+  "updatedAt": "2026-10-01T02:32:52.705Z",
   "locations": [
     {
-      "id": "building_8912",
+      "id": "building_1358",
       "name": "A Block",
       "category": "academic",
-      "description": "Campus facility structure",
+      "description": "Admin cum Academic Block",
       "position": {
-        "x": -268,
+        "x": -263,
         "y": 0,
-        "z": -17
+        "z": 0
       },
-      "rotationY": 273,
+      "rotationY": 272,
       "scale": [
-        210,
-        210,
-        210
+        212.05,
+        212.05,
+        212.05
       ],
       "modelKey": "block-a-optimized.glb",
-      "nodeId": "node_building_8912_entrance",
+      "nodeId": "node_ent_5718",
       "entranceNodeIds": [
-        "node_building_8912_entrance",
-        "node_ent_4967",
-        "node_ent_9426",
-        "node_ent_6010"
+        "node_ent_5718"
       ],
       "entrances": [
         {
-          "id": "building_8912_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_8912",
-          "junctionId": "node_building_8912_entrance",
+          "id": "building_1358_ent_1",
+          "name": "Entrance 1",
+          "buildingId": "building_1358",
+          "junctionId": "node_ent_5718",
           "position": {
-            "x": -265,
+            "x": -270,
             "y": 0.2,
-            "z": 38
-          }
-        },
-        {
-          "id": "building_8912_ent_2",
-          "name": "Entrance 2",
-          "buildingId": "building_8912",
-          "junctionId": "node_ent_4967",
-          "position": {
-            "x": -153,
-            "y": 0.2,
-            "z": -35
-          }
-        },
-        {
-          "id": "building_8912_ent_5953",
-          "name": "A Block Entrance 2 Gate",
-          "buildingId": "building_8912",
-          "junctionId": "node_ent_9426",
-          "position": {
-            "x": -263,
-            "y": 0.2,
-            "z": -81
-          }
-        },
-        {
-          "id": "building_8912_ent_2889",
-          "name": "A Block Entrance 3 Gate",
-          "buildingId": "building_8912",
-          "junctionId": "node_ent_6010",
-          "position": {
-            "x": -370,
-            "y": 0.2,
-            "z": -20
+            "z": 46
           }
         }
-      ]
+      ],
+      "image": "https://pages.rajalakshmi.org/image/banner-1.jpg"
     },
     {
-      "id": "building_2972",
+      "id": "building_9936",
       "name": "B Block",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
-        "x": -64,
+        "x": -61,
         "y": 0,
-        "z": -125
+        "z": -132
       },
-      "rotationY": 273,
+      "rotationY": 272,
       "scale": [
-        211,
-        211,
-        211
+        230,
+        230,
+        230
       ],
       "modelKey": "block-b-optimized.glb",
-      "nodeId": "node_building_2972_entrance",
+      "nodeId": "",
       "entranceNodeIds": [
-        "node_building_2972_entrance",
-        "node_ent_5923",
-        "node_ent_0894"
+        "node_ent_1400"
       ],
       "entrances": [
         {
-          "id": "building_2972_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_2972",
-          "junctionId": "node_building_2972_entrance",
+          "id": "building_9936_ent_4069",
+          "name": "B Block Entrance 1 Gate",
+          "buildingId": "building_9936",
+          "junctionId": "node_ent_1400",
           "position": {
-            "x": -64,
+            "x": -62,
             "y": 0.2,
-            "z": -72
-          }
-        },
-        {
-          "id": "building_2972_ent_2",
-          "name": "Entrance 2",
-          "buildingId": "building_2972",
-          "junctionId": "node_ent_5923",
-          "position": {
-            "x": -70,
-            "y": 0.2,
-            "z": -134
-          }
-        },
-        {
-          "id": "building_2972_ent_3",
-          "name": "Entrance 3",
-          "buildingId": "building_2972",
-          "junctionId": "node_ent_0894",
-          "position": {
-            "x": -181,
-            "y": 0.2,
-            "z": -109
+            "z": -67
           }
         }
-      ]
+      ],
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToHX0vTfuFAVFTQ9o1Ae31qwvK9B5-lG1GB5wulsYx3lIG6WM-F8B6uYY&s=10"
     },
     {
-      "id": "building_6269",
+      "id": "building_9086",
+      "name": "Tech Lounge",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": -418,
+        "y": -7,
+        "z": 0
+      },
+      "rotationY": 271,
+      "scale": [
+        70,
+        70,
+        70
+      ],
+      "modelKey": "Tech lounge-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_6988",
+      "name": "C Block",
+      "category": "academic",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 21,
+        "y": 0,
+        "z": -382
+      },
+      "rotationY": 0,
+      "scale": [
+        95,
+        95,
+        95
+      ],
+      "modelKey": "C - Block-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_4542",
+      "name": "D Block",
+      "category": "academic",
+      "description": "Academic Block",
+      "position": {
+        "x": 98,
+        "y": 0,
+        "z": -337
+      },
+      "rotationY": 353,
+      "scale": [
+        117.05,
+        117.05,
+        117.05
+      ],
+      "modelKey": "block_d-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_5997",
       "name": "Idea Factory",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
-        "x": 173,
+        "x": 192,
         "y": 0,
-        "z": -220
+        "z": -219
       },
       "rotationY": 90,
       "scale": [
@@ -149,691 +154,582 @@
         80
       ],
       "modelKey": "idea factory-optimized.glb",
-      "nodeId": "node_building_6269_entrance",
-      "entranceNodeIds": [
-        "node_building_6269_entrance"
-      ],
-      "entrances": [
-        {
-          "id": "building_6269_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_6269",
-          "junctionId": "node_building_6269_entrance",
-          "position": {
-            "x": 178,
-            "y": 0.2,
-            "z": -251
-          }
-        }
-      ]
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
     },
     {
-      "id": "building_2229",
-      "name": "Rajalakshmi School of Architecture (TIFAC)",
+      "id": "building_3710",
+      "name": "Rajalakshmi School of Architecture (TIFAC Block)",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
-        "x": 257,
-        "y": 1,
-        "z": -316
+        "x": 284,
+        "y": 0,
+        "z": -315
+      },
+      "rotationY": 272,
+      "scale": [
+        169.1,
+        169.1,
+        169.1
+      ],
+      "modelKey": "TIFFAC-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_1257",
+      "name": "REC BlackBucks",
+      "category": "food",
+      "description": "Food Spot!",
+      "position": {
+        "x": 33,
+        "y": 0,
+        "z": -11
+      },
+      "rotationY": 276,
+      "scale": [
+        25,
+        25,
+        25
+      ],
+      "modelKey": "Blackbuck-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_4143",
+      "name": "Dominos",
+      "category": "food",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 1,
+        "y": 0,
+        "z": -8
+      },
+      "rotationY": 274,
+      "scale": [
+        27,
+        27,
+        27
+      ],
+      "modelKey": "dominos-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_8161",
+      "name": "Yippee",
+      "category": "food",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 200,
+        "y": 0,
+        "z": -413
       },
       "rotationY": 270,
       "scale": [
-        170,
-        170,
-        170
+        27,
+        27,
+        27
       ],
-      "modelKey": "TIFFAC-optimized.glb",
-      "nodeId": "node_building_2229_entrance",
-      "entranceNodeIds": [
-        "node_building_2229_entrance"
-      ],
-      "entrances": [
-        {
-          "id": "building_2229_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_2229",
-          "junctionId": "node_building_2229_entrance",
-          "position": {
-            "x": 257,
-            "y": 0.2,
-            "z": -265
-          }
-        }
-      ]
+      "modelKey": "Yippe (1)-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
     },
     {
-      "id": "building_5948",
-      "name": "D Block",
-      "category": "academic",
+      "id": "building_2169",
+      "name": "Wokon",
+      "category": "food",
       "description": "Campus facility structure",
       "position": {
-        "x": 102,
+        "x": 173,
         "y": 0,
-        "z": -338
+        "z": -413
+      },
+      "rotationY": 270,
+      "scale": [
+        27,
+        27,
+        27
+      ],
+      "modelKey": "Wokon-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_6930",
+      "name": "REC Cafe",
+      "category": "food",
+      "description": "Campus facility structure",
+      "position": {
+        "x": 91,
+        "y": 0,
+        "z": -233
+      },
+      "rotationY": 180,
+      "scale": [
+        80,
+        80,
+        80
+      ],
+      "modelKey": "rec-cafe-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_7352",
+      "name": "REC Gym",
+      "category": "sports",
+      "description": "Campus facility structure",
+      "position": {
+        "x": -416,
+        "y": 0,
+        "z": -270
+      },
+      "rotationY": 270,
+      "scale": [
+        100,
+        100,
+        100
+      ],
+      "modelKey": "Gym-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
+    },
+    {
+      "id": "building_6706",
+      "name": "Indoor Auditorium",
+      "category": "admin",
+      "description": "Campus facility structure",
+      "position": {
+        "x": -542,
+        "y": 0,
+        "z": -319
       },
       "rotationY": 0,
       "scale": [
-        115,
-        115,
-        115
+        110.1,
+        110.1,
+        110.1
       ],
-      "modelKey": "block_d-optimized.glb",
-      "nodeId": "node_building_5948_entrance",
-      "entranceNodeIds": [
-        "node_building_5948_entrance",
-        "node_ent_2358",
-        "node_ent_3301"
-      ],
-      "entrances": [
-        {
-          "id": "building_5948_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_5948",
-          "junctionId": "node_building_5948_entrance",
-          "position": {
-            "x": 50,
-            "y": 0.2,
-            "z": -338
-          }
-        },
-        {
-          "id": "building_5948_ent_2",
-          "name": "Entrance 2",
-          "buildingId": "building_5948",
-          "junctionId": "node_ent_2358",
-          "position": {
-            "x": 50,
-            "y": 0.2,
-            "z": -355
-          }
-        },
-        {
-          "id": "building_5948_ent_3",
-          "name": "Entrance 3",
-          "buildingId": "building_5948",
-          "junctionId": "node_ent_3301",
-          "position": {
-            "x": 149,
-            "y": 0.2,
-            "z": -344
-          }
-        }
-      ]
+      "modelKey": "Indoor Auditorium-optimized.glb",
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
     },
     {
-      "id": "building_4404",
-      "name": "C Block",
-      "category": "academic",
-      "description": "Campus facility structure",
-      "position": {
-        "x": 12,
-        "y": 0,
-        "z": -385
-      },
-      "rotationY": 0,
-      "scale": [
-        111,
-        111,
-        111
-      ],
-      "modelKey": "C - Block-optimized.glb",
-      "nodeId": "node_building_4404_entrance",
-      "entranceNodeIds": [
-        "node_building_4404_entrance",
-        "node_ent_2077"
-      ],
-      "entrances": [
-        {
-          "id": "building_4404_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_4404",
-          "junctionId": "node_building_4404_entrance",
-          "position": {
-            "x": 36,
-            "y": 0.2,
-            "z": -386
-          }
-        },
-        {
-          "id": "building_4404_ent_2",
-          "name": "Entrance 2",
-          "buildingId": "building_4404",
-          "junctionId": "node_ent_2077",
-          "position": {
-            "x": 39,
-            "y": 0.2,
-            "z": -433
-          }
-        }
-      ]
-    },
-    {
-      "id": "building_7013",
-      "name": "Tech  Lounge",
-      "category": "academic",
-      "description": "Campus facility structure",
-      "position": {
-        "x": -420,
-        "y": -5,
-        "z": 0
-      },
-      "rotationY": 271,
-      "scale": [
-        71,
-        71,
-        71
-      ],
-      "modelKey": "Tech lounge-optimized.glb",
-      "nodeId": "node_building_7013_entrance",
-      "entranceNodeIds": [
-        "node_building_7013_entrance",
-        "node_ent_9245"
-      ],
-      "entrances": [
-        {
-          "id": "building_7013_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_7013",
-          "junctionId": "node_building_7013_entrance",
-          "position": {
-            "x": 0,
-            "y": 0.2,
-            "z": 15
-          }
-        },
-        {
-          "id": "building_7013_ent_2",
-          "name": "Entrance 2",
-          "buildingId": "building_7013",
-          "junctionId": "node_ent_9245",
-          "position": {
-            "x": -416,
-            "y": 0.2,
-            "z": -44
-          }
-        }
-      ]
-    },
-    {
-      "id": "building_8973",
+      "id": "building_6535",
       "name": "Fresh Crush",
       "category": "food",
       "description": "Campus facility structure",
       "position": {
-        "x": -207,
+        "x": -205,
         "y": 0,
         "z": -239
       },
       "rotationY": 0,
       "scale": [
-        20,
-        20,
-        20
+        16,
+        16,
+        16
       ],
       "modelKey": "Freshcrush-optimized.glb",
-      "nodeId": "node_building_8973_entrance",
-      "entranceNodeIds": [
-        "node_building_8973_entrance"
-      ],
-      "entrances": [
-        {
-          "id": "building_8973_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_8973",
-          "junctionId": "node_building_8973_entrance",
-          "position": {
-            "x": -188,
-            "y": 0.2,
-            "z": -245
-          }
-        }
-      ]
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
     },
     {
-      "id": "building_6901",
-      "name": "REC Gym",
-      "category": "sports",
-      "description": "Campus facility structure",
-      "position": {
-        "x": -422,
-        "y": 0,
-        "z": -257
-      },
-      "rotationY": 270,
-      "scale": [
-        100.69,
-        100.69,
-        100.69
-      ],
-      "modelKey": "Gym-optimized.glb",
-      "nodeId": "node_building_6901_entrance",
-      "entranceNodeIds": [
-        "node_building_6901_entrance"
-      ],
-      "entrances": [
-        {
-          "id": "building_6901_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_6901",
-          "junctionId": "node_building_6901_entrance",
-          "position": {
-            "x": -473,
-            "y": 0.2,
-            "z": -208
-          }
-        }
-      ]
-    },
-    {
-      "id": "building_7317",
-      "name": "Indoor Auditorium",
+      "id": "building_0049",
+      "name": "REC Mart",
       "category": "academic",
       "description": "Campus facility structure",
       "position": {
-        "x": -548,
+        "x": -157,
         "y": 0,
-        "z": -346
+        "z": -231
       },
-      "rotationY": 0,
+      "rotationY": 90,
       "scale": [
-        111,
-        111,
-        111
-      ],
-      "modelKey": "Indoor Auditorium-optimized.glb",
-      "nodeId": "node_building_7317_entrance",
-      "entranceNodeIds": [
-        "node_building_7317_entrance"
-      ],
-      "entrances": [
-        {
-          "id": "building_7317_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_7317",
-          "junctionId": "node_building_7317_entrance",
-          "position": {
-            "x": -477,
-            "y": 0.2,
-            "z": -351
-          }
-        }
-      ]
-    },
-    {
-      "id": "building_4085",
-      "name": "REC Mart",
-      "category": "food",
-      "description": "Campus facility structure",
-      "position": {
-        "x": -155,
-        "y": 0,
-        "z": -218
-      },
-      "rotationY": 92,
-      "scale": [
-        35,
-        35,
-        35
+        30,
+        30,
+        30
       ],
       "modelKey": "Mart (1)-optimized.glb",
-      "nodeId": "node_building_4085_entrance",
-      "entranceNodeIds": [
-        "node_building_4085_entrance"
-      ],
-      "entrances": [
-        {
-          "id": "building_4085_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_4085",
-          "junctionId": "node_building_4085_entrance",
-          "position": {
-            "x": -182,
-            "y": 0.2,
-            "z": -223
-          }
-        }
-      ]
-    },
-    {
-      "id": "building_6202",
-      "name": "Wokon",
-      "category": "food",
-      "description": "Campus facility structure",
-      "position": {
-        "x": 179,
-        "y": 0,
-        "z": -430
-      },
-      "rotationY": 270,
-      "scale": [
-        25,
-        25,
-        25
-      ],
-      "modelKey": "Wokon-optimized.glb",
-      "nodeId": "node_building_6202_entrance",
-      "entranceNodeIds": [
-        "node_building_6202_entrance"
-      ],
-      "entrances": [
-        {
-          "id": "building_6202_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_6202",
-          "junctionId": "node_building_6202_entrance",
-          "position": {
-            "x": 174,
-            "y": 0.2,
-            "z": -405
-          }
-        }
-      ]
-    },
-    {
-      "id": "building_5682",
-      "name": "Yippee",
-      "category": "food",
-      "description": "Campus facility structure",
-      "position": {
-        "x": 208,
-        "y": 0,
-        "z": -429
-      },
-      "rotationY": 270,
-      "scale": [
-        25,
-        25,
-        25
-      ],
-      "modelKey": "Yippe (1)-optimized.glb",
-      "nodeId": "node_building_5682_entrance",
-      "entranceNodeIds": [
-        "node_building_5682_entrance"
-      ],
-      "entrances": [
-        {
-          "id": "building_5682_ent_1",
-          "name": "Main Entrance",
-          "buildingId": "building_5682",
-          "junctionId": "node_building_5682_entrance",
-          "position": {
-            "x": 211,
-            "y": 0.2,
-            "z": -404
-          }
-        }
-      ]
+      "nodeId": "",
+      "entranceNodeIds": [],
+      "entrances": []
     }
   ],
   "nodes": [
     {
-      "id": "node_building_8912_entrance",
-      "name": "A Block Main Entrance",
+      "id": "node_9177",
+      "name": "BlackBucks Corner",
       "position": {
-        "x": -265,
-        "y": 0.2,
-        "z": 38
+        "x": 65,
+        "y": 0,
+        "z": 20
       }
     },
     {
-      "id": "node_ent_9426",
-      "name": "A Block Back Entrance",
+      "id": "node_7554",
+      "name": "#REC Corner",
       "position": {
-        "x": -263,
-        "y": 0.2,
-        "z": -56
+        "x": -62,
+        "y": 0,
+        "z": 29
       }
     },
     {
-      "id": "node_ent_6010",
-      "name": "A Block Right Entrance",
+      "id": "node_0745",
+      "name": "A Block Right Corner - Front",
       "position": {
-        "x": -370,
-        "y": 0.2,
-        "z": -20
+        "x": -146,
+        "y": 0,
+        "z": 29
       }
     },
     {
-      "id": "node_ent_4967",
-      "name": "A Block Left Entrance ",
+      "id": "node_3530",
+      "name": "A Block Left Corner - Front",
       "position": {
-        "x": -159,
+        "x": -374,
         "y": 0.2,
-        "z": -20
+        "z": 33
       }
     },
     {
-      "id": "node_building_2972_entrance",
-      "name": "New Building Entrance",
+      "id": "node_2257",
+      "name": "TechLounge Corner - Front",
       "position": {
-        "x": -64,
+        "x": -468,
+        "y": 0,
+        "z": 35
+      }
+    },
+    {
+      "id": "node_0411",
+      "name": "TechLounge Corner - Back",
+      "position": {
+        "x": -466,
+        "y": 0,
+        "z": -48
+      }
+    },
+    {
+      "id": "node_5696",
+      "name": "A Block Left Corner - Back",
+      "position": {
+        "x": -377,
+        "y": 0.2,
+        "z": -52
+      }
+    },
+    {
+      "id": "node_7003",
+      "name": "A Block Right Corner - Back",
+      "position": {
+        "x": -149,
+        "y": 0,
+        "z": -63
+      }
+    },
+    {
+      "id": "node_1688",
+      "name": "BB Court Junction",
+      "position": {
+        "x": -185,
+        "y": 0,
+        "z": -62
+      }
+    },
+    {
+      "id": "node_1807",
+      "name": "B Block Right Corner",
+      "position": {
+        "x": 59,
         "y": 0.2,
         "z": -72
       }
     },
     {
-      "id": "node_ent_5923",
-      "name": "B Block Entrance 2",
+      "id": "node_5910",
+      "name": "Girls Hostel Junction",
       "position": {
-        "x": -70,
-        "y": 0.2,
-        "z": -134
+        "x": -482,
+        "y": 0,
+        "z": -430
       }
     },
     {
-      "id": "node_ent_0894",
-      "name": "B Block Entrance 3",
+      "id": "node_3296",
+      "name": "Mess Junction",
       "position": {
-        "x": -181,
+        "x": -192,
         "y": 0.2,
-        "z": -109
+        "z": -440
       }
     },
     {
-      "id": "node_building_6269_entrance",
-      "name": "Idea Factory Entrance",
+      "id": "node_8663",
+      "name": "C Block Corner",
       "position": {
-        "x": 178,
-        "y": 0.2,
-        "z": -251
+        "x": 49,
+        "y": 0,
+        "z": -446
       }
     },
     {
-      "id": "node_building_2229_entrance",
-      "name": "TIFAC Main Entrance",
+      "id": "node_6739",
+      "name": "Ground Entrance",
       "position": {
-        "x": 257,
-        "y": 0.2,
-        "z": -265
+        "x": -191,
+        "y": 0,
+        "z": -278
       }
     },
     {
-      "id": "node_ent_6899",
-      "name": "Rajalakshmi School of Architecture (TIFAC) Entrance 2",
+      "id": "node_9606",
+      "name": "Hut Entrance",
       "position": {
-        "x": 201,
+        "x": -73,
         "y": 0.2,
-        "z": -283
+        "z": -280
       }
     },
     {
-      "id": "node_building_5948_entrance",
-      "name": "New Building Entrance",
+      "id": "node_7250",
+      "name": "REC Cafe Junction",
       "position": {
-        "x": 50,
+        "x": 49,
         "y": 0.2,
-        "z": -338
+        "z": -279
       }
     },
     {
-      "id": "node_ent_2358",
-      "name": "D Block Entrance 2",
+      "id": "node_6884",
+      "name": "REC Logo Junction",
       "position": {
-        "x": 50,
+        "x": 140,
         "y": 0.2,
-        "z": -355
+        "z": -282
       }
     },
     {
-      "id": "node_ent_3301",
-      "name": "D Block Entrance 3",
+      "id": "node_0572",
+      "name": "D Block Avenue",
       "position": {
-        "x": 149,
+        "x": 51,
         "y": 0.2,
-        "z": -344
+        "z": -409
       }
     },
     {
-      "id": "node_building_4404_entrance",
-      "name": "New Building Entrance",
+      "id": "node_ent_1400",
+      "name": "B Block Entrance 1",
       "position": {
-        "x": 36,
+        "x": -62,
         "y": 0.2,
-        "z": -386
+        "z": -67
       }
     },
     {
-      "id": "node_ent_2077",
-      "name": "C Block Entrance 2",
+      "id": "node_ent_5718",
+      "name": "A Block Entrance 1",
       "position": {
-        "x": 39,
+        "x": -270,
         "y": 0.2,
-        "z": -433
-      }
-    },
-    {
-      "id": "node_building_7013_entrance",
-      "name": "Tech Lounge front entrance",
-      "position": {
-        "x": -420,
-        "y": 0.2,
-        "z": 31
-      }
-    },
-    {
-      "id": "node_ent_9245",
-      "name": "Tech  Lounge Entrance 2",
-      "position": {
-        "x": -416,
-        "y": 0.2,
-        "z": -44
-      }
-    },
-    {
-      "id": "node_building_8973_entrance",
-      "name": "New Building Entrance",
-      "position": {
-        "x": -188,
-        "y": 0.2,
-        "z": -245
-      }
-    },
-    {
-      "id": "node_building_6901_entrance",
-      "name": "New Building Entrance",
-      "position": {
-        "x": -473,
-        "y": 0.2,
-        "z": -208
-      }
-    },
-    {
-      "id": "node_building_7317_entrance",
-      "name": "New Building Entrance",
-      "position": {
-        "x": -477,
-        "y": 0.2,
-        "z": -351
-      }
-    },
-    {
-      "id": "node_building_4085_entrance",
-      "name": "New Building Entrance",
-      "position": {
-        "x": -182,
-        "y": 0.2,
-        "z": -223
-      }
-    },
-    {
-      "id": "node_building_6202_entrance",
-      "name": "New Building Entrance",
-      "position": {
-        "x": 174,
-        "y": 0.2,
-        "z": -405
-      }
-    },
-    {
-      "id": "node_building_5682_entrance",
-      "name": "New Building Entrance",
-      "position": {
-        "x": 211,
-        "y": 0.2,
-        "z": -404
-      }
-    },
-    {
-      "id": "node_7852",
-      "name": "Tech LOunge Left Corner",
-      "position": {
-        "x": -467,
-        "y": 0.2,
-        "z": 36
-      }
-    },
-    {
-      "id": "node_5640",
-      "name": "Blackbucks Corner",
-      "position": {
-        "x": 62,
-        "y": 0.2,
-        "z": 17
-      }
-    },
-    {
-      "id": "node_7261",
-      "name": "ATM Corner",
-      "position": {
-        "x": -58,
-        "y": 0.2,
-        "z": 31
-      }
-    },
-    {
-      "id": "node_0033",
-      "name": "A Block Front Right Corner",
-      "position": {
-        "x": -149,
-        "y": 0.2,
-        "z": 27
+        "z": 46
       }
     }
   ],
   "roads": [
     {
-      "id": "road_0635",
+      "id": "road_9790",
       "name": "Horizontal Road 1",
       "junctionIds": [
-        "node_7852",
-        "node_building_7013_entrance",
-        "node_building_8912_entrance",
-        "node_0033",
-        "node_7261",
-        "node_5640"
+        "node_2257",
+        "node_3530",
+        "node_ent_5718",
+        "node_0745",
+        "node_7554",
+        "node_9177"
       ],
       "width": 10,
       "description": "Campus pedestrian walkway",
       "segmentDistances": {
-        "node_building_8912_entrance:::node_ent_9426": 94,
-        "node_0033:::node_building_8912_entrance": 117,
-        "node_0033:::node_7261": 91,
-        "node_5640:::node_7261": 121,
-        "node_7852:::node_building_7013_entrance": 47,
-        "node_building_7013_entrance:::node_building_8912_entrance": 155
+        "node_7554:::node_9177": 127,
+        "node_2257:::node_7554": 406,
+        "node_3530:::node_9177": 439,
+        "node_0745:::node_9177": 211,
+        "node_8663:::node_9177": 466,
+        "node_9177:::node_ent_5718": 336
+      }
+    },
+    {
+      "id": "road_1425",
+      "name": "Horizontal Road 2",
+      "junctionIds": [
+        "node_0411",
+        "node_5696",
+        "node_1688",
+        "node_7003",
+        "node_ent_1400",
+        "node_1807"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_0411:::node_7554": 411,
+        "node_5696:::node_7554": 325,
+        "node_1688:::node_5696": 192,
+        "node_1688:::node_7003": 36,
+        "node_1807:::node_7003": 208,
+        "node_1807:::node_ent_1400": 121
+      }
+    },
+    {
+      "id": "road_4847",
+      "name": "Horizontal Road 3",
+      "junctionIds": [
+        "node_5910",
+        "node_3296",
+        "node_8663"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_5910:::node_7554": 619,
+        "node_3296:::node_9177": 527,
+        "node_3296:::node_8663": 226
+      }
+    },
+    {
+      "id": "road_4140",
+      "name": "New Horizontal Road",
+      "junctionIds": [
+        "node_6739",
+        "node_9606",
+        "node_7250",
+        "node_6884"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_6739:::node_7554": 333,
+        "node_7554:::node_9606": 309,
+        "node_7250:::node_9606": 122,
+        "node_6884:::node_7250": 91
+      }
+    },
+    {
+      "id": "road_5355",
+      "name": "Vertical Road 1",
+      "junctionIds": [
+        "node_5910",
+        "node_0411",
+        "node_2257"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_5910:::node_7554": 622,
+        "node_0411:::node_7554": 411,
+        "node_0411:::node_2257": 83
+      }
+    },
+    {
+      "id": "road_7166",
+      "name": "Vertical Road 2",
+      "junctionIds": [
+        "node_3296",
+        "node_6739",
+        "node_1688"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_3296:::node_7554": 487,
+        "node_1688:::node_7554": 153,
+        "node_1688:::node_6739": 216
+      }
+    },
+    {
+      "id": "road_6628",
+      "name": "Vertical Road 3",
+      "junctionIds": [
+        "node_8663",
+        "node_7250",
+        "node_1807",
+        "node_9177"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_7554:::node_8663": 488,
+        "node_7250:::node_7554": 327,
+        "node_1807:::node_7250": 207,
+        "node_1807:::node_9177": 92
+      }
+    },
+    {
+      "id": "road_4154",
+      "name": "D Block Avenue Road",
+      "junctionIds": [
+        "node_0572",
+        "node_6884"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_0572:::node_7554": 452,
+        "node_6884:::node_7554": 371
+      }
+    },
+    {
+      "id": "road_0001",
+      "name": "Sub - Road 1",
+      "junctionIds": [
+        "node_7003",
+        "node_0745"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_7003:::node_7554": 127,
+        "node_0745:::node_7003": 92
+      }
+    },
+    {
+      "id": "road_5321",
+      "name": "aSub - Road 2",
+      "junctionIds": [
+        "node_5696",
+        "node_3530"
+      ],
+      "width": 10,
+      "description": "Campus pedestrian walkway",
+      "segmentDistances": {
+        "node_7554:::node_9177": 127,
+        "node_5696:::node_7554": 325,
+        "node_3530:::node_5696": 85
       }
     }
-  ],
-  "categories": []
+  ]
 }
