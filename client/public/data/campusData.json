@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T05:28:48.208Z",
+  "updatedAt": "2026-10-01T06:57:54.614Z",
   "locations": [
     {
       "id": "building_1358",
@@ -302,8 +302,22 @@
       ],
       "modelKey": "Gym-optimized.glb",
       "nodeId": "",
-      "entranceNodeIds": [],
-      "entrances": []
+      "entranceNodeIds": [
+        "node_ent_3393"
+      ],
+      "entrances": [
+        {
+          "id": "building_7352_ent_1",
+          "name": "Entrance 1",
+          "buildingId": "building_7352",
+          "junctionId": "node_ent_3393",
+          "position": {
+            "x": -474,
+            "y": 0.2,
+            "z": -228
+          }
+        }
+      ]
     },
     {
       "id": "building_6706",
@@ -557,6 +571,15 @@
         "x": -5,
         "y": 0.2,
         "z": 27
+      }
+    },
+    {
+      "id": "node_ent_3393",
+      "name": "REC Gym Entrance 1",
+      "position": {
+        "x": -474,
+        "y": 0.2,
+        "z": -228
       }
     }
   ],
